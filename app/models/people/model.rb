@@ -12,6 +12,7 @@
 #  last_name           :string
 #  title               :string
 #  created_at          :datetime
+#  account_id          :integer          not null
 #  employee_id         :string
 #  proto_id            :string           not null
 #  supervisor_proto_id :string
@@ -21,7 +22,7 @@ module People
   class Model < ApplicationRecord
     self.table_name = 'people'
     include MetaModel
-
+    acts_as_tenant :account
     scope :roots, -> { where(supervisor_id: nil) }
   end
   private_constant :Model

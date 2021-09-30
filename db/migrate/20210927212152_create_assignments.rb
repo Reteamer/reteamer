@@ -8,6 +8,7 @@ class CreateAssignments < ActiveRecord::Migration[6.1]
       t.string :proto_id, null: false
       t.datetime :effective_at, null: false
       t.boolean :active, default: true, null: false
+      t.integer :account_id, null: false
 
       t.datetime :created_at
     end

@@ -12,6 +12,7 @@ class CreatePeople < ActiveRecord::Migration[6.1]
       t.text :image_url
       t.boolean :active, default: true, null: false
       t.boolean :contractor, default: false, null: false
+      t.integer :account_id, null: false
 
       t.datetime :created_at
     end

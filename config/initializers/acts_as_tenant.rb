@@ -4,5 +4,5 @@
 require "acts_as_tenant/sidekiq" if defined? Sidekiq
 
 ActsAsTenant.configure do |config|
-  config.require_tenant = false
+  config.require_tenant = true
 end

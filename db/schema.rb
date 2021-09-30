@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_212152) do
     t.string "proto_id", null: false
     t.datetime "effective_at", null: false
     t.boolean "active", default: true, null: false
+    t.integer "account_id", null: false
     t.datetime "created_at"
   end
 
@@ -135,6 +136,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_212152) do
     t.string "label"
     t.datetime "effective_at", null: false
     t.boolean "active", default: true, null: false
+    t.integer "account_id", null: false
     t.datetime "created_at"
   end
 
@@ -250,6 +252,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_212152) do
     t.text "image_url"
     t.boolean "active", default: true, null: false
     t.boolean "contractor", default: false, null: false
+    t.integer "account_id", null: false
     t.datetime "created_at"
   end
 
@@ -273,6 +276,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_212152) do
     t.string "proto_id", null: false
     t.datetime "effective_at", null: false
     t.boolean "active", default: true, null: false
+    t.integer "account_id", null: false
     t.datetime "created_at"
   end
 

@@ -7,6 +7,7 @@
 #  effective_at    :datetime         not null
 #  role_on_team    :string
 #  created_at      :datetime
+#  account_id      :integer          not null
 #  person_proto_id :string           not null
 #  proto_id        :string           not null
 #  team_proto_id   :string           not null
@@ -14,6 +15,7 @@
 module Assignments
   class Model < ApplicationRecord
     self.table_name = 'assignments'
+    acts_as_tenant :account
     include MetaModel
   end
 
