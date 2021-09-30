@@ -1,0 +1,13 @@
+--- !ruby/object:Jumpstart::Configuration
+application_name: Reteamer
+business_name: Reteamer, LLC
+domain: reteamer.com
+support_email: billing@reteamer.com
+default_from_email: Reteamer <info@reteamer.com>
+business_address: "73 Sumner St #303\r\nSan Francisco, CA 94103"
+background_job_processor: async
+email_provider: ''
+personal_accounts: true
+livereload: false
+solargraph: false
+register_with_account: true

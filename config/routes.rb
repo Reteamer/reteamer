@@ -2,6 +2,13 @@
 Rails.application.routes.draw do
   draw :turbo
 
+  resource :org_chart, only: :show
+  resources :teams, only: :index
+
+  namespace :reteamer_api do
+    resource :org_chart, only: :show
+  end
+
   # Jumpstart views
   if Rails.env.development? || Rails.env.test?
     mount Jumpstart::Engine, at: "/jumpstart"

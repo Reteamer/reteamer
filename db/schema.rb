@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_28_145523) do
+ActiveRecord::Schema.define(version: 2021_09_27_212152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,26 @@ ActiveRecord::Schema.define(version: 2021_08_28_145523) do
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
+  create_table "assignments", force: :cascade do |t|
+    t.string "person_proto_id", null: false
+    t.string "team_proto_id", null: false
+    t.string "role_on_team"
+    t.string "proto_id", null: false
+    t.datetime "effective_at", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at"
+  end
+
+  create_table "connections", force: :cascade do |t|
+    t.string "proto_id", null: false
+    t.string "person_proto_id", null: false
+    t.string "other_supervisor_proto_id", null: false
+    t.string "label"
+    t.datetime "effective_at", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at"
+  end
+
   create_table "notification_tokens", force: :cascade do |t|
     t.bigint "user_id"
     t.string "token", null: false
@@ -218,6 +238,21 @@ ActiveRecord::Schema.define(version: 2021_08_28_145523) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "people", force: :cascade do |t|
+    t.string "proto_id", null: false
+    t.datetime "effective_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "title"
+    t.string "employee_id"
+    t.string "supervisor_proto_id"
+    t.string "email"
+    t.text "image_url"
+    t.boolean "active", default: true, null: false
+    t.boolean "contractor", default: false, null: false
+    t.datetime "created_at"
+  end
+
   create_table "plans", force: :cascade do |t|
     t.string "name", null: false
     t.integer "amount", default: 0, null: false
@@ -230,6 +265,15 @@ ActiveRecord::Schema.define(version: 2021_08_28_145523) do
     t.string "currency"
     t.integer "interval_count", default: 1
     t.string "description"
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "parent_proto_id"
+    t.string "proto_id", null: false
+    t.datetime "effective_at", null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at"
   end
 
   create_table "user_connected_accounts", force: :cascade do |t|

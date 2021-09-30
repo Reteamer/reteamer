@@ -217,6 +217,7 @@ en:
       sign_out: "Sign Out"
       log_in: "Log In"
       sign_up: "Sign Up"
+      org_chart: "Org Chart"
     oauth:
       apple: "Apple"
       developer: "Developer"

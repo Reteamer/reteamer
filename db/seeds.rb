@@ -1,7 +1,15 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-# Uncomment the following to create an Admin user for Production in Jumpstart Pro
-# User.create name: "name", email: "email", password: "password", password_confirmation: "password", admin: true, terms_of_service: true
+if Rails.env.production?
+  raise "Can't run seeds on production DB because it'll destroy data"
+end
+
+User.destroy_all
+People::Person.destroy_all
+Connections::Connection.destroy_all
+Teams::Team.destroy_all
+Assignments::Assignment.destroy_all
+
+User.create!(first_name: "30", last_name: "Rock", email: "demo@thirtyrock.com", admin: true, password: 'password', password_confirmation: 'password')
+User.create!(first_name: "Marvel", last_name: "Comics", email: "demo@mcu.com", admin: true, password: 'password', password_confirmation: 'password')
+
+load File.join(Rails.root, 'db', 'seeds', '30rock.rb')
+# load File.join(Rails.root, 'db', 'seeds', 'MCU.rb')
