@@ -20,7 +20,7 @@ module Teams
     def self.create(effective_date, attributes)
       model = Model.new({
         name: attributes[:name],
-        parent_proto_id: attributes[:parent_proto_id],
+        parent_proto_id: attributes[:parent_id],
         active: attributes[:active] || true,
       })
       model.meta = Meta.new_prototype(effective_date, Model)
@@ -31,7 +31,7 @@ module Teams
     def update(effective_date, attributes)
       new_attributes = {
         name: attributes.fetch(:name, name),
-        parent_proto_id: attributes.fetch(:parent_proto_id, parent_id),
+        parent_proto_id: attributes.fetch(:parent_id, parent_id),
         active: attributes.fetch(:active, active)
       }
       new_model = Model.new(new_attributes)

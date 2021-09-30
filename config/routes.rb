@@ -3,10 +3,11 @@ Rails.application.routes.draw do
   draw :turbo
 
   resource :org_chart, only: :show
-  resources :teams, only: :index
+  resource :team_chart, only: :show
 
   namespace :reteamer_api do
     resource :org_chart, only: :show
+    resource :team_chart, only: :show
   end
 
   # Jumpstart views

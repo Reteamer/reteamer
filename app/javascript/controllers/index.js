@@ -22,9 +22,13 @@ application.register('slideover', Slideover)
 import DateNavigatorController from "./date_navigator_controller"
 import OrgChartController from "./org_chart_controller"
 import OrgDataController from "./org_data_controller"
+import TeamChartController from "./team_chart_controller"
+import TeamDataController from "./team_data_controller"
+application.register("date-navigator", DateNavigatorController)
 application.register("org-chart", OrgChartController)
 application.register("org-data", OrgDataController)
-application.register("date-navigator", DateNavigatorController)
+application.register("team-chart", TeamChartController)
+application.register("team-data", TeamDataController)
 
 
 import Flatpickr from 'stimulus-flatpickr'
