@@ -3,6 +3,6 @@ class TeamChartsController < ApplicationController
 
   def show
     @current_date = Date.parse(params.fetch(:effective_date, Date.current.iso8601))
-    @histogram = People::Person.histogram
+    @histogram = TeamChart.histogram
   end
 end

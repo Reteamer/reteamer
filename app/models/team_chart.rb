@@ -15,6 +15,19 @@ class TeamChart
     return chart + teams
   end
 
+  def self.histogram
+    people_changes = People::Person.histogram
+    team_changes = Teams::Team.histogram
+    team_changes.each do |team_change|
+      change = people_changes.find{ |c| c[:date] == team_change[:date] }
+      if change
+        change[:value] = change[:value] + team_change[:value]
+      else
+        people_changes << team_change
+      end
+    end
+  end
+
   class Assignee
     attr_reader :assignee, :assigned_team
     def name
@@ -27,7 +40,8 @@ class TeamChart
 
     def as_json(options=nil)
       {
-        parent_id: assigned_team.id,
+        id: assignee.id,
+        parentId: assigned_team.id,
         name: assignee.name
       }
     end

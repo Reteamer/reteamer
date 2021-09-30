@@ -84,7 +84,10 @@ module People
     end
 
     def self.histogram
-      Model.select('COUNT(*) AS value, effective_at::date AS date').group('date').order(:date)
+      Model.select('COUNT(*) AS value, effective_at::date AS date')
+           .group('date')
+           .order(:date)
+           .map{|person| {date: person.date, value: person.value} }
     end
 
     def self.destroy_all

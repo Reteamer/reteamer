@@ -59,10 +59,18 @@ module Teams
       Model.destroy_all
     end
 
+    def self.histogram
+      Model.select('COUNT(*) AS value, effective_at::date AS date')
+           .group('date')
+           .order(:date)
+           .map { |team| {date: team.date, value: team.value} }
+    end
+
     def as_json(options = nil)
       {
+        id: id,
         name: name,
-        parent_id: parent_id,
+        parentId: parent_id,
       }
     end
 
