@@ -68,14 +68,6 @@ module Assignments
       Model.destroy_all
     end
 
-    def as_json(options = nil)
-      {
-        person_id: person_id,
-        team_id: team_id,
-        role_on_team: role_on_team,
-      }
-    end
-
     private
 
     attr_accessor :model

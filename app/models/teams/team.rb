@@ -66,14 +66,6 @@ module Teams
            .map { |team| {date: team.date, value: team.value} }
     end
 
-    def as_json(options = nil)
-      {
-        id: id,
-        name: name,
-        parentId: parent_id,
-      }
-    end
-
     private
     attr_accessor :model
   end

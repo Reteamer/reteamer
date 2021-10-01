@@ -87,23 +87,10 @@ module People
       Model.select('COUNT(*) AS value, effective_at::date AS date')
            .group('date')
            .order(:date)
-           .map{|person| {date: person.date, value: person.value} }
     end
 
     def self.destroy_all
       Model.destroy_all
-    end
-
-    def as_json(options = nil)
-      {
-        id: id,
-        name: [first_name, last_name].join(" "),
-        parentId: supervisor_id,
-        title: title,
-        image_url: image_url || "https://www.gravatar.com/avatar/?s=50",
-        employee_id: contractor ? '' : employee_id,
-        isContractor: contractor?
-      }
     end
 
     private

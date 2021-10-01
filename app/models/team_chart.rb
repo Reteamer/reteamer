@@ -37,13 +37,5 @@ class TeamChart
       @assignee = assignee
       @assigned_team = assigned_team
     end
-
-    def as_json(options=nil)
-      {
-        id: assignee.id,
-        parentId: assigned_team.id,
-        name: assignee.name
-      }
-    end
   end
 end

@@ -55,14 +55,6 @@ module Connections
       Model.destroy_all
     end
 
-    def as_json(options = nil)
-      {
-        from: person_id,
-        to: other_supervisor_id,
-        label: label,
-      }
-    end
-
     private
     attr_accessor :model
   end
