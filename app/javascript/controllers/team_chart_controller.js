@@ -1,5 +1,5 @@
 import { Controller } from "stimulus"
-import { OrgChart } from 'd3-org-chart';
+import { TeamChart } from '../team_chart';
 import * as d3 from "d3"
 
 export default class extends Controller {
@@ -30,7 +30,7 @@ export default class extends Controller {
     container.className = 'chart-container'
     this.element.appendChild(container);
 
-    this.chart = new OrgChart()
+    this.chart = new TeamChart()
       .container('.chart-container')
       .data(this.teamData.chart)
       .nodeWidth(d => 250)

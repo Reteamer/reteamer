@@ -1,18 +1,18 @@
 class TeamChart
   def self.find_for(effective_date)
-    teams = Teams::Team.find_for(effective_date)
+    teams = Teams::Team.find_for(effective_date).map{|t| AssignedTeam.new(t)}
     people = People::Person.find_for(effective_date)
     assignments = Assignments::Assignment.find_for(effective_date)
 
-    chart = assignments.reduce([]) do |memo, assignment|
+    assignments.each do |assignment|
       assignee = people.find{|p| p.id == assignment.person_id}
       assigned_team = teams.find{|t| t.id == assignment.team_id}
       if(assignee && assigned_team)
-        memo << Assignee.new(assignee, assigned_team)
+        assigned_team.members << Assignee.new(assignee, assigned_team)
       end
     end
 
-    return chart + teams
+    return teams
   end
 
   def self.histogram
@@ -33,9 +33,31 @@ class TeamChart
     def name
       assignee&.name
     end
+
     def initialize(assignee, assigned_team)
       @assignee = assignee
       @assigned_team = assigned_team
+    end
+  end
+
+  class AssignedTeam
+    attr_reader :team, :members
+
+    def name
+      team&.name
+    end
+
+    def id
+      team&.id
+    end
+
+    def parent_id
+      team&.parent_id
+    end
+
+    def initialize(team)
+      @team = team
+      @members = []
     end
   end
 end
