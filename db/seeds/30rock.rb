@@ -64,7 +64,7 @@ def peopleOfThirtyRock(account)
     cerie   = People::Person.create(Date.current, employee_id: "NBC-8008S", first_name: "Cerie", last_name: "Xerox", title: "Assistant", supervisor_id: liz.id)
     Assignments::Assignment.create(Date.current, person_id: cerie.id, team_id: tgs.id)
 
-    don     = People::Person.create(14.weeks.from_now.to_date, employee_id: "GE-357R0", first_name: "Don", last_name: "Geiss", title: "CEO of General Electric")
+    don     = People::Person.create(14.weeks.from_now.to_date, employee_id: "GE-357R0", first_name: "Don", last_name: "Geiss", title: "CEO of General Electric", image_url: "/demo_avatars/30_rock/don.png")
     Assignments::Assignment.create(14.weeks.from_now, person_id: don.id, team_id: ge.id)
 
     jack.update(14.weeks.from_now.to_date, supervisor_id: don.id)
@@ -84,6 +84,7 @@ def peopleOfThirtyRock(account)
 
     # season 4
     danny   = People::Person.create(4.years.from_now.to_date, employee_id: "NBC-488P8", first_name: "Danny", last_name: "Baker", title: "Actor", supervisor_id: liz.id, image_url: "/demo_avatars/30_rock/danny.jpeg")
+    Assignments::Assignment.create(4.years.from_now.to_date, person_id: danny.id, team_id: actors.id)
     don.update(5.years.from_now.to_date, active: false) # Geiss dies
     jack.update(5.years.from_now.to_date, supervisor_id: nil)
     devon.update(5.years.from_now.to_date, active: false)

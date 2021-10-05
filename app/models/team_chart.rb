@@ -26,6 +26,7 @@ class TeamChart
         people_changes << team_change
       end
     end
+    people_changes
   end
 
   class Assignee
