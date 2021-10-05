@@ -30,3 +30,5 @@
 
 @import "tippy.js/dist/tippy.css";
 @import "flatpickr/dist/flatpickr.css";
+
+@import "team-chart.scss";

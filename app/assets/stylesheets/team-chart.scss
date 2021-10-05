@@ -1,0 +1,82 @@
+.team-chart {
+  team-box {
+    display: block;
+    border: 1px solid lightgray;
+  }
+  team-bar {
+    background-color: #00BB44;
+    display:block;
+    height:10px;
+    width:100%;
+    border-radius:1px;
+  }
+  team-name {
+    display:block;
+    margin: 10px;
+    color:#111672;
+    font-size:20px;
+    font-weight:bold;
+    text-align:center;
+  }
+
+  team-details {
+    width:100%;
+    display:flex;
+    justify-content: flex-end;
+    padding-left:15px;
+    padding-right:15px;
+  }
+
+  team-member-count {
+
+  }
+
+  people-box {
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:row;
+    justify-content:space-around;
+  }
+
+  person-box {
+    background-color:transparent;
+    border-radius:2px;
+    overflow:visible;
+  }
+
+  img {
+    overflow:hidden;
+    border:1px solid gray;
+  }
+
+  employment-type {
+    margin-right:10px;
+    margin-top:15px;
+    float:right;
+  }
+
+  person-bar {
+    height:10px;
+    display:block;
+  }
+
+  person-info {
+    padding:20px;
+    padding-top:35px;
+    text-align:center;
+  }
+
+  person-name {
+    color:#111672;
+    font-size:16px;
+    font-weight:bold;
+    display:block;
+  }
+
+  person-title {
+    color:#404040;
+    font-size:16px;
+    margin-top:4px;
+    display:block;
+  }
+}

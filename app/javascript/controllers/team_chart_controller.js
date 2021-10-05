@@ -1,6 +1,5 @@
 import { Controller } from "stimulus"
 import { TeamChart } from '../team_chart';
-import * as d3 from "d3"
 
 export default class extends Controller {
 
@@ -30,48 +29,66 @@ export default class extends Controller {
     container.className = 'chart-container'
     this.element.appendChild(container);
 
+    const personNodeWidth = 250;
+    const personNodeHeight = 190;
     this.chart = new TeamChart()
       .container('.chart-container')
       .data(this.teamData.chart)
-      .nodeWidth(d => d.data.members.length * 250)
+      .nodeWidth(d => this.getNodeWidth(d, personNodeWidth))
       .initialZoom(0.7)
-      .nodeHeight(d => 200)
+      .nodeHeight(d => this.getNodeHeight(d, personNodeHeight))
       .childrenMargin(d => 40)
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, index, arr, state) {
+        const contractorColor = '#FF9036';
+        const employeeColor = '#3AB6E3';
+        const avatarDiameter = 60;
+        const avatarRadius = avatarDiameter/2;
+
         return `
-            <div style="padding-top:30px;background-color:none;margin-left:1px;height:${d.height}px;border-radius:2px;overflow:visible">
-              <div style="height:${d.height - 32}px;padding-top:0px;background-color:white;border:1px solid lightgray;">
-                <div style="margin-top:-30px;background-color:${d.data.isContractor ? '#FF9036' : '#3AB6E3'};height:10px;width:${d.width - 2}px;border-radius:1px"></div>
-                <div style="padding:20px; padding-top:35px;text-align:center">
-                  <div style="color:#111672;font-size:16px;font-weight:bold"> ${d.data.name}</div>
-                </div>
-                ${d.data.members.length > 0 ? `
-                  ${d.data.members.map(member => `
-                    <div style="padding-top:30px;background-color:none;margin-left:1px;width:250px;height:${d.height}px;float:left;border-radius:2px;overflow:visible">
-                        <div style="height:${d.height - 32}px;padding-top:0px;background-color:white;border:1px solid lightgray;">
-                          <img src="${member.image_url || ''}" style="margin-top:-30px;margin-left:${d.width / 2 - 30}px;border-radius:100px;height:60px;width:60px;overflow:hidden" />
-                          <div style="margin-right:10px;margin-top:15px;float:right">${d.data.employee_id || 'Contractor'}</div>
-                          <div style="margin-top:-30px;background-color:${member.isContractor ? '#FF9036' : '#3AB6E3'};height:10px;width:${250 - 2}px;border-radius:1px"></div>
-                          <div style="padding:20px; padding-top:35px;text-align:center">
-                            <div style="color:#111672;font-size:16px;font-weight:bold"> ${member.name} </div>
-                            <div style="color:#404040;font-size:16px;margin-top:4px"> ${member.title} </div>
-                          </div>
-                        </div>
-                      </div>
-                  `).join("")}
-                  <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
-                    <div> Members:  ${d.data.members.length} 👤</div>
-                  </div>` :
-                  ""
+            <team-box style="height:${d.height}px;">
+              <team-bar></team-bar>
+              <team-name>
+                ${d.data.name}
+              </team-name>
+              <team-details>
+                <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
+              </team-details>
+              ${d.data.members.length > 0 ? `
+                <people-box>
+                ${d.data.members.map(member => `
+                  <person-box style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
+                    <div style="background-color:white;border:1px solid lightgray;">
+                      <person-bar style="background-color:${member.isContractor ? contractorColor : employeeColor};width:${personNodeWidth - 2}px;"></person-bar>
+                      <img src="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
+                      <employment-type>${member.employee_id}</employment-type>
+                      <person-info>
+                        <person-name>${member.name}</person-name>
+                        <person-title>${member.title}</person-title>
+                      </person-info>
+                    </div>
+                  </person-box>
+                  `).join("")
                 }
-              </div>
-            </div>
+                </people-box>
+              ` : ""
+            }
+            </team-box>
   `;
       })
       .render()
       .expandAll()
       .fit()
+  }
+
+  getNodeWidth(d, personNodeWidth) {
+    return d.data.members.length > 1 ? (2 * personNodeWidth) + 50 : personNodeWidth + 50;
+  }
+
+  getNodeHeight(d, personNodeHeight) {
+    const numberOfColumns = Math.ceil(d.data.members.length / 2);
+    const calculatedHeight = 100 + numberOfColumns * personNodeHeight;
+    return Math.max(100, calculatedHeight);
   }
 }

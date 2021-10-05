@@ -16,8 +16,9 @@ json.chart do
       json.id(m.assignee.id)
       json.parentId(m.assigned_team.id)
       json.name(m.assignee.name)
+      json.title(m.assignee.title)
       json.image_url(m.assignee.image_url || "https://www.gravatar.com/avatar/?s=50")
-      json.employee_id(m.assignee.contractor ? '' : m.assignee.employee_id)
+      json.employee_id(m.assignee.contractor ? 'Contractor' : m.assignee.employee_id)
       json.isContractor(m.assignee.contractor?)
     end
   end
