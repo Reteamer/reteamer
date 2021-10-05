@@ -57,30 +57,18 @@ export default class extends Controller {
     this.currentDate = new Date(self.dateInputTarget.value);
 
     this.barLayer = self.xAxisElement = self.svg.append("g")
-      .attr("class", "bar-layer")
+      .attr("class", "bar-layer") // append this layer first so the chart doesn't hide the cursor and markers
 
-    let currentDateMarker = self.svg.append("path")
+    this.selectedDateMarker = self.svg.append("path")
       .attr("class", "date-marker")
+      .style("stroke", "yellow")
+      .style("stroke-width", "1px")
+      .style("opacity", "1")
+
+    this.todayMarker = self.svg.append("path")
       .style("stroke", "red")
       .style("stroke-width", "1px")
       .style("opacity", "1")
-      .attr("d", function() {
-        var d = "M" + self.x(self.currentDate) + "," + self.height;
-        d += " " + self.x(self.currentDate) + "," + 0;
-        return d;
-      });
-
-    // let todayMarker = self.svg.append("path")
-    //   .style("stroke", "red")
-    //   .style("stroke-width", "1px")
-    //   .style("opacity", "1")
-    //   .attr("d", function() {
-    //     const xLocation = self.x(new Date());
-    //     var d = "M" + xLocation + "," + self.height;
-    //     d += " " + xLocation + "," + 0;
-    //     return d;
-    //   });
-    //
 
     this.chartCursor = this.svg.append("g")
       .attr("class", "mouse-over-effects");
@@ -181,6 +169,20 @@ export default class extends Controller {
     ]);
 
     self.xAxisElement.call(self.xAxis);
+
+    self.todayMarker.attr("d", function() {
+      const xLocation = self.x(new Date());
+      var d = "M" + xLocation + "," + self.height;
+      d += " " + xLocation + "," + 0;
+      return d;
+    });
+
+    self.selectedDateMarker.attr("d", function() {
+      var d = "M" + self.x(self.currentDate) + "," + self.height;
+      d += " " + self.x(self.currentDate) + "," + 0;
+      return d;
+    });
+
 
     this.svg
       .select(".bar-layer")
