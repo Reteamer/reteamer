@@ -48,8 +48,6 @@ export default class extends Controller {
     this.svg = d3.create("svg")
       .attr("height", this.height + this.margin.top + this.margin.bottom)
       .attr("width", "100%");
-    this.svg.append("g") //TODO: is this needed?
-      .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
     this.element.appendChild(this.svg.node()); //must do this before we can read the width of the node
 
     this.width = this.svg.node().clientWidth - this.margin.left - this.margin.right;
@@ -57,6 +55,9 @@ export default class extends Controller {
     this.xAxis = d3.axisBottom(this.x)
 
     this.currentDate = new Date(self.dateInputTarget.value);
+
+    this.barLayer = self.xAxisElement = self.svg.append("g")
+      .attr("class", "bar-layer")
 
     let currentDateMarker = self.svg.append("path")
       .attr("class", "date-marker")
@@ -68,6 +69,18 @@ export default class extends Controller {
         d += " " + self.x(self.currentDate) + "," + 0;
         return d;
       });
+
+    // let todayMarker = self.svg.append("path")
+    //   .style("stroke", "red")
+    //   .style("stroke-width", "1px")
+    //   .style("opacity", "1")
+    //   .attr("d", function() {
+    //     const xLocation = self.x(new Date());
+    //     var d = "M" + xLocation + "," + self.height;
+    //     d += " " + xLocation + "," + 0;
+    //     return d;
+    //   });
+    //
 
     this.chartCursor = this.svg.append("g")
       .attr("class", "mouse-over-effects");
@@ -170,6 +183,7 @@ export default class extends Controller {
     self.xAxisElement.call(self.xAxis);
 
     this.svg
+      .select(".bar-layer")
       .selectAll(".change-counts")
       .data(data)
       .enter()
