@@ -69,7 +69,7 @@ def peopleOfThirtyRock(account)
 
     jack.update(14.weeks.from_now.to_date, supervisor_id: don.id)
 
-    devon   = People::Person.create(18.weeks.from_now.to_date, employee_id: "NBC-64Y4K", first_name: "Devon", last_name: "Banks", title: "Vice President of West Coast News, Web Content, and Theme Park Talent Relations", supervisor_id: don.id)
+    devon   = People::Person.create(18.weeks.from_now.to_date, employee_id: "NBC-64Y4K", first_name: "Devon", last_name: "Banks", title: "Vice President of West Coast News, Web Content, and Theme Park Talent Relations", supervisor_id: don.id,image_url: "/demo_avatars/30_rock/devon.jpeg")
     nbc_west = Teams::Team.create(18.weeks.from_now.to_date, name: "West Coast News, Web Content, and Theme Park Talent Relations", parent_id: ge.id)
     Assignments::Assignment.create(18.weeks.from_now.to_date, person_id: devon.id, team_id: nbc_west.id)
     # end of season 1
