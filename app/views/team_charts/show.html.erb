@@ -5,18 +5,7 @@
   <div data-controller="date-navigator" data-action="newOrgData@window->date-navigator#handleNewTeamData" data-date-navigator-histogram-data="<%= @histogram.to_json %>">
     <input data-date-navigator-target="dateInput" data-action="change->date-navigator#handleChange" type="date" value="<%= @current_date %>"/>
   </div>
-  <div data-controller="team-chart" data-action="newTeamData@window->team-chart#handleNewTeamData" style="padding-left:0; padding-right:0">
-    <div style="text-align: left" width="20%">
-      <button data-action="click->team-chart#exportSvg" class="btn btn-action-button waves-effect waves-light"><i
-        class="fas fa-file-download"></i> Export chart as .svg
-      </button>
-      <br/>
-      <button data-action="click->team-chart#fit" class="btn btn-action-button waves-effect waves-light"><i class="fas fa-sync"></i>
-        Fit chart to screen
-      </button>
-    </div>
-  </div>
+  <div data-controller="team-chart" data-action="newTeamData@window->team-chart#handleNewTeamData" style="padding-left:0; padding-right:0"></div>
   <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked"></div>
-
 </div>
 
