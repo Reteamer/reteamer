@@ -4,8 +4,8 @@ import * as d3 from "d3"
 export default class extends Controller {
   static targets = [ "dateInput" ]
 
-  handleNewOrgData(event) {
-    this.histogramData = event.detail.orgData.histogram
+  handleNewData(event) {
+    this.histogramData = event.detail.histogram
     this.histogramData.forEach(function(d) {
       d.date = Date.parse(d.date);
     });
@@ -29,51 +29,44 @@ export default class extends Controller {
   connect() {
     const self = this;
 
-    self.histogramData = JSON.parse(self.data.get("histogramData"))
-    self.histogramData.forEach(function(d) {
-      d.date = Date.parse(d.date);
-    });
-
-    this.margin = {
+    self.margin = {
       top: 20,
       right: 80,
       bottom: 30,
       left: 50
     }
-    this.height = 80 - this.margin.top - this.margin.bottom;
-    this.y = d3.scaleSqrt()
+    self.height = 80 - self.margin.top - self.margin.bottom;
+    self.y = d3.scaleSqrt()
       .exponent(0.1)
-      .range([this.height, 0]);
+      .range([self.height, 0]);
 
-    this.svg = d3.create("svg")
-      .attr("height", this.height + this.margin.top + this.margin.bottom)
+    self.svg = d3.create("svg")
+      .attr("height", self.height + self.margin.top + self.margin.bottom)
       .attr("width", "100%");
-    this.element.appendChild(this.svg.node()); //must do this before we can read the width of the node
+    self.element.appendChild(self.svg.node()); //must do this before we can read the width of the node
 
-    this.width = this.svg.node().clientWidth - this.margin.left - this.margin.right;
-    this.x = d3.scaleUtc().range([0, this.width]);
-    this.xAxis = d3.axisBottom(this.x)
+    self.width = self.svg.node().clientWidth - self.margin.left - self.margin.right;
+    self.x = d3.scaleUtc().range([0, self.width]);
+    self.xAxis = d3.axisBottom(self.x)
 
-    this.currentDate = new Date(self.dateInputTarget.value);
-
-    this.barLayer = self.xAxisElement = self.svg.append("g")
+    self.barLayer = self.xAxisElement = self.svg.append("g")
       .attr("class", "bar-layer") // append this layer first so the chart doesn't hide the cursor and markers
 
-    this.selectedDateMarker = self.svg.append("path")
+    self.selectedDateMarker = self.svg.append("path")
       .attr("class", "date-marker")
       .style("stroke", "yellow")
       .style("stroke-width", "1px")
       .style("opacity", "1")
 
-    this.todayMarker = self.svg.append("path")
+    self.todayMarker = self.svg.append("path")
       .style("stroke", "red")
       .style("stroke-width", "1px")
       .style("opacity", "1")
 
-    this.chartCursor = this.svg.append("g")
+    self.chartCursor = self.svg.append("g")
       .attr("class", "mouse-over-effects");
 
-    this.chartCursor.append("path") // this is the black vertical line to follow mouse
+    self.chartCursor.append("path") // this is the black vertical line to follow mouse
       .attr("class", "cursor-line")
       .style("stroke", "black")
       .style("stroke-width", "1px")
@@ -142,15 +135,13 @@ export default class extends Controller {
             return "translate(" + mouse[0] + ",0)";
           });
       });
-
-    this.renderChart();
   }
 
   renderChart() {
     const self = this;
     const data = self.histogramData;
 
-    this.xExtent = d3.extent(data, function(d) {
+    self.xExtent = d3.extent(data, function(d) {
       return d.date;
     });
 
@@ -177,14 +168,15 @@ export default class extends Controller {
       return d;
     });
 
+    self.selectedDate = new Date(self.dateInputTarget.value);
     self.selectedDateMarker.attr("d", function() {
-      var d = "M" + self.x(self.currentDate) + "," + self.height;
-      d += " " + self.x(self.currentDate) + "," + 0;
+      var d = "M" + self.x(self.selectedDate) + "," + self.height;
+      d += " " + self.x(self.selectedDate) + "," + 0;
       return d;
     });
 
 
-    this.svg
+    self.svg
       .select(".bar-layer")
       .selectAll(".change-counts")
       .data(data)

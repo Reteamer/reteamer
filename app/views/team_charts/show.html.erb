@@ -2,7 +2,7 @@
   <div class="col-sm-6">
     <h1>Teams</h1>
   </div>
-  <div data-controller="date-navigator" data-action="newOrgData@window->date-navigator#handleNewTeamData" data-date-navigator-histogram-data="<%= @histogram.to_json %>">
+  <div data-controller="date-navigator" data-action="newTeamData@window->date-navigator#handleNewData">
     <input data-date-navigator-target="dateInput" data-action="change->date-navigator#handleChange" type="date" value="<%= @current_date %>"/>
   </div>
   <div class="team-chart" data-controller="team-chart" data-action="newTeamData@window->team-chart#handleNewTeamData" style="padding-left:0; padding-right:0"></div>

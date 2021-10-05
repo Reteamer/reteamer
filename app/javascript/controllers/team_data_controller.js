@@ -7,7 +7,7 @@ export default class extends Controller {
 
   async connect() {
     const newDate = new Date().toISOString().split('T')[0]
-    // this.getTeamData(newDate)
+    this.getTeamData(newDate)
   }
 
   async getTeamData(newDate) {
@@ -17,7 +17,8 @@ export default class extends Controller {
     const event = new CustomEvent("newTeamData",
       {
         detail: {
-          teamData: teamData
+          teamData: teamData,
+          histogram: teamData.histogram
         }
       }
     )

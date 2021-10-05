@@ -22,9 +22,6 @@ export default class extends Controller {
   }
 
   async connect() {
-    const response = await fetch('/reteamer_api/team_chart.json')
-    this.teamData = await response.json()
-
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
@@ -33,7 +30,6 @@ export default class extends Controller {
     const personNodeHeight = 190;
     this.chart = new TeamChart()
       .container('.chart-container')
-      .data(this.teamData.chart)
       .nodeWidth(d => this.getNodeWidth(d, personNodeWidth))
       .initialZoom(0.7)
       .nodeHeight(d => this.getNodeHeight(d, personNodeHeight))
@@ -77,9 +73,6 @@ export default class extends Controller {
             </team-box>
   `;
       })
-      .render()
-      .expandAll()
-      .fit()
   }
 
   getNodeWidth(d, personNodeWidth) {

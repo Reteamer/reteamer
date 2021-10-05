@@ -17,7 +17,8 @@ export default class extends Controller {
     const event = new CustomEvent("newOrgData",
       {
         detail: {
-          orgData: orgData
+          orgData: orgData,
+          histogram: orgData.histogram
         }
       }
     )
