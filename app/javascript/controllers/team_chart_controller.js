@@ -88,7 +88,7 @@ export default class extends Controller {
 
   getNodeHeight(d, personNodeHeight) {
     const numberOfColumns = Math.ceil(d.data.members.length / 2);
-    const calculatedHeight = 100 + numberOfColumns * personNodeHeight;
-    return Math.max(100, calculatedHeight);
+    const calculatedHeight = 150 + numberOfColumns * personNodeHeight;
+    return Math.max(130, calculatedHeight);
   }
 }
