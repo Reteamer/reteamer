@@ -3,14 +3,6 @@ module Assignments
     include ActiveModel::Model
     delegate :role_on_team, :active, :active?, :effective_at, to: :model
 
-    # validate :team_and_person_must_both_be_in_effect
-    #
-    # def team_and_person_must_both_be_in_effect
-    #   if Person.any?(person_id, effective_at) && Team.any?(team_id, effective_at)
-    #     errors.add("Can't assign person to team that doesn't exist yet")
-    #   end
-    # end
-
     def person_id
       model&.person_proto_id
     end
@@ -33,11 +25,6 @@ module Assignments
         active: attributes[:active] || true,
       })
       model.meta = Meta.new_prototype(effective_date, Model)
-      if People::Person.any?(effective_date, model.person_proto_id) && Teams::Team.any?(effective_date, model.team_proto_id)
-        model.save
-      else
-        raise "Can't assign person to team that doesn't exist yet"
-      end
       Assignment.new_from_model(model)
     end
 

@@ -1,7 +1,22 @@
+# == Schema Information
+#
+# Table name: teams
+#
+#  id              :bigint           not null, primary key
+#  active          :boolean          default(TRUE), not null
+#  effective_at    :datetime         not null
+#  name            :string           not null
+#  created_at      :datetime
+#  account_id      :integer          not null
+#  parent_proto_id :string
+#  proto_id        :string           not null
+#
 module Teams
   class Team < ApplicationRecord
     acts_as_tenant :account
     include MetaModel
+    has_one :entry, as: :versionable
+
 
     def self.create_with_date(effective_date, attributes)
       model = new(attributes)
@@ -26,11 +41,6 @@ module Teams
       end
 
       new_model
-    end
-
-    def self.any?(effective_date, person_proto_id)
-      models = where(proto_id: person_proto_id).find_for(effective_date)
-      models.present?
     end
 
     def self.histogram

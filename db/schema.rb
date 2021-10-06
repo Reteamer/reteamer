@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_27_212152) do
+ActiveRecord::Schema.define(version: 2021_10_06_030300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,17 @@ ActiveRecord::Schema.define(version: 2021_09_27_212152) do
     t.datetime "created_at"
   end
 
+  create_table "entries", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "effective_at", null: false
+    t.boolean "active", default: true, null: false
+    t.string "versionable_type"
+    t.bigint "versionable_id"
+    t.integer "account_id", null: false
+    t.datetime "created_at"
+    t.index ["versionable_type", "versionable_id"], name: "index_entries_on_versionable"
+  end
+
   create_table "notification_tokens", force: :cascade do |t|
     t.bigint "user_id"
     t.string "token", null: false
@@ -241,16 +252,13 @@ ActiveRecord::Schema.define(version: 2021_09_27_212152) do
   end
 
   create_table "people", force: :cascade do |t|
-    t.string "proto_id", null: false
-    t.datetime "effective_at", null: false
     t.string "first_name"
     t.string "last_name"
     t.string "title"
     t.string "employee_id"
-    t.string "supervisor_proto_id"
+    t.string "supervisor_key"
     t.string "email"
     t.text "image_url"
-    t.boolean "active", default: true, null: false
     t.boolean "contractor", default: false, null: false
     t.integer "account_id", null: false
     t.datetime "created_at"
