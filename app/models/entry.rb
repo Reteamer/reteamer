@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: entries
@@ -22,7 +24,7 @@ class Entry < ApplicationRecord
   before_create :set_values
 
   def set_values
-    number_of_events = self.class.where(effective_at: self.effective_at.beginning_of_day..self.effective_at.end_of_day).count
+    number_of_events = self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).count
     self.effective_at = effective_at.to_date + number_of_events.seconds
     self.key = SecureRandom.uuid unless key.present?
   end
@@ -31,5 +33,10 @@ class Entry < ApplicationRecord
     self.select('COUNT(*) AS value, effective_at::date AS date')
         .group('date')
         .order(:date)
+  end
+
+  def self.find_for(effective_date)
+    where(effective_at:
+      group(:key).where(effective_at: ..effective_date.end_of_day).select('max(effective_at) as effective_at'))
   end
 end
