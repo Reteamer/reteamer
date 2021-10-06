@@ -253,15 +253,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_080951) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "people_open_reqs", force: :cascade do |t|
-    t.string "title"
-    t.string "supervisor_key"
-    t.integer "account_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "people_people", force: :cascade do |t|
+  create_table "people", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "title"

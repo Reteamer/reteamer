@@ -99,9 +99,12 @@ def peopleOfThirtyRock(account)
 
     # season 4
     josh = Updater.deactivate(episodes[:s4e01], josh) # Josh leaves after season 3
-    # TODO: open req?
+    actor_req = Entry.create(effective_at: episodes[:s4e01], versionable: People::OpenReq.create(title: "Actor", supervisor_key: liz.key))
+    actor_req_assignment = Entry.create(effective_at: episodes[:s4e01], versionable: Assignment.create(person_key: actor_req, team_key: actors.key))
     danny   = Entry.create(effective_at: episodes[:s4e05], versionable: People::Person.create(employee_id: "NBC-488P8", first_name: "Danny", last_name: "Baker", title: "Actor", supervisor_key: liz.key, image_url: "/demo_avatars/30_rock/danny.jpeg"))
     Entry.create(effective_at: episodes[:s4e05], versionable: Assignment.create(person_key: danny.key, team_key: actors.key))
+    Updater.deactivate(episodes[:s4e05], actor_req)
+    Updater.deactivate(episodes[:s4e05], actor_req_assignment)
 
     don = Updater.deactivate(episodes[:s4e14], don) # Geiss dies
     # TODO: open req?

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: people_people
+# Table name: people
 #
 #  id             :bigint           not null, primary key
 #  contractor     :boolean          default(FALSE), not null
