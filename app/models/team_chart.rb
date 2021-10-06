@@ -5,7 +5,7 @@ class TeamChart
     assignments = Assignments::Assignment.find_for(effective_date)
 
     assignments.each do |assignment|
-      assignee = people.find{|p| p.id == assignment.person_id}
+      assignee = people.find{|p| p.proto_id == assignment.person_id}
       assigned_team = teams.find{|t| t.id == assignment.team_id}
       if(assignee && assigned_team)
         assigned_team.members << Assignee.new(assignee, assigned_team)
