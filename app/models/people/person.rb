@@ -7,7 +7,7 @@ module People
     scope :roots, -> { where(supervisor_id: nil) }
 
     def self.create_with_date(effective_date, attributes)
-      model = Person.new(attributes)
+      model = self.new(attributes)
       ApplicationRecord.transaction do
         model.meta = Meta.new_prototype(effective_date, self)
         model.save
@@ -15,7 +15,7 @@ module People
       return model
     end
 
-    def update(effective_date, attributes)
+    def update_with_date(effective_date, attributes)
       new_attributes = {
         employee_id: attributes.fetch(:employee_id, self.employee_id),
         first_name: attributes.fetch(:first_name, self.first_name),
@@ -26,7 +26,7 @@ module People
         image_url: attributes.fetch(:image_url, self.image_url),
         contractor: attributes.fetch(:contractor, self.contractor)
       }
-      new_model = Person.new(new_attributes)
+      new_model = self.class.new(new_attributes)
 
       ApplicationRecord.transaction do
         new_model.meta = Meta.update_prototype(self.proto_id, effective_date, self.class)

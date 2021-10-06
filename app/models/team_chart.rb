@@ -6,7 +6,7 @@ class TeamChart
 
     assignments.each do |assignment|
       assignee = people.find{|p| p.proto_id == assignment.person_id}
-      assigned_team = teams.find{|t| t.id == assignment.team_id}
+      assigned_team = teams.find{|t| t.proto_id == assignment.team_id}
       if(assignee && assigned_team)
         assigned_team.members << Assignee.new(assignee, assigned_team)
       end
@@ -48,12 +48,12 @@ class TeamChart
       team&.name
     end
 
-    def id
-      team&.id
+    def proto_id
+      team&.proto_id
     end
 
-    def parent_id
-      team&.parent_id
+    def parent_proto_id
+      team&.parent_proto_id
     end
 
     def initialize(team)
