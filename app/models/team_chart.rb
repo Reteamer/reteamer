@@ -1,38 +1,26 @@
+# frozen_string_literal: true
+
 class TeamChart
   def self.find_for(effective_date)
-    teams = Teams::Team.find_for(effective_date).map{|t| AssignedTeam.new(t)}
-    people = Entry.find_for(effective_date).where(versionable_type: "People::Person").map(&:versionable)
-    assignments = Assignments::Assignment.find_for(effective_date)
-
+    teams = Entry.find_for(effective_date).where(versionable_type: Teams::Team.name).select(&:active).map do |t|
+      AssignedTeam.new(t.versionable)
+    end
+    people = Entry.find_for(effective_date).where(versionable_type: People::Person.name).select(&:active).map(&:versionable)
+    assignments = Entry.find_for(effective_date).where(versionable_type: Assignments::Assignment.name).select(&:active).map(&:versionable)
     assignments.each do |assignment|
-      assignee = people.find{|p| p.proto_id == assignment.person_key}
-      assigned_team = teams.find{|t| t.proto_id == assignment.team_id}
-      if(assignee && assigned_team)
-        assigned_team.members << Assignee.new(assignee, assigned_team)
-      end
+      assignee = people.find { |p| p.key == assignment.person_key }
+      assigned_team = teams.find { |t| t.key == assignment.team_key }
+      assigned_team.members << Assignee.new(assignee, assigned_team) if assignee && assigned_team
     end
 
-    return teams
-  end
-
-  def self.histogram
-    people_changes = People::Person.histogram
-    team_changes = Teams::Team.histogram
-    team_changes.each do |team_change|
-      change = people_changes.find{ |c| c[:date] == team_change[:date] }
-      if change
-        change[:value] = change[:value] + team_change[:value]
-      else
-        people_changes << team_change
-      end
-    end
-    people_changes
+    teams
   end
 
   class Assignee
     attr_reader :assignee, :assigned_team
+
     def name
-      assignee&.name
+      assignee.name
     end
 
     def initialize(assignee, assigned_team)
@@ -45,15 +33,15 @@ class TeamChart
     attr_reader :team, :members
 
     def name
-      team&.name
+      team.name
     end
 
-    def proto_id
-      team&.proto_id
+    def key
+      team.key
     end
 
-    def parent_proto_id
-      team&.parent_proto_id
+    def parent_key
+      team.parent_key
     end
 
     def initialize(team)

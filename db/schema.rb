@@ -119,12 +119,9 @@ ActiveRecord::Schema.define(version: 2021_10_06_030300) do
   end
 
   create_table "assignments", force: :cascade do |t|
-    t.string "person_proto_id", null: false
-    t.string "team_proto_id", null: false
+    t.string "person_key", null: false
+    t.string "team_key", null: false
     t.string "role_on_team"
-    t.string "proto_id", null: false
-    t.datetime "effective_at", null: false
-    t.boolean "active", default: true, null: false
     t.integer "account_id", null: false
     t.datetime "created_at"
   end
@@ -277,10 +274,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_030300) do
 
   create_table "teams", force: :cascade do |t|
     t.string "name", null: false
-    t.string "parent_proto_id"
-    t.string "proto_id", null: false
-    t.datetime "effective_at", null: false
-    t.boolean "active", default: true, null: false
+    t.string "parent_key"
     t.integer "account_id", null: false
     t.datetime "created_at"
   end

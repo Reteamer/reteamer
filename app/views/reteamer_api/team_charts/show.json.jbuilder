@@ -11,12 +11,12 @@ end
 
 json.chart do
   json.array! @team_chart do |t|
-    json.id(t.proto_id)
-    json.parentId(t.parent_proto_id)
+    json.id(t.key)
+    json.parentId(t.parent_key)
     json.name(t.name)
     json.members t.members do |m|
-      json.id(m.assignee.proto_id)
-      json.parentId(m.assigned_team.proto_id)
+      json.id(m.assignee.key)
+      json.parentId(m.assigned_team.key)
       json.name(m.assignee.name)
       json.title(m.assignee.title)
       json.image_url(m.assignee.image_url || 'https://www.gravatar.com/avatar/?s=50')

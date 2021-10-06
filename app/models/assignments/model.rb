@@ -2,15 +2,12 @@
 #
 # Table name: assignments
 #
-#  id              :bigint           not null, primary key
-#  active          :boolean          default(TRUE), not null
-#  effective_at    :datetime         not null
-#  role_on_team    :string
-#  created_at      :datetime
-#  account_id      :integer          not null
-#  person_proto_id :string           not null
-#  proto_id        :string           not null
-#  team_proto_id   :string           not null
+#  id           :bigint           not null, primary key
+#  person_key   :string           not null
+#  role_on_team :string
+#  team_key     :string           not null
+#  created_at   :datetime
+#  account_id   :integer          not null
 #
 module Assignments
   class Model < ApplicationRecord
