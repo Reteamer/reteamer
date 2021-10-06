@@ -1,4 +1,3 @@
-json.current_date(@current_date)
 json.histogram do
   json.array! @histogram do |h|
     json.date(h[:date])

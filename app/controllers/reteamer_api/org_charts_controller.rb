@@ -6,7 +6,7 @@ module ReteamerApi
       selected_date = Date.parse(params.fetch(:effective_date, Date.current.iso8601))
       @people = Entry.find_for(selected_date).where(versionable_type: People::Person.name).select(&:active).map(&:versionable)
       @histogram = Entry.histogram.where(versionable_type: People::Person.name)
-      @connections = Entry.find_for(selected_date).where(versionable_type: Connections::Connection.name).map(&:versionable)
+      @connections = Entry.find_for(selected_date).where(versionable_type: Connection.name).map(&:versionable)
     end
   end
 end

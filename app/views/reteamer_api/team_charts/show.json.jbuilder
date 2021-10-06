@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-json.current_date(@current_date)
-
 json.histogram do
   json.array! @histogram do |h|
     json.date(h[:date])
@@ -10,18 +8,18 @@ json.histogram do
 end
 
 json.chart do
-  json.array! @team_chart do |t|
-    json.id(t.key)
-    json.parentId(t.parent_key)
-    json.name(t.name)
-    json.members t.members do |m|
-      json.id(m.assignee.key)
-      json.parentId(m.assigned_team.key)
-      json.name(m.assignee.name)
-      json.title(m.assignee.title)
-      json.image_url(m.assignee.image_url || 'https://www.gravatar.com/avatar/?s=50')
-      json.employee_id(m.assignee.contractor ? 'Contractor' : m.assignee.employee_id)
-      json.isContractor(m.assignee.contractor?)
+  json.array! @team_chart do |team|
+    json.id(team.key)
+    json.parentId(team.parent_key)
+    json.name(team.name)
+    json.members team.members do |member|
+      json.id(member.key)
+      json.parentId(member.team_key)
+      json.name(member.name)
+      json.title(member.title)
+      json.image_url(member.image_url || 'https://www.gravatar.com/avatar/?s=50')
+      json.employee_id(member.contractor? ? 'Contractor' : member.employee_id)
+      json.isContractor(member.contractor?)
     end
   end
 end

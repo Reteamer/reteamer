@@ -7,9 +7,9 @@ end
 ActsAsTenant.without_tenant do
   User.destroy_all
   People::Person.destroy_all
-  Connections::Connection.destroy_all
-  Teams::Team.destroy_all
-  Assignments::Assignment.destroy_all
+  Connection.destroy_all
+  Team.destroy_all
+  Assignment.destroy_all
 end
 
 thirtyRockUser = User.create!(first_name: "30", last_name: "Rock", email: "demo@thirtyrock.com", admin: true, password: 'password', password_confirmation: 'password', :terms_of_service => true)

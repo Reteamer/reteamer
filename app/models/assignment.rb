@@ -9,10 +9,8 @@
 #  created_at   :datetime
 #  account_id   :integer          not null
 #
-module Assignments
-  class Assignment < ApplicationRecord
-    has_one :entry, as: :versionable
-    delegate :key, to: :entry
-    acts_as_tenant :account
-  end
+class Assignment < ApplicationRecord
+  has_one :entry, as: :versionable
+  delegate :key, to: :entry
+  acts_as_tenant :account
 end
