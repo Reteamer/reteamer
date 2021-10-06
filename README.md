@@ -11,3 +11,7 @@ Other applications don't deal well when you start to ask
 - "Where are the open head counts that need filling?"
 - "A manager is leaving, but the announcement hasn't been made yet. How can we plan for their departure safely?"
 - "Someone is being promoted, but the announcement hasn't been made yet. How can we safely plan for the change to their team?"
+
+## The Benefits
+
+- When you use Reteamer, you tell your new hires that they're getting a level of autonomy that's greater than anywhere else they might want to work
