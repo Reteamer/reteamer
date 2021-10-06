@@ -13,7 +13,7 @@ json.chart do
     json.parentId(t.parent_id)
     json.name(t.name)
     json.members t.members do |m|
-      json.id(m.assignee.id)
+      json.id(m.assignee.proto_id)
       json.parentId(m.assigned_team.id)
       json.name(m.assignee.name)
       json.title(m.assignee.title)

@@ -8,8 +8,8 @@ end
 
 json.people do
   json.array! @people do |person|
-    json.id(person.id)
-    json.parentId(person.supervisor_id)
+    json.id(person.proto_id)
+    json.parentId(person.supervisor_proto_id)
     json.name(person.name)
     json.title(person.title)
     json.image_url(person.image_url || "https://www.gravatar.com/avatar/?s=50")

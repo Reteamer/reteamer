@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.describe People do
   it "let's you save multiple objects for the same day" do
-    People::Person.create(Date.current, first_name: "Peter")
-    People::Person.create(6.days.from_now, first_name: "Paul")
-    People::Person.create(2.days.from_now, first_name: "Mary")
+    People::Person.create_with_date(Date.current, first_name: "Peter")
+    People::Person.create_with_date(6.days.from_now, first_name: "Paul")
+    People::Person.create_with_date(2.days.from_now, first_name: "Mary")
 
     expect(People::Person.find_for(6.days.from_now).count).to eq(3)
     expect(People::Person.find_for(2.days.from_now).count).to eq(2)
@@ -12,7 +12,7 @@ RSpec.describe People do
   end
 
   it "let's you update the same object" do
-    person = People::Person.create(Date.current, first_name: "Peter", last_name: "Singer")
+    person = People::Person.create_with_date(Date.current, first_name: "Peter", last_name: "Singer")
     person.update(2.days.from_now, first_name: "Paul")
     person.update(2.days.from_now, first_name: "Paulz")
     person.update(1.days.from_now, first_name: "Mary")

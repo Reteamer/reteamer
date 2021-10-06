@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe MetaModel do
   let(:test_model) do Class.new{
