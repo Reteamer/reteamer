@@ -20,8 +20,8 @@ end
 
 json.connections do
   json.array! @connections do |connection|
-    json.from(connection.person_id)
-    json.to(connection.other_supervisor_id)
+    json.from(connection.person_key)
+    json.to(connection.other_supervisor_key)
     json.label(connection.label)
   end
 end

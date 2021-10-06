@@ -1,61 +1,18 @@
+# == Schema Information
+#
+# Table name: connections
+#
+#  id                   :bigint           not null, primary key
+#  label                :string
+#  other_supervisor_key :string           not null
+#  person_key           :string           not null
+#  created_at           :datetime
+#  account_id           :integer          not null
+#
 module Connections
-  class Connection
-    include ActiveModel::Model
-    delegate :label, :active, :active?, to: :model
-
-    def other_supervisor_id
-      model&.other_supervisor_proto_id
-    end
-
-    def person_id
-      model&.person_proto_id
-    end
-
-    def self.new_from_model(model)
-      wrapper = Connection.new
-      wrapper.send(:model=, model)
-      wrapper
-    end
-
-    def self.create(effective_date, attributes)
-      model = Model.new({
-        person_proto_id: attributes[:person_id],
-        other_supervisor_proto_id: attributes[:other_supervisor_id],
-        active: attributes[:active] || true,
-        label: attributes[:label]
-      })
-      model.meta = Meta.new_prototype(effective_date, Model)
-      model.save
-      Connection.new_from_model(model)
-    end
-
-    def update(effective_date, attributes)
-      new_attributes = {
-        person_proto_id: attributes.fetch(:person_id, person_id),
-        other_supervisor_proto_id: attributes.fetch(:other_supervisor_id, other_supervisor_id),
-        active: attributes.fetch(:active, active)
-      }
-      new_model = Model.new(new_attributes)
-
-      ApplicationRecord.transaction do
-        new_model.meta = Meta.update_prototype(model.proto_id, effective_date, Model)
-        new_model.save
-      end
-
-      self.model = new_model
-      return self
-    end
-
-    def self.find_for(effective_date)
-      models = Model.find_for(effective_date)
-      models.map{ |model| Connection.new_from_model(model) }
-    end
-
-    def self.destroy_all
-      Model.destroy_all
-    end
-
-    private
-    attr_accessor :model
+  class Connection < ApplicationRecord
+    has_one :entry, as: :versionable
+    delegate :key, to: :entry
+    acts_as_tenant :account
   end
 end

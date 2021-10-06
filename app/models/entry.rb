@@ -38,5 +38,6 @@ class Entry < ApplicationRecord
   def self.find_for(effective_date)
     where(effective_at:
       group(:key).where(effective_at: ..effective_date.end_of_day).select('max(effective_at) as effective_at'))
+      .includes(:versionable) # avoid n+1 queries
   end
 end

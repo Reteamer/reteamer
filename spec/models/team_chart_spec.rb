@@ -7,11 +7,11 @@ describe TeamChart do
     great_lakes_avengers = Teams::Team.create(Date.current, name: "Great Lakes Avengers", parent_id: avengers.id)
 
     iron_man = People::Person.create_with_date(Date.current, first_name: "Iron", last_name: "Man")
-    Assignments::Assignment.create(Date.current, person_id: iron_man.id, team_id: avengers.id)
+    Assignments::Assignment.create(Date.current, person_key: iron_man.id, team_id: avengers.id)
 
     hawkeye = People::Person.create_with_date(Date.current, first_name: "Hawkeye")
-    Assignments::Assignment.create(Date.current, person_id: hawkeye.id, team_id: avengers.id)
-    expect{Assignments::Assignment.create(Date.current, person_id: hawkeye.id, team_id: west_coast_avengers.id)}.to raise_error("Can't assign person to team that doesn't exist yet")
+    Assignments::Assignment.create(Date.current, person_key: hawkeye.id, team_id: avengers.id)
+    expect{Assignments::Assignment.create(Date.current, person_key: hawkeye.id, team_id: west_coast_avengers.id)}.to raise_error("Can't assign person to team that doesn't exist yet")
 
     team_chart = TeamChart.find_for(Date.current)
     p team_chart.map(&:name)

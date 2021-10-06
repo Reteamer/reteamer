@@ -1,11 +1,11 @@
 class TeamChart
   def self.find_for(effective_date)
     teams = Teams::Team.find_for(effective_date).map{|t| AssignedTeam.new(t)}
-    people = People::Person.find_for(effective_date)
+    people = Entry.find_for(effective_date).where(versionable_type: "People::Person").map(&:versionable)
     assignments = Assignments::Assignment.find_for(effective_date)
 
     assignments.each do |assignment|
-      assignee = people.find{|p| p.proto_id == assignment.person_id}
+      assignee = people.find{|p| p.proto_id == assignment.person_key}
       assigned_team = teams.find{|t| t.proto_id == assignment.team_id}
       if(assignee && assigned_team)
         assigned_team.members << Assignee.new(assignee, assigned_team)

@@ -3,7 +3,7 @@ module Assignments
     include ActiveModel::Model
     delegate :role_on_team, :active, :active?, :effective_at, to: :model
 
-    def person_id
+    def person_key
       model&.person_proto_id
     end
 
@@ -19,7 +19,7 @@ module Assignments
 
     def self.create(effective_date, attributes)
       model = Model.new({
-        person_proto_id: attributes[:person_id],
+        person_proto_id: attributes[:person_key],
         team_proto_id: attributes[:team_id],
         role_on_team: attributes[:role_on_team],
         active: attributes[:active] || true,
@@ -30,7 +30,7 @@ module Assignments
 
     def update(effective_date, attributes)
       new_attributes = {
-        person_proto_id: attributes.fetch(:person_id, person_id),
+        person_proto_id: attributes.fetch(:person_key, person_key),
         team_proto_id: attributes.fetch(:team_id, team_id),
         role_on_team: attributes.fetch(:role_on_team, role_on_team),
         active: attributes.fetch(:active, active)
