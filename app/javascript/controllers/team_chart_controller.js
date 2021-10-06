@@ -18,7 +18,6 @@ export default class extends Controller {
       .data(this.teamData.chart)
       .render()
       .expandAll()
-      .fit()
   }
 
   async connect() {

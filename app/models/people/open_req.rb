@@ -1,21 +1,16 @@
 # == Schema Information
 #
-# Table name: people_people
+# Table name: open_reqs
 #
 #  id             :bigint           not null, primary key
-#  contractor     :boolean          default(FALSE), not null
-#  email          :string
-#  first_name     :string
-#  image_url      :text
-#  last_name      :string
 #  supervisor_key :string
 #  title          :string
-#  created_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  account_id     :integer          not null
-#  employee_id    :string
 #
 module People
-  class Person < ApplicationRecord
+  class OpenReq < ApplicationRecord
     has_one :entry, as: :versionable
     delegate :key, to: :entry
     acts_as_tenant :account

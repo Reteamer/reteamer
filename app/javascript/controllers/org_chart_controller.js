@@ -20,21 +20,15 @@ export default class extends Controller {
       .connections(this.orgData.connections)
       .render()
       .expandAll()
-      .fit()
   }
 
   async connect() {
-    const response = await fetch('/reteamer_api/org_chart.json')
-    this.orgData = await response.json()
-
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
 
     this.chart = new OrgChart()
       .container('.chart-container')
-      .data(this.orgData.people)
-      .connections(this.orgData.connections)
       .connectionsUpdate(function (d, i, arr) {
         d3.select(this)
           .attr('stroke', (d) => '#CCCCCC')
@@ -84,8 +78,5 @@ export default class extends Controller {
             </div>
   `;
       })
-      .render()
-      .expandAll()
-      .fit()
   }
 }
