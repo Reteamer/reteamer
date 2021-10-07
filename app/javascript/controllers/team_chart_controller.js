@@ -36,8 +36,6 @@ export default class extends Controller {
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, index, arr, state) {
-        const contractorColor = '#FF9036';
-        const employeeColor = '#3AB6E3';
         const avatarDiameter = 60;
         const avatarRadius = avatarDiameter/2;
 
@@ -55,7 +53,7 @@ export default class extends Controller {
                 ${d.data.members.map(member => `
                   <person-box style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
                     <div style="background-color:white;border:1px solid lightgray;">
-                      <person-bar style="background-color:${member.isContractor ? contractorColor : employeeColor};width:${personNodeWidth - 2}px;"></person-bar>
+                      <person-bar class="${member.type}" style="width:${personNodeWidth - 2}px;"></person-bar>
                       <img src="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
                       <employment-type>${member.employee_id}</employment-type>
                       <person-info>

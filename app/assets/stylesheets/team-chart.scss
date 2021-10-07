@@ -37,12 +37,13 @@
     flex-direction:row;
     justify-content:space-around;
   }
+}
 
-  person-box {
-    background-color:transparent;
-    border-radius:2px;
-    overflow:visible;
-  }
+person-box {
+  background-color:transparent;
+  border-radius:2px;
+  overflow:visible;
+
 
   img {
     overflow:hidden;
@@ -58,12 +59,33 @@
   person-bar {
     height:10px;
     display:block;
+
+    &.contractor {
+      background: repeating-linear-gradient(
+          45deg,
+          #044a64,
+          #044a64 10px,
+          #465298 10px,
+          #465298 20px)
+    }
+    &.employee {
+      background-color: #3AB6E3;
+    }
+    &.openreq {
+      background: repeating-linear-gradient(
+          45deg,
+          #3AB6E3,
+          #3AB6E3 10px,
+          #74e776 10px,
+          #74e776 20px)
+    }
   }
 
   person-info {
     padding:20px;
     padding-top:35px;
     text-align:center;
+    display:block;
   }
 
   person-name {

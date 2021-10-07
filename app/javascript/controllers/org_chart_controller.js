@@ -35,9 +35,6 @@ export default class extends Controller {
           .attr('stroke-linecap', 'round')
           .attr('stroke-width', (d) => '2')
           .attr('pointer-events', 'none')
-
-           // .attr("marker-start", d => `url(#${d.from + "_" + d.to})`)
-          //  .attr("marker-end", d => `url(#arrow-${d.from + "_" + d.to})`)
           .attr('stroke-dasharray', '20, 20');
       })
       .nodeWidth(d => 250)
@@ -47,33 +44,28 @@ export default class extends Controller {
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, index, arr, state) {
+        const avatarRadius = 30;
+        const avatarDiameter = 60;
         return `
-            <div style="padding-top:30px;background-color:none;margin-left:1px;height:${
-          d.height
-        }px;border-radius:2px;overflow:visible">
+            <person-box style="padding-top:${avatarRadius}px;height:${d.height}px;">
               <div style="height:${d.height - 32}px;padding-top:0px;background-color:white;border:1px solid lightgray;">
-                <img src="${d.data.image_url || ''}" style="margin-top:-30px;margin-left:${d.width / 2 - 30}px;border-radius:100px;height:60px;width:60px;overflow:hidden" />
+                <img src="${d.data.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${d.width / 2 - avatarRadius}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
 
-                <div style="margin-right:10px;margin-top:15px;float:right">${d.data.employee_id}</div>
+                <employment-type style="margin-right:10px;margin-top:15px;float:right">${d.data.employee_id}</employment-type>
 
-                <div style="margin-top:-30px;background-color:${d.data.isContractor ? '#FF9036' : '#3AB6E3'};height:10px;width:${d.width -
-        2}px;border-radius:1px"></div>
+                <person-bar class="${d.data.type}" style="margin-top:-${avatarRadius}px;height:10px;width:${d.width - 2}px;border-radius:1px"></person-bar>
 
-                <div style="padding:20px; padding-top:35px;text-align:center">
-                  <div style="color:#111672;font-size:16px;font-weight:bold"> ${
-          d.data.name
-        } </div>
-                  <div style="color:#404040;font-size:16px;margin-top:4px"> ${
-          d.data.title
-        } </div>
-                </div>
+                <person-info>
+                  <person-name>${d.data.name}</person-name>
+                  <person-title>${d.data.title}</person-title>
+                </person-info>
                 ${d.data._directSubordinates > 0 ? `
                 <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
                   <div > Manages:  ${d.data._directSubordinates} 👤</div>
                   <div > Oversees: ${d.data._totalSubordinates} 👤</div>
                 </div>` : ""}
               </div>
-            </div>
+            </person-box>
   `;
       })
   }

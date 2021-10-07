@@ -16,5 +16,8 @@
 #
 module People
   class Contractor < Person
+    def employee_id
+      attributes[:employee_id] || "Contractor"
+    end
   end
 end
