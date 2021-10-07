@@ -17,4 +17,19 @@ describe TeamChart do
     p team_chart.map(&:name)
     expect(team_chart.count).to eq(4)
   end
+
+  it "gets all the types of People" do
+    avengers = Entry.create(effective_at: Date.current, versionable: Team.create(name: "Avengers"))
+
+    iron_man = Entry.create(effective_at: Date.current, versionable: People::Person.create(first_name: "Iron", last_name: "Man"))
+    Entry.create(effective_at: Date.current, versionable: Assignment.create(person_key: iron_man.key, team_key: avengers.key))
+
+    open_req = Entry.create(effective_at: Date.current, versionable: People::OpenReq.create(title: "Hero"))
+    Entry.create(effective_at: Date.current, versionable: Assignment.create(person_key: open_req.key, team_key: avengers.key))
+
+    team_chart = TeamChart.find_for(Date.current)
+    expect(team_chart.count).to eq(1)
+    expect(team_chart.first.members).to match_array([iron_man.versionable, open_req.versionable])
+
+  end
 end

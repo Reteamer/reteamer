@@ -12,8 +12,8 @@ json.people do
     json.name(person.name)
     json.title(person.title)
     json.image_url(person.image_url || "https://www.gravatar.com/avatar/?s=50")
-    json.employee_id(person.contractor ? '' : person.employee_id)
-    json.isContractor(person.contractor?)
+    json.employee_id(person.type == People::Contractor.name ? 'Contractor' : person.employee_id)
+    json.isContractor(person.type == People::Contractor.name)
   end
 end
 

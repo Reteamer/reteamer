@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_080951) do
+ActiveRecord::Schema.define(version: 2021_10_06_030300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,14 +168,6 @@ ActiveRecord::Schema.define(version: 2021_10_06_080951) do
     t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient_type_and_recipient_id"
   end
 
-  create_table "open_reqs", force: :cascade do |t|
-    t.string "title"
-    t.string "supervisor_key"
-    t.integer "account_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "pay_charges", force: :cascade do |t|
     t.string "processor_id", null: false
     t.integer "amount", null: false
@@ -254,6 +246,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_080951) do
   end
 
   create_table "people", force: :cascade do |t|
+    t.string "type"
     t.string "first_name"
     t.string "last_name"
     t.string "title"
@@ -261,7 +254,6 @@ ActiveRecord::Schema.define(version: 2021_10_06_080951) do
     t.string "supervisor_key"
     t.string "email"
     t.text "image_url"
-    t.boolean "contractor", default: false, null: false
     t.integer "account_id", null: false
     t.datetime "created_at"
   end

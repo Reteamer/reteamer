@@ -14,8 +14,7 @@
 #  account_id     :integer          not null
 #  employee_id    :string
 #
-require 'rails_helper'
-
-RSpec.describe People::OpenReq, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+module People
+  class Contractor < Person
+  end
 end

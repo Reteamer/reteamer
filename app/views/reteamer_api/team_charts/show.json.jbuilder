@@ -17,8 +17,8 @@ json.chart do
       json.name(member.name)
       json.title(member.title)
       json.image_url(member.image_url || 'https://www.gravatar.com/avatar/?s=50')
-      json.employee_id(member.contractor? ? 'Contractor' : member.employee_id)
-      json.isContractor(member.contractor?)
+      json.employee_id(member.type == People::Contractor.name ? 'Contractor' : member.employee_id)
+      json.isContractor(member.type == People::Contractor.name)
     end
   end
 end
