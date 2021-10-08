@@ -39,11 +39,15 @@
   }
 }
 
+.fake-root-node {
+  display: none;
+}
+
 person-box {
   background-color:transparent;
   border-radius:2px;
   overflow:visible;
-
+  display:block;
 
   img {
     overflow:hidden;

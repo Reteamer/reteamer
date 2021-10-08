@@ -41,13 +41,30 @@ export default class extends Controller {
       .initialZoom(0.7)
       .nodeHeight(d => 200)
       .childrenMargin(d => 40)
+      .buttonContent(({ node, state }) => {
+        return `<div class="${node.depth == 0 ? "fake-root-node" : ""}" style="px;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> <span style="font-size:9px">${
+          node.children
+            ? `<i class="fas fa-angle-up"></i>`
+            : `<i class="fas fa-angle-down"></i>`
+        }</span> ${node.data._totalSubordinates}  </div>`;
+      })
+      .linkUpdate(function (d, i, arr) {
+        d3.select(this)
+          .attr("stroke", d => d.data._upToTheRootHighlighted ? '#152785' : 'lightgray')
+          .attr("stroke-width", d => d.data._upToTheRootHighlighted ? 5 : 2)
+          .classed("fake-root-node", d => d.depth == 1)
+
+        if (d.data._upToTheRootHighlighted) {
+          d3.select(this).raise()
+        }
+      })
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, index, arr, state) {
         const avatarRadius = 30;
         const avatarDiameter = 60;
         return `
-            <person-box style="padding-top:${avatarRadius}px;height:${d.height}px;">
+            <person-box class="${d.depth == 0 ? "fake-root-node" : ""}" style="padding-top:${avatarRadius}px;height:${d.height}px;">
               <div style="height:${d.height - 32}px;padding-top:0px;background-color:white;border:1px solid lightgray;">
                 <img src="${d.data.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${d.width / 2 - avatarRadius}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
 

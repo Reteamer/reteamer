@@ -13,7 +13,6 @@ json.people do
     json.title(person.title)
     json.image_url(person.image_url || "https://www.gravatar.com/avatar/?s=50")
     json.employee_id(person.employee_id)
-    json.isContractor(person.type == People::Contractor.name)
     json.type(person.type.demodulize.downcase)
   end
 end

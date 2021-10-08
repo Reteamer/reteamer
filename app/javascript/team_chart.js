@@ -83,7 +83,6 @@ export class TeamChart {
           .attr("stroke", d => d.data._highlighted || d.data._upToTheRootHighlighted ? '#152785' : 'none')
           .attr("stroke-width", d.data._highlighted || d.data._upToTheRootHighlighted ? 10 : 1)
       },
-
       nodeWidth: d3Node => 250,
       nodeHeight: d => 150,
       siblingsMargin: d3Node => 20,
@@ -466,7 +465,7 @@ export class TeamChart {
 
     attrs.chart = chart;
 
-    // Display tree contenrs
+    // Display tree contents
     this.update(attrs.root);
 
 

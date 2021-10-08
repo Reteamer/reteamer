@@ -18,7 +18,6 @@ json.chart do
       json.title(member.title)
       json.image_url(member.image_url || 'https://www.gravatar.com/avatar/?s=50')
       json.employee_id(member.employee_id)
-      json.isContractor(member.type == People::Contractor.name)
       json.type(member.type.demodulize.downcase)
     end
   end

@@ -9,7 +9,7 @@ end
 #
 def peopleOfThirtyRock(account)
   episodes = {}
-  @episode_counter = 1
+  @episode_counter = -1
   (1..21).each{ |e| add_episode(e, episodes, 1) }
   (1..15).each{ |e| add_episode(e, episodes, 2) }
   (1..22).each{ |e| add_episode(e, episodes, 3) }
@@ -27,7 +27,7 @@ def peopleOfThirtyRock(account)
     actors  = Entry.create(effective_at: episodes[:s1e01], versionable: Team.create(name: "Actors", parent_key: tgs.key))
     entourage  = Entry.create(effective_at: episodes[:s1e01], versionable: Team.create(name: "Tracy's Entourage", parent_key: actors.key))
 
-    jack    = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "NBC-279F0", first_name: "Jack", last_name: "Donaghy", title: "Vice President of East Coast Television and Microwave Oven Programming", image_url: "/demo_avatars/30_rock/jack.jpeg"))
+    jack    = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "GE-279F0", first_name: "Jack", last_name: "Donaghy", title: "Vice President of East Coast Television and Microwave Oven Programming", image_url: "/demo_avatars/30_rock/jack.jpeg"))
     Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: jack.key, team_key: nbc.key))
 
     liz     = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "NBC-22B75", first_name: "Liz", last_name: "Lemon", title: "Head Writer", supervisor_key: jack.key, image_url: "/demo_avatars/30_rock/liz.jpeg"))
@@ -40,7 +40,8 @@ def peopleOfThirtyRock(account)
     jon     = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "NBC-981D7", first_name: "Jonathan", title: "Assistant", supervisor_key: jack.key, image_url: "/demo_avatars/30_rock/jonathan.jpeg"))
     Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: jon.key, team_key: nbc.key))
 
-    # howard  = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(6.weeks.from_now.to_date, first_name: "Howard", last_name: "Jorgensen", title: "Vice President of Locomotives")
+    howard  = Entry.create(effective_at: episodes[:s1e06], versionable: People::Employee.create(employee_id: "GE-711X9", first_name: "Howard", last_name: "Jorgensen", title: "Vice President of Locomotives"))
+    Entry.create(effective_at: episodes[:s1e06], versionable: Assignment.create(person_key: howard.key, team_key: ge.key))
 
     kenneth = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "NBC-435R2", first_name: "Kenneth", last_name: "Parcell", title: "Page", supervisor_key: pete.key, image_url: "/demo_avatars/30_rock/kenneth.jpeg"))
     Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: kenneth.key, team_key: tgs.key))
@@ -85,6 +86,7 @@ def peopleOfThirtyRock(account)
     Entry.create(effective_at: episodes[:s1e14], versionable: Assignment.create(person_key: don.key, team_key: ge.key))
 
     jack = Updater.update(episodes[:s1e14], jack, supervisor_key: don.key)
+    howard = Updater.update(episodes[:s1e14], howard, supervisor_key: don.key)
 
     devon   = Entry.create(effective_at: episodes[:s1e18], versionable: People::Employee.create(employee_id: "NBC-64Y4K", first_name: "Devon", last_name: "Banks", title: "Vice President of West Coast News, Web Content, and Theme Park Talent Relations", supervisor_key: don.key, image_url: "/demo_avatars/30_rock/devon.jpeg"))
     nbc_west = Entry.create(effective_at: episodes[:s1e18], versionable: Team.create(name: "West Coast News, Web Content, and Theme Park Talent Relations", parent_key: ge.key))
