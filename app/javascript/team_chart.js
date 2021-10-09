@@ -1372,7 +1372,7 @@ export class TeamChart {
   // Zoom in exposed method
   zoomIn() {
     const { svg, zoomBehavior } = this.getChartState();
-    svg.transition().call(zoomBehavior.scaleBy, 1.3);
+    svg.transition().call(zoomBehavior.translateBy, 1.3);
   }
 
   // Zoom out exposed method

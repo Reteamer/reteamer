@@ -1,5 +1,5 @@
 import { Controller } from "stimulus"
-import { OrgChart } from 'd3-org-chart';
+import { TeamChart } from '../team_chart';
 import * as d3 from "d3"
 
 export default class extends Controller {
@@ -20,14 +20,21 @@ export default class extends Controller {
       .connections(this.orgData.connections)
       .render()
       .expandAll()
+
+    if(this.firstRender) {
+      const {svg, zoomBehavior} = this.chart.getChartState();
+      svg.transition().call(zoomBehavior.translateBy, 0, -200)
+      this.firstRender = false
+    }
   }
 
   async connect() {
+    this.firstRender = true;
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
 
-    this.chart = new OrgChart()
+    this.chart = new TeamChart()
       .container('.chart-container')
       .connectionsUpdate(function (d, i, arr) {
         d3.select(this)
