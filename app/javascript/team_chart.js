@@ -835,7 +835,6 @@ export class TeamChart {
           })
           .on("drag", function(event, d) {
             let [newX, newY] = self.getCoords(this)
-            console.error("=============>", (newX + event.dx));
             d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
           })
           .on("end", function(event, d) {
