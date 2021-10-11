@@ -47,7 +47,7 @@ def peopleOfThirtyRock(account)
     Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: kenneth.key, team_key: tgs.key))
     Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: kenneth.key, team_key: entourage.key))
 
-    leo     = Entry.create(effective_at: episodes[:s1e07], versionable: People::Employee.create(employee_id: "HTH-555O0", first_name: "Leo", last_name: "Spaceman", title: "Quack Doctor", supervisor_key: jack.key, image_url: "/demo_avatars/30_rock/leo.jpeg"))
+    leo     = Entry.create(effective_at: episodes[:s1e07], versionable: People::Employee.create(employee_id: "HTH-555O0", first_name: "Leo", last_name: "Spaceman", title: "\"Doctor\"", supervisor_key: jack.key, image_url: "/demo_avatars/30_rock/leo.jpeg"))
     Entry.create(effective_at: episodes[:s1e07], versionable: Assignment.create(person_key: leo.key, team_key: nbc.key))
 
     tracy   = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "NBC-923H5", first_name: "Tracy", last_name: "Jordan", title: "Actor", supervisor_key: liz.key, image_url: "/demo_avatars/30_rock/tracy.jpeg"))
@@ -112,6 +112,7 @@ def peopleOfThirtyRock(account)
     # TODO: open req?
     jack = Updater.update(episodes[:s4e14], jack, supervisor_key: nil)
     devon = Updater.deactivate(episodes[:s4e14], devon)
+    howard = Updater.deactivate(episodes[:s4e14], howard)
     nbc_west = Updater.deactivate(episodes[:s4e14], nbc_west)
     # TODO: Dealbreaker show?
 
