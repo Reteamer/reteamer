@@ -45,6 +45,8 @@ export default class extends Controller {
           .attr('stroke-dasharray', '20, 20');
       })
       .nodeWidth(d => 250)
+      .compact(false)
+      .layout("top") // "left", "right", "top", "bottom"
       .initialZoom(0.7)
       .nodeHeight(d => 200)
       .childrenMargin(d => 40)

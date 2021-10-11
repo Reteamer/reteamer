@@ -12,7 +12,7 @@ export default class extends Controller {
     this.chart.fit();
   }
 
-  async handleNewTeamData(event) {
+  handleNewTeamData(event) {
     this.teamData = event.detail.teamData;
     this.chart
       .data(this.teamData.chart)
@@ -20,7 +20,7 @@ export default class extends Controller {
       .expandAll()
   }
 
-  async connect() {
+  connect() {
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);

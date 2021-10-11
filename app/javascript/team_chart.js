@@ -1,9 +1,10 @@
-import { selection, select } from "d3-selection";
-import { max, min, sum, cumsum } from "d3-array";
-import { tree, stratify } from "d3-hierarchy";
-import { zoom, zoomIdentity } from "d3-zoom";
-import { flextree } from 'd3-flextree';
-import { linkHorizontal } from 'd3-shape';
+import {select, selection} from "d3-selection";
+import {cumsum, max, min, sum} from "d3-array";
+import {stratify, tree} from "d3-hierarchy";
+import {zoom, zoomIdentity} from "d3-zoom";
+import {drag} from "d3-drag";
+import {flextree} from 'd3-flextree';
+import {linkHorizontal} from 'd3-shape';
 
 const d3 = {
   selection,
@@ -12,6 +13,7 @@ const d3 = {
   min,
   sum,
   cumsum,
+  drag,
   tree,
   stratify,
   zoom,
@@ -189,7 +191,6 @@ export class TeamChart {
           "diagonal": this.diagonal.bind(this),
           "swap": d => { },
           "nodeUpdateTransform": ({ x, y, width, height }) => `translate(${x - width / 2},${y})`,
-
         },
         "bottom": {
           "nodeLeftX": node => -node.width / 2,
@@ -808,7 +809,18 @@ export class TeamChart {
           return;
         }
         attrs.onNodeClick(attrs.nodeId(data));
-      });
+      })
+      .call(d3.drag()
+          .on("start", function(event, d) {
+            d3.select(this).raise()
+          })
+          .on("drag", function(event, d) {
+            console.error("=============>", event, d);
+            d3.select(this).attr("transform", "translate(" + (event.x) + "," + (event.y) + ")");
+          })
+          .on("end", function(event, d) {
+          })
+        )
 
     // Add background rectangle for the nodes
     nodeEnter
@@ -1439,8 +1451,6 @@ export class TeamChart {
 
 
   }
-
-
 
   exportSvg() {
     const { svg } = this.getChartState();
