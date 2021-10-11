@@ -179,7 +179,7 @@ export class TeamChart {
           "linkParentY": node => node.parent.y + node.parent.height,
           "buttonX": node => node.width / 2,
           "buttonY": node => node.height,
-          "centerTransform": ({ root, rootMargin, centerY, scale, centerX }) => `translate(${centerX},${rootMargin}) scale(${scale})`,
+          "centerTransform": ({ root, rootMargin, centerY, scale, centerX }) => `translate(${centerX},${rootMargin}) scale(${scale})`, // TODO: this might be a better place to compute the hiding of the fake root
           "nodeFlexSize": ({ height, width, siblingsMargin, childrenMargin, state, node, compactViewIndex }) => {
             if (state.compact && node.flexCompactDim) {
               const result = [node.flexCompactDim[0], node.flexCompactDim[1]]
@@ -726,7 +726,7 @@ export class TeamChart {
 
     // Remove any  links which is exiting after animation
     const linkExit = linkSelection
-      .exit()
+      .exit() //TODO: maybe this is a way to show people leaving the team graph?
       .transition()
       .duration(attrs.duration)
       .attr("d", (d) => {
@@ -792,7 +792,17 @@ export class TeamChart {
       .selectAll("g.node")
       .data(nodes, ({ data }) => attrs.nodeId(data));
 
+    this.getCoords = function(myElement) {
+      var xforms = myElement.transform.baseVal; // An SVGTransformList
+      var firstXForm = xforms.getItem(0);       // An SVGTransform
+      if (firstXForm.type == SVGTransform.SVG_TRANSFORM_TRANSLATE){
+        var firstX = firstXForm.matrix.e,
+          firstY = firstXForm.matrix.f;
+      }
+      return [parseInt(firstX), parseInt(firstY)]
+    }
     // Enter any new nodes at the parent's previous position.
+    let self = this;
     const nodeEnter = nodesSelection
       .enter()
       .append("g")
@@ -811,14 +821,28 @@ export class TeamChart {
         attrs.onNodeClick(attrs.nodeId(data));
       })
       .call(d3.drag()
+          // .container(function() {
+          //   return d3.select(".svg-chart-container").node();
+          // })
           .on("start", function(event, d) {
-            d3.select(this).raise()
+            let startCoords = self.getCoords(this)
+            this.dragStartX = startCoords[0]
+            this.dragStartY = startCoords[1]
+            const node = d3.select(this);
+            node.raise()
+            self.setExpansionFlagToChildren(d, false);
+
           })
           .on("drag", function(event, d) {
-            console.error("=============>", event, d);
-            d3.select(this).attr("transform", "translate(" + (event.x) + "," + (event.y) + ")");
+            let [newX, newY] = self.getCoords(this)
+            console.error("=============>", (newX + event.dx));
+            d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
           })
           .on("end", function(event, d) {
+            d3.select(this)
+              .transition()
+              .duration(attrs.duration)
+              .attr("transform", "translate(" + this.dragStartX + "," + this.dragStartY + ")");
           })
         )
 
@@ -892,7 +916,6 @@ export class TeamChart {
       .duration(attrs.duration)
       .attr("transform", ({ x, y, width, height }) => {
         return attrs.layoutBindings[attrs.layout].nodeUpdateTransform({ x, y, width, height });
-
       })
       .attr("opacity", 1);
 
