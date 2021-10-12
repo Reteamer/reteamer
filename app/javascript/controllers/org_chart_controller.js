@@ -44,6 +44,25 @@ export default class extends Controller {
           .attr('pointer-events', 'none')
           .attr('stroke-dasharray', '20, 20');
       })
+      .dropHandler((person_key, supervisor_key) => {
+        const body = {
+          "person": {
+            "key": person_key,
+            "effective_date": new Date().toISOString().split('T')[0],
+            "supervisor_key": supervisor_key
+          }
+        };
+
+        fetch("/reteamer_api/people/update_supervisor", {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        }).then(res => {
+          console.log("Request complete! response:", res);
+        });
+      })
       .nodeWidth(d => 250)
       .compact(false)
       .layout("top") // "left", "right", "top", "bottom"

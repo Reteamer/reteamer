@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace :reteamer_api do
     resource :org_chart, only: :show
     resource :team_chart, only: :show
+    post 'people/update_supervisor', to: 'people#update_supervisor'
   end
 
   # Jumpstart views

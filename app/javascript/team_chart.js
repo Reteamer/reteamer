@@ -38,6 +38,7 @@ export class TeamChart {
       setActiveNodeCentered: true,
       expandLevel: 1,
       compact: true,
+      dropHandler: null,
       rootMargin: 40,
       nodeDefaultBackground: 'none',
       connections: [],
@@ -812,41 +813,6 @@ export class TeamChart {
         .attr('pointer-events', 'none')
         .classed('activeDrag', true)
         .raise()
-
-      // svgGroup.selectAll("g.node").sort(function(a, b) { // select the parent and sort the path's
-      //   if (a.id != draggingDatum.id) return 1; // a is not the hovered element, send "a" to the back
-      //   else return -1; // a is the hovered element, bring "a" to the front
-      // });
-      // // if nodes has children, remove the links and nodes
-      // if (nodes.length > 1) {
-      //   // remove link paths
-      //   links = tree.links(nodes);
-      //   nodePaths = svgGroup.selectAll("path.link")
-      //     .data(links, function(d) {
-      //       return d.target.id;
-      //     }).remove();
-      //   // remove child nodes
-      //   nodesExit = svgGroup.selectAll("g.node")
-      //     .data(nodes, function(d) {
-      //       return d.id;
-      //     }).filter(function(d, i) {
-      //       if (d.id == draggingDatum.id) {
-      //         return false;
-      //       }
-      //       return true;
-      //     }).remove();
-      // }
-      //
-      // // remove parent link
-      // parentLink = tree.links(tree.nodes(draggingDatum.parent));
-      // svgGroup.selectAll('path.link').filter(function(d, i) {
-      //   if (d.target.id == draggingDatum.id) {
-      //     return true;
-      //   }
-      //   return false;
-      // }).remove();
-      //
-      // dragStarted = null;
     }
 
     this.endDrag = function(domNode) {
@@ -874,10 +840,8 @@ export class TeamChart {
           self.destinationDatum.children = [];
           self.destinationDatum.children.push(self.draggingDatum);
         }
-        console.error("=============> new parent's children after insertion ", self.destinationDatum.children);
         self.update(self.destinationDatum.parent);
-        // Make sure that the node being added to is expanded so user can see added node is correctly moved
-        // expand(self.destinationDatum);
+        attrs.dropHandler(self.draggingDatum.data.id, self.destinationDatum.data.id)
       } else {
         node.transition()
           .duration(attrs.duration)
