@@ -32,7 +32,7 @@ export class TeamChart {
       container: "body",
       defaultTextFill: "#2C3E50",
       defaultFont: "Helvetica",
-      ctx: document.createElement('canvas').getContext('2d'),
+      ctx: document.createElement('canvas').getContext('2d'), //TODO: this could help with the getCoords function
       data: null,
       duration: 400,
       setActiveNodeCentered: true,
@@ -801,6 +801,92 @@ export class TeamChart {
       }
       return [parseInt(firstX), parseInt(firstY)]
     }
+
+    this.initiateDrag = function(d, domNode) {
+      this.draggingDatum = d;
+      let startCoords = self.getCoords(domNode)
+      self.dragStartX = startCoords[0]
+      self.dragStartY = startCoords[1]
+      const node = d3.select(domNode);
+      node
+        .attr('pointer-events', 'none')
+        .classed('activeDrag', true)
+        .raise()
+
+      // svgGroup.selectAll("g.node").sort(function(a, b) { // select the parent and sort the path's
+      //   if (a.id != draggingDatum.id) return 1; // a is not the hovered element, send "a" to the back
+      //   else return -1; // a is the hovered element, bring "a" to the front
+      // });
+      // // if nodes has children, remove the links and nodes
+      // if (nodes.length > 1) {
+      //   // remove link paths
+      //   links = tree.links(nodes);
+      //   nodePaths = svgGroup.selectAll("path.link")
+      //     .data(links, function(d) {
+      //       return d.target.id;
+      //     }).remove();
+      //   // remove child nodes
+      //   nodesExit = svgGroup.selectAll("g.node")
+      //     .data(nodes, function(d) {
+      //       return d.id;
+      //     }).filter(function(d, i) {
+      //       if (d.id == draggingDatum.id) {
+      //         return false;
+      //       }
+      //       return true;
+      //     }).remove();
+      // }
+      //
+      // // remove parent link
+      // parentLink = tree.links(tree.nodes(draggingDatum.parent));
+      // svgGroup.selectAll('path.link').filter(function(d, i) {
+      //   if (d.target.id == draggingDatum.id) {
+      //     return true;
+      //   }
+      //   return false;
+      // }).remove();
+      //
+      // dragStarted = null;
+    }
+
+    this.endDrag = function(domNode) {
+      const node = d3.select(domNode);
+      node
+        .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
+        .classed("activeDrag", false)
+
+      if (self.destinationDatum !== null) {
+        var index = self.draggingDatum.parent.children.indexOf(self.draggingDatum);
+
+        // now remove the element from the parent, and insert it into the new elements children
+        if (index > -1) {
+          self.draggingDatum.parent.children.splice(index, 1);
+          self.draggingDatum.parent = self.destinationDatum;
+        }
+
+        if (typeof self.destinationDatum.children !== 'undefined' || typeof self.destinationDatum._children !== 'undefined') {
+          if (typeof self.destinationDatum.children !== 'undefined') {
+            self.destinationDatum.children.push(self.draggingDatum);
+          } else {
+            self.destinationDatum._children.push(self.draggingDatum);
+          }
+        } else {
+          self.destinationDatum.children = [];
+          self.destinationDatum.children.push(self.draggingDatum);
+        }
+        console.error("=============> new parent's children after insertion ", self.destinationDatum.children);
+        self.update(self.destinationDatum.parent);
+        // Make sure that the node being added to is expanded so user can see added node is correctly moved
+        // expand(self.destinationDatum);
+      } else {
+        node.transition()
+          .duration(attrs.duration)
+          .attr("transform", "translate(" + self.dragStartX + "," + self.dragStartY + ")")
+      }
+      self.draggingDatum = null;
+      self.destinationDatum = null;
+    }
+
     // Enter any new nodes at the parent's previous position.
     let self = this;
     const nodeEnter = nodesSelection
@@ -821,29 +907,23 @@ export class TeamChart {
         attrs.onNodeClick(attrs.nodeId(data));
       })
       .call(d3.drag()
-          // .container(function() {
-          //   return d3.select(".svg-chart-container").node();
-          // })
           .on("start", function(event, d) {
-            let startCoords = self.getCoords(this)
-            this.dragStartX = startCoords[0]
-            this.dragStartY = startCoords[1]
-            const node = d3.select(this);
-            node.raise()
-            self.setExpansionFlagToChildren(d, false);
-
+            self.initiateDrag(d, this)
           })
           .on("drag", function(event, d) {
             let [newX, newY] = self.getCoords(this)
             d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
           })
           .on("end", function(event, d) {
-            d3.select(this)
-              .transition()
-              .duration(attrs.duration)
-              .attr("transform", "translate(" + this.dragStartX + "," + this.dragStartY + ")");
+            self.endDrag(this);
           })
         )
+      .on("mouseover", function(event, d) {
+        self.overCircle(this, d);
+      })
+      .on("mouseout", function(event, d) {
+        self.outCircle(this, d);
+      })
 
     // Add background rectangle for the nodes
     nodeEnter
@@ -872,6 +952,49 @@ export class TeamChart {
       selector: "node-foreign-object-div",
       data: (d) => [d]
     })
+
+    this.overCircle = function(domNode, d) {
+      self.destinationDatum = d;
+      if(self.draggingDatum) {
+        d3.select(domNode).classed("drop-target", true)
+      }
+      // self.updateTempConnector();
+    };
+    this.outCircle = function(domNode, d) {
+      d3.select(domNode).classed("drop-target", false)
+      if(self.draggingDatum) {
+        self.destinationDatum = null;
+      }
+      // self.updateTempConnector();
+    };
+
+    // Function to update the temporary connector indicating dragging affiliation
+    this.updateTempConnector = function() {
+      var data = [];
+      if (this.draggingDatum !== null && this.destinationDatum !== null) {
+        // have to flip the source coordinates since we did this for the existing connectors on the original tree
+        data = [{
+          source: {
+            x: this.destinationDatum.y0,
+            y: this.destinationDatum.x0
+          },
+          target: {
+            x: this.draggingDatum.y0,
+            y: this.draggingDatum.x0
+          }
+        }];
+      }
+      var link = attrs.svg.selectAll(".templink").data(data);
+
+      link.enter().append("path")
+        .attr("class", "templink")
+        .attr("d", d3.svg.diagonal())
+        .attr('pointer-events', 'none');
+
+      link.attr("d", d3.svg.diagonal());
+
+      link.exit().remove();
+    };
 
     this.restyleForeignObjectElements();
 
