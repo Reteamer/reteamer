@@ -10,7 +10,7 @@ in the sand and ignore the change; we have to act. Adapting to change has to be 
 to thrive. By engaging in [_Dynamic Reteaming_](https://www.heidihelfand.com/dynamic-reteaming/), we acknowledge that change is real, and we build the are much more
 prepared for the obstacles that lie ahead.
 
-###Other applications don't deal well when you start to ask
+### Other applications don't deal well when you start to ask...
 - "When should I rotate to another team?"
 - "Where should I rotate to next to progress in my career?"
 - "What's the next state of this team (in terms of _Team Topologies_) as I try to address business needs?"
