@@ -43,6 +43,10 @@ en:
   something_went_wrong: "Something went wrong"
   unauthorized: "You are not authorized to perform this action."
 
+  date:
+    formats:
+      people_date: "%a, %b %-d, %Y"
+
   account_invitations_mailer:
     invite:
       subject: "%{inviter} invited you to %{account}"

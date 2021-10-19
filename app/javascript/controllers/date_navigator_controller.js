@@ -3,6 +3,7 @@ import * as d3 from "d3"
 
 export default class extends Controller {
   static targets = [ "dateInput" ]
+  static values = { startingDate: String }
 
   handleNewData(event) {
     this.histogramData = event.detail.histogram
@@ -11,11 +12,15 @@ export default class extends Controller {
     });
     this.renderChart()
   }
+
   handleChange(event) {
     this.emitNewDateEvent(new Date(event.target.value))
   }
 
   emitNewDateEvent(newDate) {
+    var pageUrl = "?effective_date=" + newDate;
+    window.history.pushState('', '', pageUrl);
+
     const dateChangedEvent = new CustomEvent("datePicked",
       {
         detail: {
@@ -28,6 +33,7 @@ export default class extends Controller {
 
   connect() {
     const self = this;
+    this.dateInputTarget.value = this.startingDateValue
 
     self.margin = {
       top: 20,
@@ -51,17 +57,6 @@ export default class extends Controller {
 
     self.barLayer = self.xAxisElement = self.svg.append("g")
       .attr("class", "bar-layer") // append this layer first so the chart doesn't hide the cursor and markers
-
-    self.selectedDateMarker = self.svg.append("path")
-      .attr("class", "date-marker")
-      .style("stroke", "yellow")
-      .style("stroke-width", "1px")
-      .style("opacity", "1")
-
-    self.todayMarker = self.svg.append("path")
-      .style("stroke", "red")
-      .style("stroke-width", "1px")
-      .style("opacity", "1")
 
     self.chartCursor = self.svg.append("g")
       .attr("class", "mouse-over-effects");
@@ -91,6 +86,19 @@ export default class extends Controller {
       .attr('height', self.height)
       .attr('fill', 'none')
       .attr('pointer-events', 'all')
+
+    self.selectedDateMarker = self.mouseMovementRectangle.append("path")
+      .attr("class", "selected-date-marker")
+      .style("stroke", "yellow")
+      .style("stroke-width", "1px")
+      .style("opacity", "1")
+
+    self.todayMarker = self.svg.append("path")
+      .attr("class", "today-marker")
+      .style("stroke", "red")
+      .style("stroke-width", "1px")
+      .style("opacity", "1")
+
     self.mouseMovementRectangle
       .on('mouseout', function() { // on mouse out hide line, circles and text
         d3.select(".cursor-line")
@@ -185,7 +193,7 @@ export default class extends Controller {
       .attr("class", "change-counts")
       .attr("fill", "steelblue")
       .attr("height", d => self.height - self.y(d.value))
-      .attr("width", 10)
+      .attr("width", 8)
       .attr("x", (d, i) => self.x(d.date))
       .attr("y", d => self.y(d.value))
   }

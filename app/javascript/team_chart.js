@@ -841,11 +841,10 @@ export class TeamChart {
           self.destinationDatum.children.push(self.draggingDatum);
         }
         self.update(self.destinationDatum.parent);
+
         attrs.dropHandler(self.draggingDatum.data.id, self.destinationDatum.data.id)
       } else {
-        node.transition()
-          .duration(attrs.duration)
-          .attr("transform", "translate(" + self.dragStartX + "," + self.dragStartY + ")")
+        this.restoreNode(node, attrs, self);
       }
       self.draggingDatum = null;
       self.destinationDatum = null;
@@ -1093,7 +1092,13 @@ export class TeamChart {
 
   }
 
-  // This function detects whether current browser is edge
+  restoreNode(node, attrs, self) {
+    node.transition()
+      .duration(attrs.duration)
+      .attr("transform", "translate(" + self.dragStartX + "," + self.dragStartY + ")")
+  }
+
+// This function detects whether current browser is edge
   isEdge() {
     return window.navigator.userAgent.includes("Edge");
   }

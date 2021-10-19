@@ -30,6 +30,8 @@ group :development, :test do
   gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "letter_opener_web", "~> 1.3", ">= 1.3.4"
   gem "standard"
+  gem "factory_bot_rails"
+  gem "cypress-rails"
 end
 
 group :development do
