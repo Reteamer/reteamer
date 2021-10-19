@@ -5,7 +5,6 @@ export default class extends Controller {
 
   handleDatePicked(event) {
     this.selectedDate = event.detail.newDate;
-    console.error("=============> new date", event.detail.newDate);
     this.selectedDateTarget.innerHTML = this.selectedDate;
     this.selectedDateInputTarget.value = this.selectedDate;
     this.customDateInputTarget.value = this.selectedDate;

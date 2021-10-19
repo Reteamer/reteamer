@@ -1,4 +1,5 @@
 import { Controller } from "stimulus"
+import { toISODate } from "../date_helpers"
 import * as d3 from "d3"
 
 export default class extends Controller {
@@ -59,89 +60,76 @@ export default class extends Controller {
       .attr("class", "bar-layer") // append this layer first so the chart doesn't hide the cursor and markers
 
     self.chartCursor = self.svg.append("g")
-      .attr("class", "mouse-over-effects");
+      .classed( "cursor" , true)
+      .classed("mouse-over-effects", true)
+      .style("opacity", "0");
 
-    self.chartCursor.append("path") // this is the black vertical line to follow mouse
+    self.chartCursor.append("line") // this is the black vertical line to follow mouse
       .attr("class", "cursor-line")
       .style("stroke", "black")
       .style("stroke-width", "1px")
-      .style("opacity", "0");
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("y1", 0)
+      .attr("y2", self.height)
+
+    self.chartCursor.append("g")
+      .attr("class", "cursor-date-container")
+      .append("text")
+      .attr("transform", "translate(10,13)")
+      .attr("class", "cursor-date")
 
     self.xAxisElement = self.svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + self.height + ")")
 
-    self.mouseLine = self.svg.append("g")
-      .attr("class", "mouse-per-line");
-
-    self.mouseLine.append("text")
-      .attr("transform", "translate(10,3)")
-      .attr("class", "cursor-changes")
-    self.mouseLine.append("text")
-      .attr("transform", "translate(10,13)")
-      .attr("class", "cursor-date")
-
-    self.mouseMovementRectangle = self.chartCursor.append('svg:rect') // append a rect to catch mouse movements on canvas
+    self.mouseMovementRectangle = self.svg.append('svg:rect') // append a rect to catch mouse movements on canvas
+      .classed("mouse-catcher", true)
       .attr('width', self.width) // can't catch mouse events on a g element
       .attr('height', self.height)
       .attr('fill', 'none')
       .attr('pointer-events', 'all')
 
-    self.selectedDateMarker = self.mouseMovementRectangle.append("path")
+    self.selectedDateMarker = self.svg.append("line")
       .attr("class", "selected-date-marker")
       .style("stroke", "yellow")
       .style("stroke-width", "1px")
       .style("opacity", "1")
 
-    self.todayMarker = self.svg.append("path")
+    self.todayMarker = self.svg.append("line")
       .attr("class", "today-marker")
       .style("stroke", "red")
-      .style("stroke-width", "1px")
+      .style("stroke-width", "3px")
       .style("opacity", "1")
 
     self.mouseMovementRectangle
       .on('mouseout', function() { // on mouse out hide line, circles and text
-        d3.select(".cursor-line")
-          .style("opacity", "0");
-        d3.selectAll(".mouse-per-line text")
+        d3.select(".cursor")
           .style("opacity", "0");
       })
       .on('mouseover', function() { // on mouse in show line, circles and text
-        d3.select(".cursor-line")
-          .style("opacity", "1");
-        d3.selectAll(".mouse-per-line text")
+        d3.select(".cursor")
           .style("opacity", "1");
       })
       .on('click', function(event) { // on mouse in show line, circles and text
         var mouse = d3.pointer(event);
         var xDate = self.x.invert(mouse[0])
 
-        d3.select(".date-marker")
-          .attr("d", function() {
-            var d = "M" + mouse[0] + "," + self.height;
-            d += " " + mouse[0] + "," + 0;
-            return d;
-          });
-        let newDate = xDate.toISOString().split('T')[0];
+        d3.select(".selected-date-marker")
+          .attr("x1", mouse[0])
+          .attr("x2", mouse[0])
+
+        let newDate = toISODate(xDate);
         self.dateInputTarget.value = newDate;
         self.emitNewDateEvent(newDate)
       })
       .on('mousemove', function(event) { // mouse moving over canvas
         var mouse = d3.pointer(event);
-        d3.select(".cursor-line")
-          .attr("d", function() {
-            var d = "M" + mouse[0] + "," + self.height;
-            d += " " + mouse[0] + "," + 0;
-            return d;
-          });
+        d3.select(".cursor")
+          .attr("transform", "translate(" + mouse[0] + ",0)")
 
-        d3.selectAll(".mouse-per-line")
-          .attr("transform", function(d, i) {
-            d3.select(this).select('text.cursor-date')
-              .text(self.x.invert(mouse[0]).toISOString().split('T')[0])
-
-            return "translate(" + mouse[0] + ",0)";
-          });
+        d3.select('.cursor-date')
+          .text(toISODate(self.x.invert(mouse[0])))
       });
   }
 
@@ -169,20 +157,19 @@ export default class extends Controller {
 
     self.xAxisElement.call(self.xAxis);
 
-    self.todayMarker.attr("d", function() {
-      const xLocation = self.x(new Date());
-      var d = "M" + xLocation + "," + self.height;
-      d += " " + xLocation + "," + 0;
-      return d;
-    });
+    const today = new Date();
+    self.todayMarker
+      .attr("x1", self.x(today))
+      .attr("x2", self.x(today))
+      .attr("y1", 0)
+      .attr("y2", self.height)
 
-    self.selectedDate = new Date(self.dateInputTarget.value);
-    self.selectedDateMarker.attr("d", function() {
-      var d = "M" + self.x(self.selectedDate) + "," + self.height;
-      d += " " + self.x(self.selectedDate) + "," + 0;
-      return d;
-    });
-
+    const selectedDate = new Date(self.dateInputTarget.value);
+    self.selectedDateMarker
+      .attr("x1", self.x(selectedDate))
+      .attr("x2", self.x(selectedDate))
+      .attr("y1", 0)
+      .attr("y2", self.height)
 
     self.svg
       .select(".bar-layer")

@@ -1,4 +1,5 @@
 import { Controller } from "stimulus"
+import { newISODate } from "../date_helpers"
 
 export default class extends Controller {
   async handleDatePicked(event) {
@@ -6,7 +7,7 @@ export default class extends Controller {
   }
 
   async connect() {
-    const newDate = new Date().toISOString().split('T')[0]
+    const newDate = newISODate()
     this.getTeamData(newDate)
   }
 
