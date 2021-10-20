@@ -1,13 +1,11 @@
 import { Controller } from "stimulus"
 
 export default class extends Controller {
-  static targets = [ "selectedDate", "selectedDateInput", "currentDateLabel", "customDateInput" ]
+  static targets = [ "selectedDate" ]
 
   handleDatePicked(event) {
     this.selectedDate = event.detail.newDate;
     this.selectedDateTarget.innerHTML = this.selectedDate;
-    this.selectedDateInputTarget.value = this.selectedDate;
-    this.customDateInputTarget.value = this.selectedDate;
   }
 
   cancelChange() {

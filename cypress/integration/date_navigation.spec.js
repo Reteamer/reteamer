@@ -12,6 +12,7 @@ describe('Date Navigation Test', () => {
     cy.contains("Dashboard")
     cy.get("#sidebar-open").click()
     cy.get("nav").contains("Org Chart").click()
+    cy.get(".change-counts").its('length').should('be.gte', 1)
   })
 
   it("Initializes the component correctly", () => {
@@ -23,7 +24,6 @@ describe('Date Navigation Test', () => {
     cy.location("search").should("be.empty")
 
     // it("Marks today's date for reference on the slider", () => {
-    cy.wait(500)
     cy.get(".today-marker").then($marker => {
       cy.get(".mouse-catcher")
         .trigger("mouseover")
@@ -31,7 +31,7 @@ describe('Date Navigation Test', () => {
     })
 
     cy.get(".cursor-date").invoke("text").then($text => {
-      cy.expectToBeNearDate($text, new Date());
+      cy.expectToBeNearDate($text, new Date(), 2);
     })
 
     // it("Marks today's date as the selected date on the slider", () => {
@@ -41,7 +41,7 @@ describe('Date Navigation Test', () => {
         .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force: true})
     })
     cy.get(".cursor-date").invoke("text").then($text => {
-      cy.expectToBeNearDate($text, new Date());
+      cy.expectToBeNearDate($text, new Date(), 2);
     })
   });
 
@@ -51,16 +51,19 @@ describe('Date Navigation Test', () => {
         .trigger("mouseover")
         .trigger("mousemove",100, 0, {force:true})
         .trigger("click",100, 0, {force:true})
+      cy.get(".cursor-date").invoke("text").as('expectedSelectedDate')
     })
 
-    it("Updates the selected date in the component", () => {
-      cy.get(".cursor-date").invoke("text").then($selectedDate => {
-        cy.get("date-navigator input[type='date']")
-          .invoke("val")
-          .should('eq', $selectedDate)
-        cy.location("search")
-          .should("eq", "?effective_date=" + $selectedDate)
-      })
+    it("Updates the selected date in the component and the URL", function() {
+      cy.get("date-navigator input[type='date']")
+        .invoke("val")
+        .should('eq', this.expectedSelectedDate)
+      cy.location("search")
+        .should("eq", "?effective_date=" + this.expectedSelectedDate)
+    })
+
+    it("Updates the other components", function() {
+      cy.contains("Howard Jorgensen").should("exist")
     })
   })
 })
