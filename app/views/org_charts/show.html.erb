@@ -3,7 +3,7 @@
     <h1>Org Chart</h1>
   </div>
   <date-navigator data-controller="date-navigator" data-action="newOrgData@window->date-navigator#handleNewData" data-date-navigator-starting-date-value="<%= @selected_date %>">
-    <input data-date-navigator-target="dateInput" data-action="change->date-navigator#handleChange" type="date" />
+    <input data-date-navigator-target="dateInput" data-action="change->date-navigator#handleInputChange" type="date" />
   </date-navigator>
   <div data-controller="org-chart" data-action="newOrgData@window->org-chart#handleNewOrgData" style="padding-left:0; padding-right:0">
     <div style="text-align: left" width="20%">

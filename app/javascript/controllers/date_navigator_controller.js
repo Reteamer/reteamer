@@ -14,8 +14,8 @@ export default class extends Controller {
     this.renderChart()
   }
 
-  handleChange(event) {
-    this.emitNewDateEvent(new Date(event.target.value))
+  handleInputChange(event) {
+    this.emitNewDateEvent(event.target.value)
   }
 
   emitNewDateEvent(newDate) {
