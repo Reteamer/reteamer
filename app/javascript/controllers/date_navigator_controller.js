@@ -99,7 +99,7 @@ export default class extends Controller {
     self.todayMarker = self.svg.append("line")
       .attr("class", "today-marker")
       .style("stroke", "red")
-      .style("stroke-width", "3px")
+      .style("stroke-width", "1px")
       .style("opacity", "1")
 
     self.mouseMovementRectangle

@@ -4,7 +4,7 @@
 // If you're unfamiliar with how Cypress works,
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
-import { newISODate } from "../../app/javascript/date_helpers"
+import {newISODate} from "../../app/javascript/date_helpers"
 
 function log_in(email, password = "password") {
   cy.visit('/')
@@ -13,6 +13,19 @@ function log_in(email, password = "password") {
   cy.get("#user_email").type(email)
   cy.get("#user_password").type(password)
   return cy.get("input[name='commit']").click()
+}
+
+function expectToBeNearDate($text, expectedDate) {
+  // Cypress doesn't seem to pass decimal values to the MouseEvent object
+  // that it creates, so we can't assert the date is equal, only that we're
+  // pretty close
+  const oneDayAgo = new Date(expectedDate)
+  oneDayAgo.setDate(expectedDate.getDate() - 1);
+  const oneDayFromNow = new Date(expectedDate)
+  oneDayFromNow.setDate(expectedDate.getDate() + 1);
+
+  expect(new Date($text)).to.be.greaterThan(oneDayAgo)
+  expect(new Date($text)).to.be.lessThan(oneDayFromNow)
 }
 
 describe('Date Navigation Test', () => {
@@ -37,7 +50,9 @@ describe('Date Navigation Test', () => {
         .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force:true})
     })
 
-    cy.get(".cursor-date").invoke("text").should("eq", today)
+    cy.get(".cursor-date").invoke("text").then($text => {
+      expectToBeNearDate($text, new Date());
+    })
 
     // expect yellow line at selected date (today)
     cy.get(".selected-date-marker").then($marker => {
@@ -45,7 +60,9 @@ describe('Date Navigation Test', () => {
         .trigger("mouseover")
         .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force:true})
     })
-    cy.get(".cursor-date").invoke("text").should("eq", today)
+    cy.get(".cursor-date").invoke("text").then($text => {
+      expectToBeNearDate($text, new Date());
+    })
 
     // click in the input
 
