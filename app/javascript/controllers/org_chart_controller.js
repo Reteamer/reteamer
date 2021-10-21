@@ -1,6 +1,7 @@
-import { Controller } from "stimulus"
-import { TeamChart } from '../team_chart';
+import {Controller} from "stimulus"
+import {TeamChart} from '../team_chart';
 import * as d3 from "d3"
+import { emitDatePickedEvent } from "../event_emitter";
 
 export default class extends Controller {
 
@@ -43,19 +44,10 @@ export default class extends Controller {
             "key": this.dropped.person_key
           }
         }
-      ) // body data type must match "Content-Type" header
+      )
     });
-    console.error("=============>", response.json()); // parses JSON response into native JavaScript objects
     this.chart.finalizeDrop()
-
-    const dateChangedEvent = new CustomEvent("datePicked",
-      {
-        detail: {
-          newDate: event.detail.selectedDate
-        }
-      }
-    )
-    window.dispatchEvent(dateChangedEvent)
+    emitDatePickedEvent(event.detail.selectedDate)
   }
 
   async connect() {

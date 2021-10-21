@@ -1,4 +1,5 @@
 import { Controller } from "stimulus"
+import { emitCompleteChangeEvent } from "../event_emitter";
 
 export default class extends Controller {
   static targets = [ "selectedDate" ]
@@ -18,14 +19,7 @@ export default class extends Controller {
     if (newDate == "other") {
       newDate = document.getElementById("other_effective_date").value
     }
-    const event = new CustomEvent("completeChange",
-      {
-        detail: {
-          selectedDate: newDate
-        }
-      }
-    )
-    window.dispatchEvent(event)
+    emitCompleteChangeEvent(newDate)
   }
 
   connect() {

@@ -1,5 +1,6 @@
 import { Controller } from "stimulus"
 import { toISODate } from "../date_helpers"
+import { emitDatePickedEvent } from "../event_emitter"
 import * as d3 from "d3"
 
 export default class extends Controller {
@@ -15,21 +16,7 @@ export default class extends Controller {
   }
 
   handleInputChange(event) {
-    this.emitNewDateEvent(event.target.value)
-  }
-
-  emitNewDateEvent(newDate) {
-    var pageUrl = "?effective_date=" + newDate;
-    window.history.pushState('', '', pageUrl);
-
-    const dateChangedEvent = new CustomEvent("datePicked",
-      {
-        detail: {
-          newDate: newDate
-        }
-      }
-    )
-    window.dispatchEvent(dateChangedEvent)
+    emitDatePickedEvent(event.target.value)
   }
 
   connect() {
@@ -121,7 +108,7 @@ export default class extends Controller {
 
         let newDate = toISODate(xDate);
         self.dateInputTarget.value = newDate;
-        self.emitNewDateEvent(newDate)
+        emitDatePickedEvent(newDate)
       })
       .on('mousemove', function(event) { // mouse moving over canvas
         var mouse = d3.pointer(event);
