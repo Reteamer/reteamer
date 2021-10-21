@@ -29,7 +29,7 @@ export default class extends Controller {
   }
 
   handleCompleteChange(event) {
-
+  // WILL: write code here
   }
 
   async connect() {
@@ -88,8 +88,8 @@ export default class extends Controller {
         const avatarRadius = 30;
         const avatarDiameter = 60;
         return `
-            <person-box class="${d.depth == 0 ? "fake-root-node" : ""}" style="padding-top:${avatarRadius}px;height:${d.height}px;">
-              <div style="height:${d.height - 32}px;padding-top:0px;background-color:white;border:1px solid lightgray;">
+            <person-node class="${d.depth == 0 ? "fake-root-node" : ""}" style="padding-top:${avatarRadius}px;height:${d.height}px;">
+              <person-box style="height:${d.height - 32}px;">
                 <img src="${d.data.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${d.width / 2 - avatarRadius}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
 
                 <employment-type style="margin-right:10px;margin-top:15px;float:right">${d.data.employee_id}</employment-type>
@@ -105,8 +105,8 @@ export default class extends Controller {
                   <div > Manages:  ${d.data._directSubordinates} 👤</div>
                   <div > Oversees: ${d.data._totalSubordinates} 👤</div>
                 </div>` : ""}
-              </div>
-            </person-box>
+              </person-box>
+            </person-node>
   `;
       })
   }

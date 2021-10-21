@@ -77,7 +77,7 @@ describe('Date Navigation Test', () => {
         .trigger("change")
     })
 
-    it.only("Updates the selected date in the component and the URL", function() {
+    it("Updates the selected date in the component and the URL", function() {
       cy.get("date-navigator input[type='date']")
         .invoke("val")
         .should('eq', toISODate(twoMonthsFromNow))

@@ -51,7 +51,7 @@ export default class extends Controller {
               ${d.data.members.length > 0 ? `
                 <people-box>
                 ${d.data.members.map(member => `
-                  <person-box style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
+                  <person-node style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
                     <div style="background-color:white;border:1px solid lightgray;">
                       <person-bar class="${member.type}" style="width:${personNodeWidth - 2}px;"></person-bar>
                       <img src="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
@@ -61,7 +61,7 @@ export default class extends Controller {
                         <person-title>${member.title}</person-title>
                       </person-info>
                     </div>
-                  </person-box>
+                  </person-node>
                   `).join("")
                 }
                 </people-box>

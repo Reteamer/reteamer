@@ -869,24 +869,24 @@ export class TeamChart {
         }
         attrs.onNodeClick(attrs.nodeId(data));
       })
-      .call(d3.drag()
-          .on("start", function(event, d) {
-            self.initiateDrag(d, this)
-          })
-          .on("drag", function(event, d) {
-            let [newX, newY] = self.getCoords(this)
-            d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
-          })
-          .on("end", function(event, d) {
-            self.endDrag(this);
-          })
-        )
       .on("mouseover", function(event, d) {
         self.overCircle(this, d);
       })
       .on("mouseout", function(event, d) {
         self.outCircle(this, d);
       })
+      .call(d3.drag()
+        .on("start", function(event, d) {
+          self.initiateDrag(d, this)
+        })
+        .on("drag", function(event, d) {
+          let [newX, newY] = self.getCoords(this)
+          d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
+        })
+        .on("end", function(event, d) {
+          self.endDrag(this);
+        })
+      )
 
     // Add background rectangle for the nodes
     nodeEnter
