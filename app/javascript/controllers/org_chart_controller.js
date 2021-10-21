@@ -28,8 +28,34 @@ export default class extends Controller {
     }
   }
 
-  handleCompleteChange(event) {
-  // WILL: write code here
+  async handleCompleteChange(event) {
+    const response = await fetch("/reteamer_api/people/update_supervisor", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify(
+        {
+          "person": {
+            "effective_date": event.detail.selectedDate,
+            "supervisor_key": this.dropped.supervisor_key,
+            "key": this.dropped.person_key
+          }
+        }
+      ) // body data type must match "Content-Type" header
+    });
+    console.error("=============>", response.json()); // parses JSON response into native JavaScript objects
+    this.chart.finalizeDrop()
+
+    const dateChangedEvent = new CustomEvent("datePicked",
+      {
+        detail: {
+          newDate: event.detail.selectedDate
+        }
+      }
+    )
+    window.dispatchEvent(dateChangedEvent)
   }
 
   async connect() {
@@ -49,6 +75,7 @@ export default class extends Controller {
           .attr('stroke-dasharray', '20, 20');
       })
       .dropHandler((person_key, supervisor_key) => {
+        this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
         const supervisorChangedEvent = new CustomEvent("supervisorChanged",
           {
             detail: {

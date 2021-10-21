@@ -5,7 +5,7 @@
   <date-navigator data-controller="date-navigator" data-action="newOrgData@window->date-navigator#handleNewData" data-date-navigator-starting-date-value="<%= @selected_date %>">
     <input data-date-navigator-target="dateInput" data-action="change->date-navigator#handleInputChange" type="date" />
   </date-navigator>
-  <div data-controller="org-chart" data-action="newOrgData@window->org-chart#handleNewOrgData" style="padding-left:0; padding-right:0">
+  <div data-controller="org-chart" data-action="newOrgData@window->org-chart#handleNewOrgData completeChange@window->org-chart#handleCompleteChange" style="padding-left:0; padding-right:0">
     <div style="text-align: left" width="20%">
       <button data-action="click->org-chart#exportSvg" class="btn btn-action-button waves-effect waves-light"><i
         class="fas fa-file-download"></i> Export chart as .svg
@@ -31,7 +31,7 @@
             <label><input type="radio" name="effective_date" value="<%= @selected_date %>" checked /> The selected date: <span data-effective-date-picker-target="selectedDate"><%= l(@selected_date, format: :people_date) %></span></label>
             <label><input type="radio" name="effective_date" value="<%= Date.current %>" /> Today: <%= l(Date.current, format: :people_date) %></label>
             <label><input type="radio" name="effective_date" value="<%= Date.current.next_week(:monday) %>" /> Beginning of next week: <%= l(Date.current.next_week(:monday), format: :people_date) %></label>
-            <label><input type="radio" name="effective_date" value="other" /> A different date: <input type="date" name="other_effective_date" value="<%= @selected_date %>"></label>
+            <label><input type="radio" name="effective_date" value="other" /> A different date: <input type="date" id="other_effective_date" name="other_effective_date" value="<%= @selected_date %>"></label>
 
             <div class="flex justify-end items-center flex-wrap mt-6">
               <button class="btn btn-cancel" data-action="click->modal#close click->effective-date-picker#cancelChange">Cancel</button>

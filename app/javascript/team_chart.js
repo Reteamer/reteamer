@@ -815,39 +815,23 @@ export class TeamChart {
         .raise()
     }
 
+    this.finalizeDrop = function() {
+      self.draggingDatum = null;
+      self.destinationDatum = null;
+    }
+
     this.endDrag = function(domNode) {
-      const node = d3.select(domNode);
-      node
+      d3.select(domNode)
         .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
         .classed("activeDrag", false)
 
       if (self.destinationDatum !== null) {
-        var index = self.draggingDatum.parent.children.indexOf(self.draggingDatum);
-
-        // now remove the element from the parent, and insert it into the new elements children
-        if (index > -1) {
-          self.draggingDatum.parent.children.splice(index, 1);
-          self.draggingDatum.parent = self.destinationDatum;
-        }
-
-        if (typeof self.destinationDatum.children !== 'undefined' || typeof self.destinationDatum._children !== 'undefined') {
-          if (typeof self.destinationDatum.children !== 'undefined') {
-            self.destinationDatum.children.push(self.draggingDatum);
-          } else {
-            self.destinationDatum._children.push(self.draggingDatum);
-          }
-        } else {
-          self.destinationDatum.children = [];
-          self.destinationDatum.children.push(self.draggingDatum);
-        }
-        self.update(self.destinationDatum.parent);
-
         attrs.dropHandler(self.draggingDatum.data.id, self.destinationDatum.data.id)
       } else {
-        this.restoreNode(node, attrs, self);
+        this.restoreNode(d3.select(domNode), attrs, self);
+        self.draggingDatum = null;
+        self.destinationDatum = null;
       }
-      self.draggingDatum = null;
-      self.destinationDatum = null;
     }
 
     // Enter any new nodes at the parent's previous position.
