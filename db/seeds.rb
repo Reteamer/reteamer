@@ -1,9 +1,6 @@
 require_relative "./seeds/30rock"
 
-p "Run ing seeds..."
-if Rails.env.production?
-  raise "Can't run seeds on production DB because it'll destroy data"
-end
+p "Running seeds..."
 
 p "Clearing the DB..."
 
