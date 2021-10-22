@@ -6,14 +6,7 @@
 //
 //
 // -- This is a parent command --
-Cypress.Commands.add('login', (email, password = "password") => {
-  cy.visit('/')
-  cy.get('#sidebar-open').click()
-  cy.contains("Log In").click()
-  cy.get("#user_email").type(email)
-  cy.get("#user_password").type(password)
-  return cy.get("input[name='commit']").click()
-})
+// Cypress.Commands.add('login', (email, password = "password") => {...})
 //
 //
 // -- This is a child command --
