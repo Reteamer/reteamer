@@ -5,14 +5,15 @@
 // check out the link below and learn how to write your first test:
 // https://on.cypress.io/writing-first-test
 import {newISODate, toISODate} from "../../app/javascript/date_helpers"
+import AccountLeader from "../support/roles/account_leader";
+import dayjs from "dayjs";
+import System from "../support/pages/system";
 
 describe('Date Navigation Test', () => {
   beforeEach(() => {
-    cy.login("demo@thirtyrock.com");
-    cy.contains("Dashboard")
-    cy.get("#sidebar-open").click()
-    cy.get("nav").contains("Org Chart").click()
-    cy.get(".change-counts").its('length').should('be.gte', 1)
+    System.resetDatabase()
+    AccountLeader.login()
+    AccountLeader.navigateToOrgChart()
   })
 
   it("Initializes the component correctly", () => {
@@ -68,8 +69,7 @@ describe('Date Navigation Test', () => {
   })
 
   describe("When changing the date input", () => {
-    const twoMonthsFromNow = new Date()
-    twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+    const twoMonthsFromNow = dayjs().add(2, "months")
 
     beforeEach(() => {
       cy.get("date-navigator input[type='date']")
@@ -81,8 +81,7 @@ describe('Date Navigation Test', () => {
       cy.get("date-navigator input[type='date']")
         .invoke("val")
         .should('eq', toISODate(twoMonthsFromNow))
-      cy.location("search")
-        .should("eq", "?effective_date=" + toISODate(twoMonthsFromNow))
+      AccountLeader.seesTheSearchParamsChangeTo(`?effective_date=${toISODate(twoMonthsFromNow)}`)
     })
 
     it("Updates the other components", function() {
