@@ -95,10 +95,6 @@ export class TeamChart {
       compactMarginBetween: (d3Node => 20),
       onNodeClick: (d) => d,
       linkGroupArc: d3.linkHorizontal().x(d => d.x).y(d => d.y),
-      // ({ source, target }) => {
-      //     return
-      //     return `M ${source.x} , ${source.y} Q ${(source.x + target.x) / 2 + 100},${source.y-100}  ${target.x}, ${target.y}`;
-      // },
       nodeContent: d => `<div style="padding:5px;font-size:10px;">Sample Node(id=${d.id}), override using <br/> <br/> 
             <code>chart<br/>
             &nbsp;.nodeContent({data}=>{ <br/>
@@ -793,45 +789,9 @@ export class TeamChart {
       .selectAll("g.node")
       .data(nodes, ({ data }) => attrs.nodeId(data));
 
-    this.getCoords = function(myElement) {
-      var xforms = myElement.transform.baseVal; // An SVGTransformList
-      var firstXForm = xforms.getItem(0);       // An SVGTransform
-      if (firstXForm.type == SVGTransform.SVG_TRANSFORM_TRANSLATE){
-        var firstX = firstXForm.matrix.e,
-          firstY = firstXForm.matrix.f;
-      }
-      return [parseInt(firstX), parseInt(firstY)]
-    }
-
-    this.initiateDrag = function(d, domNode) {
-      this.draggingDatum = d;
-      let startCoords = self.getCoords(domNode)
-      self.dragStartX = startCoords[0]
-      self.dragStartY = startCoords[1]
-      const node = d3.select(domNode);
-      node
-        .attr('pointer-events', 'none')
-        .classed('activeDrag', true)
-        .raise()
-    }
-
     this.finalizeDrop = function() {
       self.draggingDatum = null;
       self.destinationDatum = null;
-    }
-
-    this.endDrag = function(domNode) {
-      d3.select(domNode)
-        .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
-        .classed("activeDrag", false)
-
-      if (self.destinationDatum !== null) {
-        attrs.dropHandler(self.draggingDatum.data.id, self.destinationDatum.data.id)
-      } else {
-        this.restoreNode(d3.select(domNode), attrs, self);
-        self.draggingDatum = null;
-        self.destinationDatum = null;
-      }
     }
 
     // Enter any new nodes at the parent's previous position.
@@ -899,49 +859,6 @@ export class TeamChart {
       selector: "node-foreign-object-div",
       data: (d) => [d]
     })
-
-    this.overCircle = function(domNode, d) {
-      self.destinationDatum = d;
-      if(self.draggingDatum) {
-        d3.select(domNode).classed("drop-target", true)
-      }
-      // self.updateTempConnector();
-    };
-    this.outCircle = function(domNode, d) {
-      d3.select(domNode).classed("drop-target", false)
-      if(self.draggingDatum) {
-        self.destinationDatum = null;
-      }
-      // self.updateTempConnector();
-    };
-
-    // Function to update the temporary connector indicating dragging affiliation
-    this.updateTempConnector = function() {
-      var data = [];
-      if (this.draggingDatum !== null && this.destinationDatum !== null) {
-        // have to flip the source coordinates since we did this for the existing connectors on the original tree
-        data = [{
-          source: {
-            x: this.destinationDatum.y0,
-            y: this.destinationDatum.x0
-          },
-          target: {
-            x: this.draggingDatum.y0,
-            y: this.draggingDatum.x0
-          }
-        }];
-      }
-      var link = attrs.svg.selectAll(".templink").data(data);
-
-      link.enter().append("path")
-        .attr("class", "templink")
-        .attr("d", d3.svg.diagonal())
-        .attr('pointer-events', 'none');
-
-      link.attr("d", d3.svg.diagonal());
-
-      link.exit().remove();
-    };
 
     this.restyleForeignObjectElements();
 
@@ -1665,6 +1582,57 @@ export class TeamChart {
     ctx.font = `${fontWeight || ''} ${fontSize}px ${defaultFont} `
     const measurement = ctx.measureText(text);
     return measurement.width;
+  }
+
+  getCoords(myElement) {
+    var xforms = myElement.transform.baseVal; // An SVGTransformList
+    var firstXForm = xforms.getItem(0);       // An SVGTransform
+    if (firstXForm.type == SVGTransform.SVG_TRANSFORM_TRANSLATE){
+      var firstX = firstXForm.matrix.e,
+        firstY = firstXForm.matrix.f;
+    }
+    return [parseInt(firstX), parseInt(firstY)]
+  }
+
+  overCircle(domNode, d) {
+    this.destinationDatum = d;
+    if(this.draggingDatum) {
+      d3.select(domNode).classed("drop-target", true)
+    }
+  };
+
+  outCircle(domNode, d) {
+    d3.select(domNode).classed("drop-target", false)
+    if(this.draggingDatum) {
+      this.destinationDatum = null;
+    }
+  };
+
+  initiateDrag(d, domNode) {
+    this.draggingDatum = d;
+    let startCoords = this.getCoords(domNode)
+    this.dragStartX = startCoords[0]
+    this.dragStartY = startCoords[1]
+    const node = d3.select(domNode);
+    node
+      .attr('pointer-events', 'none')
+      .classed('activeDrag', true)
+      .raise()
+  }
+
+  endDrag(domNode) {
+    d3.select(domNode)
+      .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
+      .classed("activeDrag", false)
+
+    const attrs = this.getChartState()
+    if (this.destinationDatum !== null) {
+      attrs.dropHandler(this.draggingDatum.data.id, this.destinationDatum.data.id)
+    } else {
+      this.restoreNode(d3.select(domNode), attrs, this);
+      this.draggingDatum = null;
+      this.destinationDatum = null;
+    }
   }
 
 }
