@@ -20,6 +20,12 @@ def peopleOfThirtyRock(account)
   episodes[:special] = @episode_counter.weeks.from_now.to_date
 
   ActsAsTenant.with_tenant(account) do
+    Entry.destroy_all
+    People::Person.destroy_all
+    Connection.destroy_all
+    Team.destroy_all
+    Assignment.destroy_all
+
     ge      = Entry.create(effective_at: episodes[:s1e01], versionable: Team.create(name: "General Electric"))
     nbc     = Entry.create(effective_at: episodes[:s1e01], versionable: Team.create(name: "East Coast Television and Microwave Oven Programming", parent_key: ge.key))
     tgs     = Entry.create(effective_at: episodes[:s1e01], versionable: Team.create(name: "The Girly Show (TGS)", parent_key: nbc.key))

@@ -223,6 +223,7 @@ en:
       sign_up: "Sign Up"
       org_chart: "Org Chart"
       team_chart: "Team Chart"
+      reset_data: "Reset Data"
     oauth:
       apple: "Apple"
       developer: "Developer"

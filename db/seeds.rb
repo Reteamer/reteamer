@@ -6,10 +6,6 @@ p "Clearing the DB..."
 
 ActsAsTenant.without_tenant do
   User.destroy_all
-  People::Person.destroy_all
-  Connection.destroy_all
-  Team.destroy_all
-  Assignment.destroy_all
 end
 
 p "Adding 30 Rock data..."
