@@ -10,40 +10,22 @@ import dayjs from "dayjs";
 import System from "../support/pages/system";
 
 describe('Date Navigation Test', () => {
-  beforeEach(() => {
+  before(() => {
     System.resetDatabase()
+  })
+
+  beforeEach(() => {
     AccountLeader.login()
     AccountLeader.navigateToOrgChart()
   })
 
   it("Initializes the component correctly", () => {
-    // expect date input to have today's date
-    const today = newISODate();
-    cy.get("date-navigator input[type='date']").invoke("val").should('eq', today)
+    const today = dayjs();
+    AccountLeader.seesTheInputHasDate(today)
+    AccountLeader.seesTheSearchParamsAreEmpty()
 
-    // it("Leaves today's date off the URL", () => {
-    cy.location("search").should("be.empty")
-
-    // it("Marks today's date for reference on the slider", () => {
-    cy.get(".today-marker").then($marker => {
-      cy.get(".mouse-catcher")
-        .trigger("mouseover")
-        .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force: true})
-    })
-
-    cy.get(".cursor-date").invoke("text").then($text => {
-      cy.expectToBeNearDate($text, new Date(), 2);
-    })
-
-    // it("Marks today's date as the selected date on the slider", () => {
-    cy.get(".selected-date-marker").then($marker => {
-      cy.get(".mouse-catcher")
-        .trigger("mouseover")
-        .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force: true})
-    })
-    cy.get(".cursor-date").invoke("text").then($text => {
-      cy.expectToBeNearDate($text, new Date(), 2);
-    })
+    AccountLeader.seesTodayMarkedOnTheSlider()
+    AccountLeader.seesTheSelectedDateIs(today.toDate())
   });
 
   describe("When clicking on the slider", () => {

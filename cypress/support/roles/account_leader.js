@@ -19,4 +19,35 @@ export default class AccountLeader {
     cy.location("search")
       .should("eq", expectedQueryString)
   }
+
+  static seesTheSearchParamsAreEmpty() {
+    this.seesTheSearchParamsChangeTo("")
+  }
+
+  static seesTheInputHasDate(expectedDate) {
+    cy.get("date-navigator input[type='date']").invoke("val").should('eq', expectedDate.format("YYYY-MM-DD"))
+  }
+
+  static seesTodayMarkedOnTheSlider() {
+    cy.get(".today-marker").then($marker => {
+      cy.get(".mouse-catcher")
+        .trigger("mouseover")
+        .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force: true})
+    })
+
+    cy.get(".cursor-date").invoke("text").then($text => {
+      cy.expectToBeNearDate($text, new Date(), 2);
+    })
+  }
+
+  static seesTheSelectedDateIs(expectedDate) {
+    cy.get(".selected-date-marker").then($marker => {
+      cy.get(".mouse-catcher")
+        .trigger("mouseover")
+        .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force: true})
+    })
+    cy.get(".cursor-date").invoke("text").then($text => {
+      cy.expectToBeNearDate($text, expectedDate, 2);
+    })
+  }
 }

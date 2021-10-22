@@ -4,11 +4,8 @@ import System from "../support/pages/system";
 import dayjs from "dayjs";
 
 describe('Org Chart', () => {
-  before(() => {
-    System.resetDatabase()
-  })
-
   beforeEach(() => {
+    System.resetDatabase()
     AccountLeader.login()
     AccountLeader.navigateToOrgChart()
   })
