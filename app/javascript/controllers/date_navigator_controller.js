@@ -36,12 +36,19 @@ export default class extends Controller {
 
     self.svg = d3.create("svg")
       .attr("height", self.height + self.margin.top + self.margin.bottom)
-      .attr("width", "100%");
+      .attr("width", "100%")
     self.element.appendChild(self.svg.node()); //must do this before we can read the width of the node
 
     self.width = self.svg.node().clientWidth - self.margin.left - self.margin.right;
     self.x = d3.scaleUtc().range([0, self.width]);
     self.xAxis = d3.axisBottom(self.x)
+
+    self.svg.append("rect")
+      .attr("height", self.height)
+      .attr("width", self.width)
+      .attr("fill", "none")
+      .style("stroke", "black")
+      .style("stroke-width", "1px")
 
     self.barLayer = self.xAxisElement = self.svg.append("g")
       .attr("class", "bar-layer") // append this layer first so the chart doesn't hide the cursor and markers
