@@ -33,18 +33,41 @@ describe('Org Chart', () => {
   })
 
   it("Initializes the component correctly", () => {
-    cy.get(".node:contains('Jonathan')")
-      .trigger('mousedown', { force: true, view: window, which: 1 })
-      .trigger('mousemove', { force: true, view: window, which: 1, clientX: -100, clientY: 40})
-      .trigger('mouseup', {force: true});
-    // })
-    // cy.get(".node:contains('Pete')").trigger("mouseover")
-    // cy.get(".node:contains('Pete')").then($destination => {
-      //   .trigger('mousedown', { which: 1, force: true, view: window }) // <-- here
-      //   .trigger('mousemove',  -100, 0, {view: window, force: true})      // <-- here
-      // $destination.trigger("mouseover")
-      // cy.get(".node:contains('Jonathan')")
-      //   .trigger('mouseup', { force: true });
-    // })
+    cy.window().then(win => {
+      cy.get(".node:contains('Jonathan')")
+        .trigger('mousedown', {
+          which: 1,
+          force: true,
+          view: win,
+        })
+      cy.get(".node:contains('Pete')").trigger("mouseover", {
+        force: true,
+        view: win
+      })
+      cy.get(".node:contains('Jonathan')")
+        .trigger('mousemove', {
+          clientX: -100,
+          clientY: 30,
+          force: true,
+        })
+        .trigger('mouseup', {
+          force: true,
+          view: win,
+        });
+    });
+
+    cy.get("input[type='radio'][value='other']").click()
+
+    const twoMonthsFromNow = new Date()
+    twoMonthsFromNow.setMonth(twoMonthsFromNow.getMonth() + 2);
+
+    cy.get("input[type='date']#other_effective_date")
+      .type(toISODate(twoMonthsFromNow))
+      .trigger("change")
+
+    cy.get("button").contains("Commit").click()
+
+    cy.location("search")
+      .should("eq", "?effective_date=" + toISODate(twoMonthsFromNow))
   });
 })
