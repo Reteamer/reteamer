@@ -22,6 +22,28 @@ export default class extends Controller {
       .render()
       .expandAll()
 
+    const self = this;
+    d3.selectAll("g.nodes-wrapper g.node")
+      .on("mouseover", function(event, d) {
+        self.overCircle(this, d);
+      })
+      .on("mouseout", function(event, d) {
+        self.outCircle(this, d);
+      })
+      .call(d3.drag()
+        .on("start", function(event, d) {
+          self.initiateDrag(d, this)
+        })
+        .on("drag", function(event, d) {
+          let [newX, newY] = self.chart.getCoords(this)
+          d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
+        })
+        .on("end", function(event, d) {
+          self.endDrag(this);
+        })
+      )
+
+
     if(this.firstRender) {
       const {svg, zoomBehavior} = this.chart.getChartState();
       svg.transition().call(zoomBehavior.translateBy, 0, -200)
@@ -48,6 +70,48 @@ export default class extends Controller {
     });
     this.chart.finalizeDrop()
     emitDatePickedEvent(event.detail.selectedDate)
+  }
+
+
+  overCircle(domNode, d) {
+    this.destinationDatum = d;
+    if(this.draggingDatum) {
+      d3.select(domNode).classed("drop-target", true)
+    }
+  };
+
+  outCircle(domNode, d) {
+    d3.select(domNode).classed("drop-target", false)
+    if(this.draggingDatum) {
+      this.destinationDatum = null;
+    }
+  };
+
+  initiateDrag(d, domNode) {
+    this.draggingDatum = d;
+    let startCoords = this.chart.getCoords(domNode)
+    this.dragStartX = startCoords[0]
+    this.dragStartY = startCoords[1]
+    const node = d3.select(domNode);
+    node
+      .attr('pointer-events', 'none')
+      .classed('activeDrag', true)
+      .raise()
+  }
+
+  endDrag(domNode) {
+    d3.select(domNode)
+      .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
+      .classed("activeDrag", false)
+
+    const attrs = this.chart.getChartState()
+    if (this.destinationDatum !== null) {
+      attrs.dropHandler(this.draggingDatum.data.id, this.destinationDatum.data.id)
+    } else {
+      this.restoreNode(d3.select(domNode), attrs, this);
+      this.draggingDatum = null;
+      this.destinationDatum = null;
+    }
   }
 
   async connect() {
