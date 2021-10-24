@@ -2,10 +2,10 @@
   <div class="col-sm-6">
     <h1>Teams</h1>
   </div>
-  <div data-controller="date-navigator" data-action="newTeamData@window->date-navigator#handleNewData">
-    <input data-date-navigator-target="dateInput" data-action="change->date-navigator#handleChange" type="date" value="<%= @current_date %>"/>
-  </div>
+  <%= render "shared/date_navigator", selected_date: @selected_date %>
   <div class="team-chart" data-controller="team-chart" data-action="newTeamData@window->team-chart#handleNewTeamData" style="padding-left:0; padding-right:0"></div>
-  <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked"></div>
+  <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked" data-team-data-starting-date-value="<%= @selected_date %>"></div>
+  <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
 </div>
+<%= render "shared/effective_date_selector_modal", selected_date: @selected_date %>
 

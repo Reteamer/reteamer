@@ -2,10 +2,10 @@
   <div class="col-sm-6">
     <h1>Org Chart</h1>
   </div>
-  <%= render 'date_navigator' %>
+  <%= render "shared/date_navigator", selected_date: @selected_date %>
   <div data-controller="org-chart" data-action="newOrgData@window->org-chart#handleNewOrgData completeChange@window->org-chart#handleCompleteChange" style="padding-left:0; padding-right:0"></div>
   <div data-controller="org-data" data-action="datePicked@window->org-data#handleDatePicked" data-org-data-starting-date-value="<%= @selected_date %>"></div>
   <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
 </div>
 
-<%= render 'effective_date_selector_modal' %>
+<%= render "shared/effective_date_selector_modal", selected_date: @selected_date %>
