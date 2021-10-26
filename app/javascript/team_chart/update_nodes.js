@@ -45,7 +45,7 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
 
   // Add foreignObject element inside rectangle
   const foreignObject = nodeUpdate.patternify({
-    tag: "foreignObject",
+    tag: "g",
     selector: "node-foreign-object",
     data: (d) => [d]
   })
@@ -53,7 +53,7 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
 
   // Add foreign object
   foreignObject.patternify({
-    tag: "xhtml:div",
+    tag: "g",
     selector: "node-foreign-object-div",
     data: (d) => [d]
   })

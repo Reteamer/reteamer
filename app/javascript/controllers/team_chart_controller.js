@@ -53,7 +53,7 @@ export default class extends Controller {
     this.chart.finalizeDrop()
   }
 
-  memberNode(avatarRadius, member, avatarDiameter, personNodeWidth) {
+  personNodeHtml(avatarRadius, member, avatarDiameter, personNodeWidth) {
     return `<person-node style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
       <person-box>
         <person-bar class="${member.type}" style="width:${personNodeWidth - 2}px;"></person-bar>
@@ -65,8 +65,7 @@ export default class extends Controller {
           <person-title>${member.title}</person-title>
         </person-info>
       </person-box>
-    </person-node>`
-      ;
+    </person-node>`;
   }
 
   connect() {
@@ -91,24 +90,17 @@ export default class extends Controller {
         const avatarDiameter = 60;
         const avatarRadius = avatarDiameter/2;
 
+        let nodeHeight = self.getNodeHeight(d, personNodeHeight);
+        let nodeWidth = self.getNodeWidth(d, personNodeWidth);
         return `
-            <team-box style="height:${d.height}px;">
-              <team-bar></team-bar>
-              <team-name>
-                ${d.data.name}
-              </team-name>
-              <team-details>
-                <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
-              </team-details>
-              ${d.data.members.length > 0 ? `
-                <people-box>
-                  ${d.data.members.map(member => 
-                    self.memberNode(avatarRadius, member, avatarDiameter, personNodeWidth)
-                  ).join("")}
-                </people-box>
-              ` : ""
-            }
-            </team-box>
+            <rect class="team-box" height="${nodeHeight}" width="${nodeWidth}"/>
+            <rect class="team-bar" width="${nodeWidth}"/>
+            <foreignObject width="${nodeWidth}" height="30" y="10">
+              <div class="team-name">${d.data.name}</div>
+            </foreignObject> 
+            <foreignObject width="${nodeWidth}" height="30" y="40">
+              <div class="team-member-count"> Members:  ${d.data.members.length} 👤</div>
+            </foreignObject>
   `;
       })
   }

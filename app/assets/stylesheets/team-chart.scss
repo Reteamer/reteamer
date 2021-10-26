@@ -1,23 +1,22 @@
 .team-chart {
-  team-box {
-    display: block;
-    background-color: white;
-    border: 1px solid lightgray;
+  .team-box {
+    fill: white;
+    stroke-width: 1px;
+    stroke: lightgrey;
   }
-  team-bar {
-    background-color: #6d9bb4;
-    display:block;
+
+  .team-bar {
+    fill: #6d9bb4;
     height:10px;
-    width:100%;
-    border-radius:1px;
+    rx:1px;
+    ry:1px;
   }
-  team-name {
-    display:block;
-    margin: 10px;
+  .team-name {
     color:#111672;
     font-size:20px;
     font-weight:bold;
-    text-align:center;
+    text-align: center;
+    padding: 10px;
   }
 
   team-details {
@@ -28,8 +27,9 @@
     padding-right:15px;
   }
 
-  team-member-count {
-
+  .team-member-count {
+    padding: 10px;
+    text-align: right;
   }
 
   people-box {

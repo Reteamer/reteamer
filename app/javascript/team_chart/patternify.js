@@ -12,8 +12,8 @@ export default function initializeEnterExitUpdatePattern() {
 
     // Pattern in action
     var selection = container.selectAll("." + selector).data(data, (d, i) => {
-      if (typeof d === "object") {
-        if (d.id) { return d.id; }
+      if (typeof d === "object" && d.id) {
+        return d.id;
       }
       return i;
     });
