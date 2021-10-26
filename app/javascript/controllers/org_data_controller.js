@@ -15,7 +15,7 @@ export default class extends Controller {
     const response = await fetch(`/reteamer_api/org_chart.json?effective_date=${newDate}`)
     const orgData = await response.json()
 
-    const event = new CustomEvent("newOrgData",
+    const event = new CustomEvent("newData",
       {
         detail: {
           orgData: orgData,
