@@ -798,7 +798,7 @@ export class TeamChart {
   getTextWidth(text, {
     fontSize = 14,
     fontWeight = 400,
-    defaultFont = "Helvetice",
+    defaultFont = "Helvetica",
     ctx
   } = {}) {
     ctx.font = `${fontWeight || ''} ${fontSize}px ${defaultFont} `
