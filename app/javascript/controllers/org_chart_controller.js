@@ -1,5 +1,5 @@
 import {Controller} from "stimulus"
-import {TeamChart} from '../team_chart';
+import {OrgChart} from '../org_chart';
 import * as d3 from "d3"
 import { emitDatePickedEvent } from "../event_emitter";
 
@@ -120,7 +120,7 @@ export default class extends Controller {
     container.className = 'chart-container'
     this.element.appendChild(container);
 
-    this.chart = new TeamChart()
+    this.chart = new OrgChart()
       .container('.chart-container')
       .connectionsUpdate(function (d, i, arr) {
         d3.select(this)
