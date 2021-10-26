@@ -105,7 +105,18 @@ export default class extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {
-      attrs.dropHandler(this.draggingDatum.data.id, this.destinationDatum.data.id)
+      const person_key = this.draggingDatum.data.id;
+      const supervisor_key = this.destinationDatum.data.id
+      this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
+      const supervisorChangedEvent = new CustomEvent("supervisorChanged",
+        {
+          detail: {
+            person_key: person_key,
+            supervisor_key: supervisor_key
+          }
+        }
+      )
+      window.dispatchEvent(supervisorChangedEvent)
     } else {
       this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
       this.chart.finalizeDrop()
@@ -127,18 +138,6 @@ export default class extends Controller {
           .attr('stroke-width', (d) => '2')
           .attr('pointer-events', 'none')
           .attr('stroke-dasharray', '20, 20');
-      })
-      .dropHandler((person_key, supervisor_key) => {
-        this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
-        const supervisorChangedEvent = new CustomEvent("supervisorChanged",
-          {
-            detail: {
-              person_key: person_key,
-              supervisor_key: supervisor_key
-            }
-          }
-        )
-        window.dispatchEvent(supervisorChangedEvent)
       })
       .nodeWidth(d => 250)
       .compact(false)

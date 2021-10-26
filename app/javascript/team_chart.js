@@ -46,7 +46,6 @@ export class TeamChart {
       setActiveNodeCentered: true,
       expandLevel: 1,
       compact: true,
-      dropHandler: null,
       rootMargin: 40,
       nodeDefaultBackground: 'none',
       connections: [],
