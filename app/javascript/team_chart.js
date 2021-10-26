@@ -8,6 +8,8 @@ import {linkHorizontal} from 'd3-shape';
 import initializeEnterExitUpdatePattern from "./team_chart/patternify";
 import api from "./team_chart/api";
 import Diagonals from "./team_chart/diagonals";
+import updateLinks from "./team_chart/update_links";
+import updateConnections from "./team_chart/update_connections";
 
 const d3 = {
   selection,
@@ -550,149 +552,8 @@ export class TeamChart {
 
     const nodes = treeData.descendants();
 
-    // console.table(nodes.map(d => ({ x: d.x, y: d.y, width: d.width, height: d.height, flexCompactDim: d.flexCompactDim + "" })))
-
-    // Get all links
-    const links = treeData.descendants().slice(1);
-    nodes.forEach(attrs.layoutBindings[attrs.layout].swap)
-
-    // Connections
-    const connections = attrs.connections;
-    const allNodesMap = {};
-    attrs.allNodes.forEach(d => allNodesMap[attrs.nodeId(d.data)] = d);
-
-    const visibleNodesMap = {}
-    nodes.forEach(d => visibleNodesMap[attrs.nodeId(d.data)] = d);
-
-    connections.forEach(connection => {
-      const source = allNodesMap[connection.from];
-      const target = allNodesMap[connection.to];
-      connection._source = source;
-      connection._target = target;
-    })
-    const visibleConnections = connections.filter(d => visibleNodesMap[d.from] && visibleNodesMap[d.to]);
-    const defsString = attrs.defs.bind(this)(attrs, visibleConnections);
-    const existingString = attrs.defsWrapper.html();
-    if (defsString !== existingString) {
-      attrs.defsWrapper.html(defsString)
-    }
-
-    // --------------------------  LINKS ----------------------
-    // Get links selection
-    const linkSelection = attrs.linksWrapper
-      .selectAll("path.link")
-      .data(links, (d) => attrs.nodeId(d.data));
-
-    // Enter any new links at the parent's previous position.
-    const linkEnter = linkSelection
-      .enter()
-      .insert("path", "g")
-      .attr("class", "link")
-      .attr("d", (d) => {
-        const xo = attrs.layoutBindings[attrs.layout].linkJoinX({ x: x0, y: y0, width, height });
-        const yo = attrs.layoutBindings[attrs.layout].linkJoinY({ x: x0, y: y0, width, height });
-        const o = { x: xo, y: yo };
-        return attrs.layoutBindings[attrs.layout].diagonal(o, o, o);
-      });
-
-    // Get links update selection
-    const linkUpdate = linkEnter.merge(linkSelection);
-
-    // Styling links
-    linkUpdate
-      .attr("fill", "none")
-
-    // Allow external modifications
-    linkUpdate.each(attrs.linkUpdate);
-
-    // Transition back to the parent element position
-    linkUpdate
-      .transition()
-      .duration(attrs.duration)
-      .attr("d", (d) => {
-        const n = attrs.compact && d.flexCompactDim ?
-          {
-            x: attrs.layoutBindings[attrs.layout].compactLinkMidX(d, attrs),
-            y: attrs.layoutBindings[attrs.layout].compactLinkMidY(d, attrs)
-          } :
-          {
-            x: attrs.layoutBindings[attrs.layout].linkX(d),
-            y: attrs.layoutBindings[attrs.layout].linkY(d)
-          };
-
-        const p = {
-          x: attrs.layoutBindings[attrs.layout].linkParentX(d),
-          y: attrs.layoutBindings[attrs.layout].linkParentY(d),
-        };
-
-        const m = attrs.compact && d.flexCompactDim ? {
-          x: attrs.layoutBindings[attrs.layout].linkCompactXStart(d),
-          y: attrs.layoutBindings[attrs.layout].linkCompactYStart(d),
-        } : n;
-        return attrs.layoutBindings[attrs.layout].diagonal(n, p, m);
-      });
-
-    // Remove any  links which is exiting after animation
-    const linkExit = linkSelection
-      .exit() //TODO: maybe this is a way to show people leaving the team graph?
-      .transition()
-      .duration(attrs.duration)
-      .attr("d", (d) => {
-        const xo = attrs.layoutBindings[attrs.layout].linkJoinX({ x, y, width, height });
-        const yo = attrs.layoutBindings[attrs.layout].linkJoinY({ x, y, width, height });
-        const o = { x: xo, y: yo };
-        return attrs.layoutBindings[attrs.layout].diagonal(o, o);
-      })
-      .remove();
-
-
-    // --------------------------  CONNECTIONS ----------------------
-
-    const connectionsSel = attrs.connectionsWrapper
-      .selectAll("path.connection")
-      .data(visibleConnections)
-
-    // Enter any new connections at the parent's previous position.
-    const connEnter = connectionsSel
-      .enter()
-      .insert("path", "g")
-      .attr("class", "connection")
-      .attr("d", (d) => {
-        const xo = attrs.layoutBindings[attrs.layout].linkJoinX({ x: x0, y: y0, width, height });
-        const yo = attrs.layoutBindings[attrs.layout].linkJoinY({ x: x0, y: y0, width, height });
-        const o = { x: xo, y: yo };
-        return attrs.layoutBindings[attrs.layout].diagonal(o, o);
-      });
-
-
-    // Get connections update selection
-    const connUpdate = connEnter.merge(connectionsSel);
-
-    // Styling connections
-    connUpdate.attr("fill", "none")
-
-    // Transition back to the parent element position
-    connUpdate
-      .transition()
-      .duration(attrs.duration)
-      .attr('d', (d) => {
-        const xs = attrs.layoutBindings[attrs.layout].linkX({ x: d._source.x, y: d._source.y, width: d._source.width, height: d._source.height });
-        const ys = attrs.layoutBindings[attrs.layout].linkY({ x: d._source.x, y: d._source.y, width: d._source.width, height: d._source.height });
-        const xt = attrs.layoutBindings[attrs.layout].linkJoinX({ x: d._target.x, y: d._target.y, width: d._target.width, height: d._target.height });
-        const yt = attrs.layoutBindings[attrs.layout].linkJoinY({ x: d._target.x, y: d._target.y, width: d._target.width, height: d._target.height });
-        return attrs.linkGroupArc({ source: { x: xs, y: ys }, target: { x: xt, y: yt } })
-      })
-
-    // Allow external modifications
-    connUpdate.each(attrs.connectionsUpdate);
-
-    // Remove any  links which is exiting after animation
-    const connExit = connectionsSel
-      .exit()
-      .transition()
-      .duration(attrs.duration)
-      .attr('opacity', 0)
-      .remove();
+    updateLinks(treeData, nodes, attrs, x0, y0, width, height, x, y);
+    updateConnections.call(this, attrs, nodes, x0, y0, width, height);
 
     // --------------------------  NODES ----------------------
     // Get nodes selection
