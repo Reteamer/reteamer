@@ -25,10 +25,10 @@ export default class extends Controller {
     const self = this;
     d3.selectAll("g.nodes-wrapper g.node")
       .on("mouseover", function(event, d) {
-        self.overCircle(this, d);
+        self.handleMouseOver(this, d);
       })
       .on("mouseout", function(event, d) {
-        self.outCircle(this, d);
+        self.handleMouseOut(this, d);
       })
       .call(d3.drag()
         .on("start", function(event, d) {
@@ -72,15 +72,20 @@ export default class extends Controller {
     emitDatePickedEvent(event.detail.selectedDate)
   }
 
+  restoreNode(node, attrs, self) {
+    node.transition()
+      .duration(attrs.duration)
+      .attr("transform", "translate(" + self.dragStartX + "," + self.dragStartY + ")")
+  }
 
-  overCircle(domNode, d) {
+  handleMouseOver(domNode, d) {
     this.destinationDatum = d;
     if(this.draggingDatum) {
       d3.select(domNode).classed("drop-target", true)
     }
   };
 
-  outCircle(domNode, d) {
+  handleMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
     if(this.draggingDatum) {
       this.destinationDatum = null;
