@@ -12,6 +12,7 @@ import updateLinks from "./team_chart/update_links";
 import updateConnections from "./team_chart/update_connections";
 import updateNodes from "./team_chart/update_nodes";
 import Utils from "./team_chart/utils";
+import drag_and_drop from "./team_chart/drag_and_drop";
 
 const d3 = {
   selection,
@@ -291,8 +292,7 @@ export class TeamChart {
     initializeEnterExitUpdatePattern();
   }
 
-
-  // This method can be invoked via chart.setZoomFactor API, it zooms to particulat scale
+  // This method can be invoked via chart.setZoomFactor API, it zooms to particular scale
   initialZoom(zoomLevel) {
     const attrs = this.getChartState();
     attrs.lastTransform.k = zoomLevel;
@@ -560,12 +560,6 @@ export class TeamChart {
 
   }
 
-  restoreNode(node, attrs, self) {
-    node.transition()
-      .duration(attrs.duration)
-      .attr("transform", "translate(" + self.dragStartX + "," + self.dragStartY + ")")
-  }
-
   restyleForeignObjectElements() {
     const attrs = this.getChartState();
 
@@ -825,4 +819,5 @@ export class TeamChart {
 }
 
 Object.assign(TeamChart.prototype, api);
+Object.assign(TeamChart.prototype, drag_and_drop);
 

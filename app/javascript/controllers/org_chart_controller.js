@@ -72,12 +72,6 @@ export default class extends Controller {
     emitDatePickedEvent(event.detail.selectedDate)
   }
 
-  restoreNode(node, attrs, self) {
-    node.transition()
-      .duration(attrs.duration)
-      .attr("transform", "translate(" + self.dragStartX + "," + self.dragStartY + ")")
-  }
-
   handleMouseOver(domNode, d) {
     this.destinationDatum = d;
     if(this.draggingDatum) {
@@ -113,9 +107,8 @@ export default class extends Controller {
     if (this.destinationDatum !== null) {
       attrs.dropHandler(this.draggingDatum.data.id, this.destinationDatum.data.id)
     } else {
-      this.restoreNode(d3.select(domNode), attrs, this);
-      this.draggingDatum = null;
-      this.destinationDatum = null;
+      this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
+      this.chart.finalizeDrop()
     }
   }
 

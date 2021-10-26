@@ -7,11 +7,6 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
     .selectAll("g.node")
     .data(nodes, ({data}) => attrs.nodeId(data));
 
-  this.finalizeDrop = function() {
-    self.draggingDatum = null;
-    self.destinationDatum = null;
-  }
-
   // Enter any new nodes at the parent's previous position.
   let self = this;
   const nodeEnter = nodesSelection
