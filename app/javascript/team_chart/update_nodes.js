@@ -6,14 +6,12 @@ const d3 = {
 }
 
 export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
-  // --------------------------  NODES ----------------------
   // Get nodes selection
   const nodesSelection = attrs.nodesWrapper
     .selectAll("g.node")
     .data(nodes, ({data}) => attrs.nodeId(data));
 
   // Enter any new nodes at the parent's previous position.
-  let self = this;
   const nodeEnter = nodesSelection
     .enter()
     .append("g")

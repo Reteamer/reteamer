@@ -3,7 +3,13 @@
     <h1>Teams</h1>
   </div>
   <%= render "shared/date_navigator", selected_date: @selected_date %>
-  <div class="team-chart" data-controller="team-chart" data-action="newData@window->team-chart#handleNewTeamData" style="padding-left:0; padding-right:0"></div>
+  <div class="team-chart" data-controller="team-chart"
+       data-action="
+       newData@window->team-chart#handleNewTeamData
+       completeChange@window->team-chart#handleCompleteChange
+       cancelChange@window->team-chart#handleCancelChange
+        "
+       style="padding-left:0; padding-right:0"></div>
   <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked" data-team-data-starting-date-value="<%= @selected_date %>"></div>
   <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
 </div>

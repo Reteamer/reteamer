@@ -14,7 +14,7 @@ export default class extends Controller {
     this.chart.fit();
   }
 
-  async handleNewOrgData(event) {
+  handleNewOrgData(event) {
     this.orgData = event.detail.orgData;
     this.chart
       .data(this.orgData.people)
@@ -49,6 +49,12 @@ export default class extends Controller {
       svg.transition().call(zoomBehavior.translateBy, 0, -200)
       this.firstRender = false
     }
+  }
+
+  handleCancelChange(event) {
+    const attrs = this.chart.getChartState()
+    this.chart.restoreNodePosition(d3.select(this.draggingNode), attrs.duration, this.dragStartX, this.dragStartY);
+    this.chart.finalizeDrop()
   }
 
   async handleCompleteChange(event) {
@@ -88,6 +94,8 @@ export default class extends Controller {
 
   initiateDrag(d, domNode) {
     this.draggingDatum = d;
+    this.draggingNode = domNode;
+
     let startCoords = this.chart.getCoords(domNode)
     this.dragStartX = startCoords[0]
     this.dragStartY = startCoords[1]
