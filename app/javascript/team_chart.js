@@ -5,6 +5,8 @@ import {zoom, zoomIdentity} from "d3-zoom";
 import {drag} from "d3-drag";
 import {flextree} from 'd3-flextree';
 import {linkHorizontal} from 'd3-shape';
+import initializeEnterExitUpdatePattern from "./team_chart/patternify";
+import getNodeChildren from "./team_chart/getNodeChildren";
 
 const d3 = {
   selection,
@@ -281,52 +283,10 @@ export class TeamChart {
       };
     });
 
-    this.initializeEnterExitUpdatePattern();
-  }
-
-  initializeEnterExitUpdatePattern() {
-    d3.selection.prototype.patternify = function (params) {
-      var container = this;
-      var selector = params.selector;
-      var elementTag = params.tag;
-      var data = params.data || [selector];
-
-      // Pattern in action
-      var selection = container.selectAll("." + selector).data(data, (d, i) => {
-        if (typeof d === "object") {
-          if (d.id) { return d.id; }
-        }
-        return i;
-      });
-      selection.exit().remove();
-      selection = selection.enter().append(elementTag).merge(selection);
-      selection.attr("class", selector);
-      return selection;
-    };
+    initializeEnterExitUpdatePattern();
   }
 
   // This method retrieves passed node's children IDs (including node)
-  getNodeChildren({ data, children, _children }, nodeStore) {
-    // Store current node ID
-    nodeStore.push(data);
-
-    // Loop over children and recursively store descendants id (expanded nodes)
-    if (children) {
-      children.forEach((d) => {
-        this.getNodeChildren(d, nodeStore);
-      });
-    }
-
-    // Loop over _children and recursively store descendants id (collapsed nodes)
-    if (_children) {
-      _children.forEach((d) => {
-        this.getNodeChildren(d, nodeStore);
-      });
-    }
-
-    // Return result
-    return nodeStore;
-  }
 
   // This method can be invoked via chart.setZoomFactor API, it zooms to particulat scale
   initialZoom(zoomLevel) {
@@ -518,7 +478,7 @@ export class TeamChart {
     node.descendants()
       .forEach(d => d.data._filteredOut = true)
 
-    const descendants = this.getNodeChildren(node, [], attrs.nodeId);
+    const descendants = getNodeChildren(node, []);
     descendants.forEach(d => d._filtered = true)
 
     // Filter out retrieved nodes and reassign data
