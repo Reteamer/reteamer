@@ -28,6 +28,8 @@ export default class extends Controller {
       .on("mouseout", function(event, d) {
         self.handleMouseOut(this, d);
       })
+
+    d3.selectAll("g.nodes-wrapper person-node")
       .call(d3.drag()
         .on("start", function(event, d) {
           self.initiateDrag(d, this)
@@ -43,10 +45,28 @@ export default class extends Controller {
 
   }
 
+  handleCompleteChange(event) {}
+
   handleCancelChange(event) {
     const attrs = this.chart.getChartState()
     this.chart.restoreNodePosition(d3.select(this.draggingNode), attrs.duration, this.dragStartX, this.dragStartY);
     this.chart.finalizeDrop()
+  }
+
+  memberNode(avatarRadius, member, avatarDiameter, personNodeWidth) {
+    return `<person-node style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
+      <person-box>
+        <person-bar class="${member.type}" style="width:${personNodeWidth - 2}px;"></person-bar>
+        <img src="${member.image_url || ''}"
+             style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;"/>
+        <employment-type>${member.employee_id}</employment-type>
+        <person-info>
+          <person-name>${member.name}</person-name>
+          <person-title>${member.title}</person-title>
+        </person-info>
+      </person-box>
+    </person-node>`
+      ;
   }
 
   connect() {
@@ -54,8 +74,11 @@ export default class extends Controller {
     container.className = 'chart-container'
     this.element.appendChild(container);
 
+    const self = this;
+
     const personNodeWidth = 250;
     const personNodeHeight = 190;
+
     this.chart = new TeamChart()
       .container('.chart-container')
       .nodeWidth(d => this.getNodeWidth(d, personNodeWidth))
@@ -79,20 +102,9 @@ export default class extends Controller {
               </team-details>
               ${d.data.members.length > 0 ? `
                 <people-box>
-                ${d.data.members.map(member => `
-                  <person-node style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
-                    <div style="background-color:white;border:1px solid lightgray;">
-                      <person-bar class="${member.type}" style="width:${personNodeWidth - 2}px;"></person-bar>
-                      <img src="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
-                      <employment-type>${member.employee_id}</employment-type>
-                      <person-info>
-                        <person-name>${member.name}</person-name>
-                        <person-title>${member.title}</person-title>
-                      </person-info>
-                    </div>
-                  </person-node>
-                  `).join("")
-                }
+                  ${d.data.members.map(member => 
+                    self.memberNode(avatarRadius, member, avatarDiameter, personNodeWidth)
+                  ).join("")}
                 </people-box>
               ` : ""
             }
@@ -128,7 +140,7 @@ export default class extends Controller {
   initiateDrag(d, domNode) {
     this.draggingDatum = d;
     this.draggingNode = domNode;
-    
+
     let startCoords = this.chart.getCoords(domNode)
     this.dragStartX = startCoords[0]
     this.dragStartY = startCoords[1]
