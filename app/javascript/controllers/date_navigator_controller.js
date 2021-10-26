@@ -8,7 +8,6 @@ export default class extends Controller {
   static values = { startingDate: String }
 
   handleNewData(event) {
-    console.error("=============>", event);
     this.histogramData = event.detail.histogram
     this.histogramData.forEach(function(d) {
       d.date = Date.parse(d.date);
@@ -129,7 +128,6 @@ export default class extends Controller {
   }
 
   renderChart() {
-    console.error("=============>", "rendering");
     const self = this;
     const data = self.histogramData;
 
