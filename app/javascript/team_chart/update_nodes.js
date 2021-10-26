@@ -1,4 +1,9 @@
 import Utils from "./utils";
+import {select} from "d3-selection";
+
+const d3 = {
+  select,
+}
 
 export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
   // --------------------------  NODES ----------------------
