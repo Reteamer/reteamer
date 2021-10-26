@@ -459,7 +459,7 @@ export class TeamChart {
     })
     return Object.entries(grouped);
   }
-  calculateCompactFlexDimensions(root) {
+  #calculateCompactFlexDimensions(root) {
     const attrs = this.getChartState();
     root.eachBefore(node => {
       node.firstCompact = null;
@@ -498,7 +498,7 @@ export class TeamChart {
     })
   }
 
-  calculateCompactFlexPositions(root) {
+  #calculateCompactFlexPositions(root) {
     const attrs = this.getChartState();
     root.eachBefore(node => {
       if (node.children) {
@@ -539,7 +539,7 @@ export class TeamChart {
 
 
     if (attrs.compact) {
-      this.calculateCompactFlexDimensions(attrs.root);
+      this.#calculateCompactFlexDimensions(attrs.root);
     }
 
     //  Assigns the x and y position for the nodes
@@ -547,7 +547,7 @@ export class TeamChart {
 
     // Reassigns the x and y position for the based on the compact layout
     if (attrs.compact) {
-      this.calculateCompactFlexPositions(attrs.root);
+      this.#calculateCompactFlexPositions(attrs.root);
     }
 
     const nodes = treeData.descendants();
@@ -600,7 +600,7 @@ export class TeamChart {
       .style("font", "12px sans-serif");
 
     // Add foreignObject element inside rectangle
-    const fo = nodeUpdate.patternify({
+    const foreignObject = nodeUpdate.patternify({
       tag: "foreignObject",
       selector: "node-foreign-object",
       data: (d) => [d]
@@ -608,7 +608,7 @@ export class TeamChart {
       .style('overflow', 'visible')
 
     // Add foreign object
-    fo.patternify({
+    foreignObject.patternify({
       tag: "xhtml:div",
       selector: "node-foreign-object-div",
       data: (d) => [d]
@@ -626,7 +626,7 @@ export class TeamChart {
       .on("click", (event, d) => this.onButtonClick(event, d));
 
     // Add expand collapse button content
-    const nodeFo = nodeButtonGroups
+    const nodeForeignObject = nodeButtonGroups
       .patternify({
         tag: "foreignObject",
         selector: "node-button-foreign-object",
@@ -992,56 +992,6 @@ export class TeamChart {
     }
     node.data._expanded = expandedFlag;
     return this;
-  }
-
-  setHighlighted(nodeId) {
-    const attrs = this.getChartState();
-    const node = attrs.allNodes.filter(d => attrs.nodeId(d.data) === nodeId)[0];
-    if (!node) {
-      console.log(`ORG CHART - HIGHLIGHT - Node with id (${nodeId})  not found in the tree`);
-      return this
-    }
-    node.data._highlighted = true;
-    node.data._expanded = true;
-    node.data._centered = true;
-    return this;
-  }
-
-  setUpToTheRootHighlighted(nodeId) {
-    const attrs = this.getChartState();
-    const node = attrs.allNodes.filter(d => attrs.nodeId(d.data) === nodeId)[0];
-    if (!node) {
-      console.log(`ORG CHART - HIGHLIGHTROOT - Node with id (${nodeId}) not found in the tree`)
-      return this;
-    }
-    node.data._upToTheRootHighlighted = true;
-    node.data._expanded = true;
-    node.ancestors().forEach(d => d.data._upToTheRootHighlighted = true)
-    return this;
-  }
-
-  clearHighlighting() {
-    const attrs = this.getChartState();
-    attrs.allNodes.forEach(d => {
-      d.data._highlighted = false;
-      d.data._upToTheRootHighlighted = false;
-    })
-    this.update(attrs.root)
-  }
-
-
-  toDataURL(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      var reader = new FileReader();
-      reader.onloadend = function () {
-        callback(reader.result);
-      }
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-    xhr.send();
   }
 
   // Calculate what size text will take

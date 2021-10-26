@@ -252,5 +252,52 @@ export default {
     return this;
   },
 
+  clearHighlighting() {
+    const attrs = this.getChartState();
+    attrs.allNodes.forEach(d => {
+      d.data._highlighted = false;
+      d.data._upToTheRootHighlighted = false;
+    })
+    this.update(attrs.root)
+  },
 
+  setUpToTheRootHighlighted(nodeId) {
+    const attrs = this.getChartState();
+    const node = attrs.allNodes.filter(d => attrs.nodeId(d.data) === nodeId)[0];
+    if (!node) {
+      console.log(`ORG CHART - HIGHLIGHTROOT - Node with id (${nodeId}) not found in the tree`)
+      return this;
+    }
+    node.data._upToTheRootHighlighted = true;
+    node.data._expanded = true;
+    node.ancestors().forEach(d => d.data._upToTheRootHighlighted = true)
+    return this;
+  },
+
+  setHighlighted(nodeId) {
+    const attrs = this.getChartState();
+    const node = attrs.allNodes.filter(d => attrs.nodeId(d.data) === nodeId)[0];
+    if (!node) {
+      console.log(`ORG CHART - HIGHLIGHT - Node with id (${nodeId})  not found in the tree`);
+      return this
+    }
+    node.data._highlighted = true;
+    node.data._expanded = true;
+    node.data._centered = true;
+    return this;
+  },
+
+  toDataURL(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result);
+      }
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  },
 }
