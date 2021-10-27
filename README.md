@@ -19,5 +19,12 @@ prepared for the obstacles that lie ahead.
 - "Someone is being promoted, but the announcement hasn't been made yet. How can we safely plan for the change to their team?"
 
 ## The Benefits
-
+- When you use Reteamer, you'll know what's coming for you and your team
 - When you use Reteamer, you tell your new hires that they're getting a level of autonomy that's greater than anywhere else they might want to work
+
+## About Us
+Reteamer is avoiding outside investment. We want to be able to work
+with customers who share the same values around dynamic reteaming
+and not be pressured to build a product to accommodate a wide range 
+of values. We believe education, story telling, and experience are the best tools
+for persuading potential new customers to work a different way. 
