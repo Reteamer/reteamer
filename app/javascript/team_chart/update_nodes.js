@@ -43,22 +43,14 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
     .merge(nodesSelection)
     .style("font", "12px sans-serif");
 
-  // Add foreignObject element inside rectangle
-  const foreignObject = nodeUpdate.patternify({
-    tag: "g",
-    selector: "node-foreign-object",
-    data: (d) => [d]
-  })
-    .style('overflow', 'visible')
+  this.nodeEnter = nodeEnter;
+  // const foreignObject = nodeUpdate.patternify({
+  //   tag: "g",
+  //   selector: "node-foreign-object",
+  //   data: (d) => [d]
+  // })
 
-  // Add foreign object
-  foreignObject.patternify({
-    tag: "g",
-    selector: "node-foreign-object-div",
-    data: (d) => [d]
-  })
-
-  this.restyleForeignObjectElements();
+  // this.restyleForeignObjectElements();
 
   // Add Node button circle's group (expand-collapse button)
   const nodeButtonGroups = nodeEnter

@@ -21,6 +21,7 @@ export default class extends Controller {
       .expandAll()
 
     const self = this;
+
     d3.selectAll("g.nodes-wrapper g.node")
       .on("mouseover", function(event, d) {
         self.handleMouseOver(this, d);
@@ -28,8 +29,39 @@ export default class extends Controller {
       .on("mouseout", function(event, d) {
         self.handleMouseOut(this, d);
       })
+      .append("rect")
+      .classed("team-box", true)
+      .attr("width", d => self.getNodeWidth(d))
+      .attr("height", d => self.getNodeHeight(d))
 
-    d3.selectAll("g.nodes-wrapper person-node")
+    const barHeight = 10;
+    d3.selectAll("g.nodes-wrapper g.node")
+      .append("rect")
+      .classed("team-bar", true)
+      .attr("width", d => self.getNodeWidth(d))
+      .attr("height", barHeight)
+
+    const nameHeight = 30
+    d3.selectAll("g.nodes-wrapper g.node")
+      .append("foreignObject")
+      .attr("width", d => self.getNodeWidth(d))
+      .attr("height", nameHeight)
+      .attr("y", barHeight)
+      .html(d =>
+        `<div class="team-name">${d.data.name}</div>`
+      )
+
+    d3.selectAll("g.nodes-wrapper g.node")
+      .append("g")
+      .classed("people-box", true)
+      .attr("width", d => self.getNodeWidth(d))
+      .attr("height", d => self.getNodeHeight(d))
+
+    this.chart.nodeEnter.selectAll(".people-box")
+      .data(d => d.data.members)
+      .enter()
+      .append("g")
+      .classed("person-node", true)
       .call(d3.drag()
         .on("start", function(event, d) {
           self.initiateDrag(d, this)
@@ -42,7 +74,29 @@ export default class extends Controller {
           self.endDrag(this);
         })
       )
+      .attr("transform", (d, index, nodes) => {
+        return `translate(0,0)`
+      })
+      .append("rect")
+      .attr("stroke", "lightgray")
+      .attr("stroke-width", "1px")
+      .attr("width", self.personNodeWidth())
+      .attr("height", self.personNodeHeight())
 
+    d3.selectAll("g.person-node")
+      .append("rect")
+      .attr("class", d => `${d.type} person-bar`)
+      .attr("width", self.personNodeWidth())
+      .attr("height", barHeight)
+
+    d3.selectAll("g.person-node")
+      .append("foreignObject")
+      .attr("width", d => self.personNodeWidth())
+      .attr("height", nameHeight)
+      .attr("y", barHeight)
+      .html(d =>
+        `<div class="person-name">${d.name}</div>`
+      )
   }
 
   handleCompleteChange(event) {}
@@ -75,43 +129,30 @@ export default class extends Controller {
 
     const self = this;
 
-    const personNodeWidth = 250;
-    const personNodeHeight = 190;
-
     this.chart = new TeamChart()
       .container('.chart-container')
-      .nodeWidth(d => this.getNodeWidth(d, personNodeWidth))
+      .nodeWidth(d => this.getNodeWidth(d, self.personNodeWidth))
       .initialZoom(0.7)
-      .nodeHeight(d => this.getNodeHeight(d, personNodeHeight))
+      .nodeHeight(d => this.getNodeHeight(d, self.personNodeHeight))
       .childrenMargin(d => 40)
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
-      .nodeContent(function(d, index, arr, state) {
-        const avatarDiameter = 60;
-        const avatarRadius = avatarDiameter/2;
-
-        let nodeHeight = self.getNodeHeight(d, personNodeHeight);
-        let nodeWidth = self.getNodeWidth(d, personNodeWidth);
-        return `
-            <rect class="team-box" height="${nodeHeight}" width="${nodeWidth}"/>
-            <rect class="team-bar" width="${nodeWidth}"/>
-            <foreignObject width="${nodeWidth}" height="30" y="10">
-              <div class="team-name">${d.data.name}</div>
-            </foreignObject> 
-            <foreignObject width="${nodeWidth}" height="30" y="40">
-              <div class="team-member-count"> Members:  ${d.data.members.length} 👤</div>
-            </foreignObject>
-  `;
-      })
+  }
+  personNodeWidth() {
+    return 250;
   }
 
-  getNodeWidth(d, personNodeWidth) {
-    return d.data.members.length > 1 ? (2 * personNodeWidth) + 50 : personNodeWidth + 50;
+  personNodeHeight() {
+    return 190;
   }
 
-  getNodeHeight(d, personNodeHeight) {
+  getNodeWidth(d) {
+    return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + 50 : this.personNodeWidth() + 50;
+  }
+
+  getNodeHeight(d) {
     const numberOfColumns = Math.ceil(d.data.members.length / 2);
-    const calculatedHeight = 150 + numberOfColumns * personNodeHeight;
+    const calculatedHeight = 150 + numberOfColumns * this.personNodeHeight();
     return Math.max(130, calculatedHeight);
   }
 
@@ -150,7 +191,7 @@ export default class extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {
-      const person_key = this.draggingDatum.data.id;
+      const person_key = this.draggingDatum.id;
       const supervisor_key = this.destinationDatum.data.id
       this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
       const supervisorChangedEvent = new CustomEvent("supervisorChanged",

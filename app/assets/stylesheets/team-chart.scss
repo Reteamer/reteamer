@@ -7,7 +7,6 @@
 
   .team-bar {
     fill: #6d9bb4;
-    height:10px;
     rx:1px;
     ry:1px;
   }
@@ -56,13 +55,12 @@
   filter: drop-shadow( 3px 3px 2px rgba(33, 208, 28, 0.7));
 }
 
-person-node {
-  background-color:transparent;
-  border-radius:2px;
-  overflow:visible;
-  display:block;
+.person-node {
+  fill: white;
+  stroke: lightgrey;
+  stroke-width: 1px;
 
-  person-box {
+  .person-box {
     padding-top:0px;
     background-color:white;
     border:1px solid lightgray;
@@ -74,34 +72,23 @@ person-node {
     border:1px solid gray;
   }
 
-  employment-type {
+  .employment-type {
     margin-right:10px;
     margin-top:15px;
     float:right;
   }
 
-  person-bar {
+  .person-bar {
     height:10px;
-    display:block;
 
     &.contractor {
-      background: repeating-linear-gradient(
-          45deg,
-          #044a64,
-          #044a64 10px,
-          #465298 10px,
-          #465298 20px)
+      fill: #465298;
     }
     &.employee {
-      background-color: #3AB6E3;
+      fill: #3AB6E3;
     }
     &.openreq {
-      background: repeating-linear-gradient(
-          45deg,
-          #3AB6E3,
-          #3AB6E3 10px,
-          #74e776 10px,
-          #74e776 20px)
+      fill: #74e776;
     }
   }
 

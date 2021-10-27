@@ -13,21 +13,7 @@ import updateConnections from "./team_chart/update_connections";
 import updateNodes from "./team_chart/update_nodes";
 import Utils from "./team_chart/utils";
 import drag_and_drop from "./team_chart/drag_and_drop";
-
-const d3 = {
-  selection,
-  select,
-  max,
-  min,
-  sum,
-  cumsum,
-  drag,
-  tree,
-  stratify,
-  zoom,
-  zoomIdentity,
-  linkHorizontal,
-}
+import * as d3 from "d3";
 
 export class TeamChart {
   constructor() {
@@ -559,21 +545,19 @@ export class TeamChart {
 
   }
 
-  restyleForeignObjectElements() {
-    const attrs = this.getChartState();
+  // restyleForeignObjectElements() {
+    // const attrs = this.getChartState();
 
-    attrs.svg
-      .selectAll(".node-foreign-object")
-      .attr("width", ({ width }) => width)
-      .attr("height", ({ height }) => height)
-      .attr("x", ({ width }) => 0)
-      .attr("y", ({ height }) => 0);
-    attrs.svg
-      .selectAll(".node-foreign-object-div")
-      .style("width", ({ width }) => `${width}px`)
-      .style("height", ({ height }) => `${height}px`)
-      .html(function (d, i, arr) { return attrs.nodeContent.bind(this)(d, i, arr, attrs) })
-  }
+    // attrs.svg
+    //   .selectAll(".node-foreign-object")
+    //   .attr("width", ({ width }) => width)
+    //   .attr("height", ({ height }) => height)
+    //   .attr("x", ({ width }) => 0)
+    //   .attr("y", ({ height }) => 0)
+    //   .style('overflow', 'visible')
+
+    // .html(function (d, i, arr) { return attrs.nodeContent.bind(this)(d, i, arr, attrs) })
+  // }
 
   // Toggle children on click.
   onButtonClick(event, d) {
