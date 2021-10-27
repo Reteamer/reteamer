@@ -116,15 +116,8 @@ export default class extends Controller {
       const person_key = this.draggingDatum.data.id;
       const supervisor_key = this.destinationDatum.data.id
       this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
-      const supervisorChangedEvent = new CustomEvent("supervisorChanged",
-        {
-          detail: {
-            person_key: person_key,
-            supervisor_key: supervisor_key
-          }
-        }
-      )
-      window.dispatchEvent(supervisorChangedEvent)
+      const parentChangedEvent = new CustomEvent("parentChanged", {})
+      window.dispatchEvent(parentChangedEvent)
     } else {
       this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
       this.chart.finalizeDrop()

@@ -11,7 +11,7 @@ class TeamChart
     assignments.each do |assignment|
       assignee = people.find { |p| p.key == assignment.person_key }
       assigned_team = teams.find { |t| t.key == assignment.team_key }
-      assigned_team.members << assignee.versionable if assignee && assigned_team
+      assigned_team.members << Assignee.new(assignee, assignment) if assignee && assigned_team
     end
     teams
   end
@@ -34,6 +34,18 @@ class TeamChart
     def initialize(team_entry)
       @team_entry = team_entry
       @members = []
+    end
+  end
+
+  class Assignee
+    delegate :name, :title, :image_url, :employee_id, :type, to: :@person
+    def key
+      @assignment_entry.key
+    end
+
+    def initialize(person_entry, assignment_entry)
+      @person = person_entry.versionable
+      @assignment_entry = assignment_entry
     end
   end
 end

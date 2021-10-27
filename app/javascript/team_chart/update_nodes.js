@@ -29,6 +29,7 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
       }
       attrs.onNodeClick(attrs.nodeId(data));
     })
+  attrs.nodeContent.bind(this)(nodesSelection)
 
   // Add background rectangle for the nodes
   nodeEnter
@@ -43,12 +44,12 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
     .merge(nodesSelection)
     .style("font", "12px sans-serif");
 
-  this.nodeEnter = nodeEnter;
   // const foreignObject = nodeUpdate.patternify({
   //   tag: "g",
   //   selector: "node-foreign-object",
   //   data: (d) => [d]
   // })
+
 
   // this.restyleForeignObjectElements();
 

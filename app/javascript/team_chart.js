@@ -386,6 +386,7 @@ export class TeamChart {
       selector: "nodes-wrapper"
     })
 
+
     attrs.connectionsWrapper = attrs.centerG.patternify({
       tag: "g",
       selector: "connections-wrapper"
@@ -446,6 +447,7 @@ export class TeamChart {
     })
     return Object.entries(grouped);
   }
+
   #calculateCompactFlexDimensions(root) {
     const attrs = this.getChartState();
     root.eachBefore(node => {
@@ -523,7 +525,6 @@ export class TeamChart {
   update({ x0, y0, x = 0, y = 0, width, height }) {
     const attrs = this.getChartState();
     const calc = attrs.calc;
-
 
     if (attrs.compact) {
       this.#calculateCompactFlexDimensions(attrs.root);

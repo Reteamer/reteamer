@@ -1,6 +1,7 @@
 import { Controller } from "stimulus"
 import { TeamChart } from '../team_chart';
 import * as d3 from "d3";
+import {emitDatePickedEvent} from "../event_emitter";
 
 export default class extends Controller {
 
@@ -18,88 +19,30 @@ export default class extends Controller {
     this.chart
       .data(this.teamData.chart)
       .render()
-      .expandAll()
-
-    const self = this;
-
-    d3.selectAll("g.nodes-wrapper g.node")
-      .on("mouseover", function(event, d) {
-        self.handleMouseOver(this, d);
-      })
-      .on("mouseout", function(event, d) {
-        self.handleMouseOut(this, d);
-      })
-      .append("rect")
-      .classed("team-box", true)
-      .attr("width", d => self.getNodeWidth(d))
-      .attr("height", d => self.getNodeHeight(d))
-
-    const barHeight = 10;
-    d3.selectAll("g.nodes-wrapper g.node")
-      .append("rect")
-      .classed("team-bar", true)
-      .attr("width", d => self.getNodeWidth(d))
-      .attr("height", barHeight)
-
-    const nameHeight = 30
-    d3.selectAll("g.nodes-wrapper g.node")
-      .append("foreignObject")
-      .attr("width", d => self.getNodeWidth(d))
-      .attr("height", nameHeight)
-      .attr("y", barHeight)
-      .html(d =>
-        `<div class="team-name">${d.data.name}</div>`
-      )
-
-    d3.selectAll("g.nodes-wrapper g.node")
-      .append("g")
-      .classed("people-box", true)
-      .attr("width", d => self.getNodeWidth(d))
-      .attr("height", d => self.getNodeHeight(d))
-
-    this.chart.nodeEnter.selectAll(".people-box")
-      .data(d => d.data.members)
-      .enter()
-      .append("g")
-      .classed("person-node", true)
-      .call(d3.drag()
-        .on("start", function(event, d) {
-          self.initiateDrag(d, this)
-        })
-        .on("drag", function(event, d) {
-          let [newX, newY] = self.chart.getCoords(this)
-          d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
-        })
-        .on("end", function(event, d) {
-          self.endDrag(this);
-        })
-      )
-      .attr("transform", (d, index, nodes) => {
-        return `translate(0,0)`
-      })
-      .append("rect")
-      .attr("stroke", "lightgray")
-      .attr("stroke-width", "1px")
-      .attr("width", self.personNodeWidth())
-      .attr("height", self.personNodeHeight())
-
-    d3.selectAll("g.person-node")
-      .append("rect")
-      .attr("class", d => `${d.type} person-bar`)
-      .attr("width", self.personNodeWidth())
-      .attr("height", barHeight)
-
-    d3.selectAll("g.person-node")
-      .append("foreignObject")
-      .attr("width", d => self.personNodeWidth())
-      .attr("height", nameHeight)
-      .attr("y", barHeight)
-      .html(d =>
-        `<div class="person-name">${d.name}</div>`
-      )
+    this.chart
+      .expandAll() //causes an extra render
   }
 
-  handleCompleteChange(event) {}
+  async handleCompleteChange(event) {
+    const response = await fetch("/reteamer_api/people/update_team", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify(
+        {
+          "person": {
+            "effective_date": event.detail.selectedDate,
+            "team_key": this.dropped.team_key,
+            "key": this.dropped.assignment_key
+          }
+        }
+      )
+    });
+    this.chart.finalizeDrop()
+    emitDatePickedEvent(event.detail.selectedDate)
+  }
 
   handleCancelChange(event) {
     const attrs = this.chart.getChartState()
@@ -123,6 +66,7 @@ export default class extends Controller {
   }
 
   connect() {
+    this.firstTime = true;
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
@@ -137,6 +81,95 @@ export default class extends Controller {
       .childrenMargin(d => 40)
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
+      .nodeContent((nodeEnter) => {
+        nodeEnter
+          .on("mouseover", function(event, d) {
+            self.handleMouseOver(this, d);
+          })
+          .on("mouseout", function(event, d) {
+            self.handleMouseOut(this, d);
+          })
+        nodeEnter
+          .append("rect")
+          .classed("team-box", true)
+          .attr("width", d => self.getNodeWidth(d))
+          .attr("height", d => self.getNodeHeight(d))
+
+        const barHeight = 10;
+        nodeEnter
+          .append("rect")
+          .classed("team-bar", true)
+          .attr("width", d => self.getNodeWidth(d))
+          .attr("height", barHeight)
+
+        const nameHeight = 30
+        nodeEnter
+          .append("foreignObject")
+          .attr("width", d => self.getNodeWidth(d))
+          .attr("height", nameHeight)
+          .attr("y", barHeight)
+          .html(d =>
+            `<div class="team-name">${d.data.name}</div>`
+          )
+
+        const peopleBox = nodeEnter.append("g")
+          .classed("people-box", true)
+          .attr("width", d => self.getNodeWidth(d))
+          .attr("height", d => self.getNodeHeight(d))
+          .attr("transform", `translate(0, ${nameHeight + barHeight})`)
+
+        const personData = peopleBox
+          .selectAll(".person-node")
+          .data((d) => d.data.members, d => d.id)
+        personData
+          .exit().remove()
+
+        const personNode = personData
+          .enter()
+          .append("g")
+          .classed("person-node", true)
+
+        personNode
+          .call(d3.drag()
+            .on("start", function(event, d) {
+              self.initiateDrag(d, this)
+            })
+            .on("drag", function(event, d) {
+              let [newX, newY] = self.chart.getCoords(this)
+              d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
+            })
+            .on("end", function(event, d) {
+              self.endDrag(this);
+            })
+          )
+          .attr("transform", (d, i, nodes) => {
+            const nodePadding = 15;
+            const x = i % 2 == 0 ? nodePadding : self.personNodeWidth() + nodePadding * 2
+            const level = Math.floor((i)/2);
+            const y = Math.max(nodePadding, level * (self.personNodeHeight() + nodePadding) + nodePadding)
+            return `translate(${x},${y})`
+          })
+          .append("rect")
+          .attr("stroke", "lightgray")
+          .attr("stroke-width", "1px")
+          .attr("width", self.personNodeWidth())
+          .attr("height", self.personNodeHeight())
+
+        personNode
+          .append("rect")
+          .attr("class", d => `${d.type} person-bar`)
+          .attr("width", self.personNodeWidth())
+          .attr("height", barHeight)
+
+        personNode
+          .append("foreignObject")
+          .attr("width", self.personNodeWidth())
+          .attr("height", nameHeight)
+          .attr("y", barHeight)
+          .html(d =>
+            `<div class="person-name">${d.name}</div>`
+          )
+      })
   }
   personNodeWidth() {
     return 250;
@@ -147,7 +180,7 @@ export default class extends Controller {
   }
 
   getNodeWidth(d) {
-    return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + 50 : this.personNodeWidth() + 50;
+    return d.data.members.length > 1 ? ( 2 * this.personNodeWidth()) + 50 : this.personNodeWidth() + 50;
   }
 
   getNodeHeight(d) {
@@ -191,22 +224,14 @@ export default class extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {
-      const person_key = this.draggingDatum.id;
-      const supervisor_key = this.destinationDatum.data.id
-      this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
-      const supervisorChangedEvent = new CustomEvent("supervisorChanged",
-        {
-          detail: {
-            person_key: person_key,
-            supervisor_key: supervisor_key
-          }
-        }
-      )
-      window.dispatchEvent(supervisorChangedEvent)
+      const assignment_key = this.draggingDatum.id;
+      const team_key = this.destinationDatum.data.id
+      this.dropped = {assignment_key: assignment_key, team_key: team_key}
+      const parentChangedEvent = new CustomEvent("parentChanged", {})
+      window.dispatchEvent(parentChangedEvent)
     } else {
       this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
       this.chart.finalizeDrop()
     }
   }
-
 }
