@@ -2,11 +2,13 @@ import { Controller } from "stimulus"
 import { emitCompleteChangeEvent } from "../event_emitter";
 
 export default class extends Controller {
-  static targets = [ "selectedDate" ]
+  static targets = [ "selectedDate", "selectedDateInput", "otherDateInput" ]
 
   handleDatePicked(event) {
     this.selectedDate = event.detail.newDate;
     this.selectedDateTarget.innerHTML = this.selectedDate;
+    this.selectedDateInputTarget.value = this.selectedDate;
+    this.otherDateInputTarget.value = this.selectedDate;
   }
 
   cancelChange() {
@@ -19,6 +21,7 @@ export default class extends Controller {
     if (newDate == "other") {
       newDate = document.getElementById("other_effective_date").value
     }
+    console.error("=============>", newDate);
     emitCompleteChangeEvent(newDate)
   }
 

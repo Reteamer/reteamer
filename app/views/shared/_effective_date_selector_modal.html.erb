@@ -7,10 +7,10 @@
         <div class="p-8">
           <h2 class="text-xl mb-4">Pick a date for the change to take effect</h2>
           <form data-controller="effective-date-picker" data-action="datePicked@window->effective-date-picker#handleDatePicked">
-            <label><input type="radio" name="effective_date" value="<%= selected_date %>" checked /> The selected date: <span data-effective-date-picker-target="selectedDate"><%= l(selected_date, format: :people_date) %></span></label>
+            <label><input type="radio" name="effective_date" value="<%= selected_date %>" data-effective-date-picker-target="selectedDateInput" checked /> The selected date: <span data-effective-date-picker-target="selectedDate"><%= l(selected_date, format: :people_date) %></span></label>
             <label><input type="radio" name="effective_date" value="<%= Date.today %>" /> Today: <%= l(Date.today, format: :people_date) %></label>
             <label><input type="radio" name="effective_date" value="<%= Date.today.next_week(:monday) %>" /> Beginning of next week: <%= l(Date.today.next_week(:monday), format: :people_date) %></label>
-            <label><input type="radio" name="effective_date" value="other" /> A different date: <input type="date" id="other_effective_date" name="other_effective_date" value="<%= selected_date %>"></label>
+            <label><input type="radio" name="effective_date" value="other" /> A different date: <input type="date" id="other_effective_date" name="other_effective_date" value="<%= selected_date %>" data-effective-date-picker-target="otherDateInput"></label>
 
             <div class="flex justify-end items-center flex-wrap mt-6">
               <button class="btn btn-cancel" data-action="click->modal#close click->effective-date-picker#cancelChange">Cancel</button>
