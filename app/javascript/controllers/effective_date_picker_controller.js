@@ -21,7 +21,6 @@ export default class extends Controller {
     if (newDate == "other") {
       newDate = document.getElementById("other_effective_date").value
     }
-    console.error("=============>", newDate);
     emitCompleteChangeEvent(newDate)
   }
 

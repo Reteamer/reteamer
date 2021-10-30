@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resource :org_chart, only: :show
     resource :team_chart, only: :show
     post 'people/update_supervisor', to: 'people#update_supervisor'
+    post 'people/update_team', to: 'people#update_team'
   end
 
   # Jumpstart views

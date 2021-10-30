@@ -11,19 +11,14 @@
   }
 
   .team-name {
-    margin: 10px;
-    fill: #111672;
+    color: #111672;
     font-size: 20px;
     font-weight: bold;
-    text-anchor: middle;
+    text-align: center;
   }
 
   team-details {
     width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    padding-left: 15px;
-    padding-right: 15px;
   }
 
   team-member-count {

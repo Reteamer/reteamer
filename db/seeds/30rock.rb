@@ -34,7 +34,7 @@ def peopleOfThirtyRock(account)
     entourage  = Entry.create(effective_at: episodes[:s1e01], versionable: Team.create(name: "Tracy's Entourage", parent_key: actors.key))
 
     jack    = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "GE-279F0", first_name: "Jack", last_name: "Donaghy", title: "Vice President of East Coast Television and Microwave Oven Programming", image_url: "/demo_avatars/30_rock/jack.jpeg"))
-    Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: jack.key, team_key: nbc.key))
+    Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: jack.key, team_key: ge.key))
 
     liz     = Entry.create(effective_at: episodes[:s1e01], versionable: People::Employee.create(employee_id: "NBC-22B75", first_name: "Liz", last_name: "Lemon", title: "Head Writer", supervisor_key: jack.key, image_url: "/demo_avatars/30_rock/liz.jpeg"))
     Entry.create(effective_at: episodes[:s1e01], versionable: Assignment.create(person_key: liz.key, team_key: tgs.key))

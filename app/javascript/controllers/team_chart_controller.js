@@ -1,6 +1,7 @@
 import { Controller } from "stimulus"
 import { TeamChart } from '../team_chart';
 import * as d3 from "d3";
+import {emitDatePickedEvent} from "../event_emitter";
 
 export default class extends Controller {
 
@@ -21,21 +22,29 @@ export default class extends Controller {
       .expandAll()
 
     d3.selectAll("g.nodes-wrapper g.node")
+      .selectAll(".people-box")
+      .data(function(d) { return [d]; });
+
+    d3.selectAll(".people-box")
       .selectAll("g.person-node")
       .data(d => d.data.members)
       .join("g")
       .classed("person-node", true)
-      .attr("transform","translate(0,0)")
+      .attr("transform",(d, i) => {
+        const x = i%2 * (this.personNodeWidth() + this.personPadding());
+        const y = Math.floor(i/2) * (this.personNodeHeight() + this.personPadding());
+        return `translate(${x},${y})`
+      })
       .html(member => `
-          <rect class="person-box" width="${this.personNodeWidth()}" height="${this.personNodeHeight()}" />
-          <rect class="person-bar ${member.type}" width="${this.personNodeWidth()}" />
+          <rect class="person-box" width="${this.personNodeWidth()}" height="${this.personNodeHeight()-this.avatarRadius()}" y="${this.avatarRadius()}" />
+          <rect class="person-bar ${member.type}" width="${this.personNodeWidth()}" y="${this.avatarRadius()}" />
           <clipPath id="clipCircle">
-            <circle r="${this.avatarRadius()}" cx="${this.personNodeWidth()/2}" cy="0"/>
+            <circle r="${this.avatarRadius()}" cx="${this.personNodeWidth()/2}" cy="${this.avatarRadius()}"/>
           </clipPath>
-          <image href="${member.image_url || ''}" x="${this.personNodeWidth()/2 - this.avatarRadius()}" y="-${this.avatarRadius()}" width="${this.avatarDiameter()}" height="${this.avatarDiameter()}" clip-path="url(#clipCircle)" />
-          <text class="employment-id" x="${this.personNodeWidth()-15}" y="40">${member.employee_id}</text>
-          <text class="person-name" x="${this.personNodeWidth()/2}" text-anchor="middle" y="60">${member.name}</text>
-          <foreignObject  y="80" width="${this.personNodeWidth()}" height="40">
+          <image href="${member.image_url || ''}" x="${this.personNodeWidth()/2 - this.avatarRadius()}" width="${this.avatarDiameter()}" height="${this.avatarDiameter()}" clip-path="url(#clipCircle)" />
+          <text class="employment-id" x="${this.personNodeWidth()-15}" y="70">${member.employee_id}</text>
+          <text class="person-name" x="${this.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
+          <foreignObject  y="110" width="${this.personNodeWidth()}" height="40">
             <div class="person-title">${member.title}</div>
           </foreignObject>
         `)
@@ -70,6 +79,27 @@ export default class extends Controller {
     this.chart.finalizeDrop()
   }
 
+  async handleCompleteChange(event) {
+    const response = await fetch("/reteamer_api/people/update_team", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      body: JSON.stringify(
+        {
+          "person": {
+            "effective_date": event.detail.selectedDate,
+            "team_key": this.dropped.team_key,
+            "key": this.dropped.assignment_key
+          }
+        }
+      )
+    });
+    this.chart.finalizeDrop()
+    emitDatePickedEvent(event.detail.selectedDate)
+  }
+
   personNodeWidth() {
     return 250;
   }
@@ -78,11 +108,16 @@ export default class extends Controller {
     return 190;
   }
 
+  personPadding() {
+    return 15;
+  }
+
   connect() {
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
 
+    const self = this;
     this.chart = new TeamChart()
       .container('.chart-container')
       .nodeWidth(d => this.getNodeWidth(d))
@@ -92,15 +127,16 @@ export default class extends Controller {
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, index, arr, state) {
-
         return `
             <rect class="team-box" width="${d.width}" height="${d.height}" />
             <rect class="team-bar" width="${d.width}" />
-            <text class="team-name" x="${d.width/2}", y="30" alignment-baseline="middle">${d.data.name}</text>
+            <foreignObject y="30" height="75" width="${d.width}">
+              <div class="team-name">${d.data.name}</div>
+            </foreignObject>
             <foreignObject class="team-details">
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
-            <g class="people-box"></g>
+            <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
         `;
       })
   }
@@ -110,7 +146,7 @@ export default class extends Controller {
   avatarRadius() { return this.avatarDiameter()/2; }
 
   getNodeWidth(d) {
-    return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + 50 : this.personNodeWidth() + 50;
+    return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + this.personPadding() * 3 : this.personNodeWidth() + this.personPadding() * 2;
   }
 
   getNodeHeight(d) {
@@ -154,18 +190,11 @@ export default class extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {
-      const person_key = this.draggingDatum.id;
-      const supervisor_key = this.destinationDatum.data.id
-      this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
-      const supervisorChangedEvent = new CustomEvent("supervisorChanged",
-        {
-          detail: {
-            person_key: person_key,
-            supervisor_key: supervisor_key
-          }
-        }
-      )
-      window.dispatchEvent(supervisorChangedEvent)
+      const assignment_key = this.draggingDatum.id;
+      const team_key = this.destinationDatum.data.id
+      this.dropped = {assignment_key: assignment_key, team_key: team_key}
+      const personDroppedEvent = new CustomEvent("personDropped", {})
+      window.dispatchEvent(personDroppedEvent)
     } else {
       this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
       this.chart.finalizeDrop()
