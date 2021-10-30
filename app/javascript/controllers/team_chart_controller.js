@@ -20,6 +20,21 @@ export default class extends Controller {
       .render()
       .expandAll()
 
+    d3.selectAll("g.nodes-wrapper g.node")
+      .selectAll("g.person-node")
+      .data(d => d.data.members)
+      .join("g")
+      .classed("person-node", true)
+      .attr("transform","translate(0,0)")
+      .html(member => `
+          <rect class="person-box" style="background-color:white;border:1px solid lightgray;" />
+          <rect class="person-bar ${member.type}" style="width:${this.personNodeWidth() - 2}px;"/>
+          <image href="${member.image_url || ''}" style="margin-top:-${this.avatarRadius()}px;margin-left:${(this.personNodeWidth() / 2) - (this.avatarRadius())}px;border-radius:${this.avatarRadius()}px;height:${this.avatarDiameter()}px;width:${this.avatarDiameter()}px;" />
+          <text class="employment-type">${member.employee_id}</text>
+          <text class="person-name">${member.name}</text>
+          <text class="person-title">${member.title}</text>
+        `)
+
     const self = this;
     d3.selectAll("g.nodes-wrapper g.node")
       .on("mouseover", function(event, d) {
@@ -50,24 +65,28 @@ export default class extends Controller {
     this.chart.finalizeDrop()
   }
 
+  personNodeWidth() {
+    return 250;
+  }
+
+  personNodeHeight() {
+    return 190;
+  }
+
   connect() {
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
 
-    const personNodeWidth = 250;
-    const personNodeHeight = 190;
     this.chart = new TeamChart()
       .container('.chart-container')
-      .nodeWidth(d => this.getNodeWidth(d, personNodeWidth))
+      .nodeWidth(d => this.getNodeWidth(d))
       .initialZoom(0.7)
-      .nodeHeight(d => this.getNodeHeight(d, personNodeHeight))
+      .nodeHeight(d => this.getNodeHeight(d))
       .childrenMargin(d => 40)
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, index, arr, state) {
-        const avatarDiameter = 60;
-        const avatarRadius = avatarDiameter/2;
 
         return `
             <rect class="team-box" style="height:${d.height}px;" />
@@ -76,33 +95,22 @@ export default class extends Controller {
             <foreignObject class="team-details">
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
-            ${d.data.members.length > 0 ? `
-              <g class="people-box">
-              ${d.data.members.map(member => `
-                <g class="person-node" transform="translate(0,0)" style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
-                  <rect class="person-box" style="background-color:white;border:1px solid lightgray;" />
-                  <rect class="person-bar ${member.type}" style="width:${personNodeWidth - 2}px;"/>
-                  <image href="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
-                  <text class="employment-type">${member.employee_id}</extemployment-type>
-                  <text class="person-name">${member.name}</text>
-                  <text class="person-title">${member.title}</text>
-                </g>
-                `).join("")
-              }
-              </g>
-            ` : ""
-            }
-  `;
+            
+        `;
       })
   }
 
-  getNodeWidth(d, personNodeWidth) {
-    return d.data.members.length > 1 ? (2 * personNodeWidth) + 50 : personNodeWidth + 50;
+  avatarDiameter() { return 60; }
+  avatarRadius() { return this.avatarDiameter()/2; }
+
+
+  getNodeWidth(d) {
+    return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + 50 : this.personNodeWidth() + 50;
   }
 
-  getNodeHeight(d, personNodeHeight) {
+  getNodeHeight(d) {
     const numberOfColumns = Math.ceil(d.data.members.length / 2);
-    const calculatedHeight = 150 + numberOfColumns * personNodeHeight;
+    const calculatedHeight = 150 + numberOfColumns * this.personNodeHeight();
     return Math.max(130, calculatedHeight);
   }
 
