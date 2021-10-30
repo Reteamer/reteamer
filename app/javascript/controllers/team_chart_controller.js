@@ -28,6 +28,7 @@ export default class extends Controller {
       .on("mouseout", function(event, d) {
         self.handleMouseOut(this, d);
       })
+    d3.selectAll("g.nodes-wrapper .person-node")
       .call(d3.drag()
         .on("start", function(event, d) {
           self.initiateDrag(d, this)
@@ -69,34 +70,28 @@ export default class extends Controller {
         const avatarRadius = avatarDiameter/2;
 
         return `
-            <team-box style="height:${d.height}px;">
-              <team-bar></team-bar>
-              <team-name>
-                ${d.data.name}
-              </team-name>
-              <team-details>
-                <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
-              </team-details>
-              ${d.data.members.length > 0 ? `
-                <people-box>
-                ${d.data.members.map(member => `
-                  <person-node style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
-                    <div style="background-color:white;border:1px solid lightgray;">
-                      <person-bar class="${member.type}" style="width:${personNodeWidth - 2}px;"></person-bar>
-                      <img src="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
-                      <employment-type>${member.employee_id}</employment-type>
-                      <person-info>
-                        <person-name>${member.name}</person-name>
-                        <person-title>${member.title}</person-title>
-                      </person-info>
-                    </div>
-                  </person-node>
-                  `).join("")
-                }
-                </people-box>
-              ` : ""
+            <rect class="team-box" style="height:${d.height}px;" />
+            <rect class="team-bar"/>
+            <text class="team-name">${d.data.name}</text>
+            <foreignObject class="team-details">
+              <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
+            </foreignObject>
+            ${d.data.members.length > 0 ? `
+              <g class="people-box">
+              ${d.data.members.map(member => `
+                <g class="person-node" transform="translate(0,0)" style="width:${personNodeWidth}px;padding-top:${avatarRadius + 10}px">
+                  <rect class="person-box" style="background-color:white;border:1px solid lightgray;" />
+                  <rect class="person-bar ${member.type}" style="width:${personNodeWidth - 2}px;"/>
+                  <image href="${member.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${(personNodeWidth / 2) - (avatarRadius)}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
+                  <text class="employment-type">${member.employee_id}</extemployment-type>
+                  <text class="person-name">${member.name}</text>
+                  <text class="person-title">${member.title}</text>
+                </g>
+                `).join("")
+              }
+              </g>
+            ` : ""
             }
-            </team-box>
   `;
       })
   }
@@ -128,7 +123,7 @@ export default class extends Controller {
   initiateDrag(d, domNode) {
     this.draggingDatum = d;
     this.draggingNode = domNode;
-    
+
     let startCoords = this.chart.getCoords(domNode)
     this.dragStartX = startCoords[0]
     this.dragStartY = startCoords[1]
