@@ -51,13 +51,6 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
   })
     .style('overflow', 'visible')
 
-  // Add foreign object
-  foreignObject.patternify({
-    tag: "g",
-    selector: "node-foreign-object-div",
-    data: (d) => [d]
-  })
-
   this.restyleForeignObjectElements();
 
   // Add Node button circle's group (expand-collapse button)

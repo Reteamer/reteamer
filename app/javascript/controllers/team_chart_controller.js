@@ -27,12 +27,17 @@ export default class extends Controller {
       .classed("person-node", true)
       .attr("transform","translate(0,0)")
       .html(member => `
-          <rect class="person-box" style="background-color:white;border:1px solid lightgray;" />
-          <rect class="person-bar ${member.type}" style="width:${this.personNodeWidth() - 2}px;"/>
-          <image href="${member.image_url || ''}" style="margin-top:-${this.avatarRadius()}px;margin-left:${(this.personNodeWidth() / 2) - (this.avatarRadius())}px;border-radius:${this.avatarRadius()}px;height:${this.avatarDiameter()}px;width:${this.avatarDiameter()}px;" />
-          <text class="employment-type">${member.employee_id}</text>
-          <text class="person-name">${member.name}</text>
-          <text class="person-title">${member.title}</text>
+          <rect class="person-box" width="${this.personNodeWidth()}" height="${this.personNodeHeight()}" />
+          <rect class="person-bar ${member.type}" width="${this.personNodeWidth()}" />
+          <clipPath id="clipCircle">
+            <circle r="${this.avatarRadius()}" cx="${this.personNodeWidth()/2}" cy="0"/>
+          </clipPath>
+          <image href="${member.image_url || ''}" x="${this.personNodeWidth()/2 - this.avatarRadius()}" y="-${this.avatarRadius()}" width="${this.avatarDiameter()}" height="${this.avatarDiameter()}" clip-path="url(#clipCircle)" />
+          <text class="employment-id" x="${this.personNodeWidth()-15}" y="40">${member.employee_id}</text>
+          <text class="person-name" x="${this.personNodeWidth()/2}" text-anchor="middle" y="60">${member.name}</text>
+          <foreignObject  y="80" width="${this.personNodeWidth()}" height="40">
+            <div class="person-title">${member.title}</div>
+          </foreignObject>
         `)
 
     const self = this;
@@ -89,20 +94,20 @@ export default class extends Controller {
       .nodeContent(function(d, index, arr, state) {
 
         return `
-            <rect class="team-box" style="height:${d.height}px;" />
-            <rect class="team-bar"/>
-            <text class="team-name">${d.data.name}</text>
+            <rect class="team-box" width="${d.width}" height="${d.height}" />
+            <rect class="team-bar" width="${d.width}" />
+            <text class="team-name" x="${d.width/2}", y="30" alignment-baseline="middle">${d.data.name}</text>
             <foreignObject class="team-details">
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
-            
+            <g class="people-box"></g>
         `;
       })
   }
 
   avatarDiameter() { return 60; }
-  avatarRadius() { return this.avatarDiameter()/2; }
 
+  avatarRadius() { return this.avatarDiameter()/2; }
 
   getNodeWidth(d) {
     return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + 50 : this.personNodeWidth() + 50;
@@ -149,7 +154,7 @@ export default class extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {
-      const person_key = this.draggingDatum.data.id;
+      const person_key = this.draggingDatum.id;
       const supervisor_key = this.destinationDatum.data.id
       this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
       const supervisorChangedEvent = new CustomEvent("supervisorChanged",
@@ -166,5 +171,4 @@ export default class extends Controller {
       this.chart.finalizeDrop()
     }
   }
-
 }

@@ -3,7 +3,7 @@
     <h1>Org Chart</h1>
   </div>
   <%= render "shared/date_navigator", selected_date: @selected_date %>
-  <div data-controller="org-chart"
+  <div class="org-chart" data-controller="org-chart"
        data-action="
        newData@window->org-chart#handleNewOrgData
        completeChange@window->org-chart#handleCompleteChange

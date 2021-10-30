@@ -564,14 +564,8 @@ export class TeamChart {
 
     attrs.svg
       .selectAll(".node-foreign-object")
-      .attr("width", ({ width }) => width)
-      .attr("height", ({ height }) => height)
-      .attr("x", ({ width }) => 0)
-      .attr("y", ({ height }) => 0);
-    attrs.svg
-      .selectAll(".node-foreign-object-div")
-      .style("width", ({ width }) => `${width}px`)
-      .style("height", ({ height }) => `${height}px`)
+      .attr("width", ({ width }) => `${width}`)
+      .attr("height", ({ height }) => `${height}`)
       .html(function (d, i, arr) { return attrs.nodeContent.bind(this)(d, i, arr, attrs) })
   }
 

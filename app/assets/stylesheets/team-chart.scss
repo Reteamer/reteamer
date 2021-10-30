@@ -1,31 +1,29 @@
 .team-chart {
-  team-box {
-    display: block;
-    background: white;
-    border: 1px solid lightgray;
+  .team-box {
+    fill: white;
+    stroke: lightgray;
+    stroke-width: 1px;
   }
-  team-bar {
-    background-color: #6d9bb4;
-    display:block;
-    height:10px;
-    width:100%;
-    border-radius:1px;
+
+  .team-bar {
+    fill: #6d9bb4;
+    height: 10px;
   }
-  team-name {
-    display:block;
+
+  .team-name {
     margin: 10px;
-    color:#111672;
-    font-size:20px;
-    font-weight:bold;
-    text-align:center;
+    fill: #111672;
+    font-size: 20px;
+    font-weight: bold;
+    text-anchor: middle;
   }
 
   team-details {
-    width:100%;
-    display:flex;
+    width: 100%;
+    display: flex;
     justify-content: flex-end;
-    padding-left:15px;
-    padding-right:15px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   team-member-count {
@@ -33,96 +31,85 @@
   }
 
   people-box {
-    display:flex;
-    flex-wrap:wrap;
-    flex-direction:row;
-    justify-content:space-around;
-  }
-}
-
-.fake-root-node {
-  display: none;
-}
-.activeDrag person-bar {
-  background:repeating-linear-gradient(
-      45deg,
-      #c7ae0c,
-      #c7ae0c 10px,
-      #b75a0e 10px,
-      #b75a0e 20px)
-}
-
-.drop-target {
-  filter: drop-shadow( 3px 3px 2px rgba(33, 208, 28, 0.7));
-}
-
-person-node {
-  background-color:transparent;
-  border-radius:2px;
-  overflow:visible;
-  display:block;
-
-  person-box {
-    padding-top:0px;
-    background-color:white;
-    border:1px solid lightgray;
-    display:block;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
   }
 
-  img {
-    overflow:hidden;
-    border:1px solid gray;
+  .fake-root-node {
+    display: none;
   }
 
-  employment-type {
-    margin-right:10px;
-    margin-top:15px;
-    float:right;
+  .activeDrag person-bar {
+    background: repeating-linear-gradient(
+        45deg,
+        #c7ae0c,
+        #c7ae0c 10px,
+        #b75a0e 10px,
+        #b75a0e 20px)
   }
 
-  person-bar {
-    height:10px;
-    display:block;
+  .drop-target {
+    filter: drop-shadow(3px 3px 2px rgba(33, 208, 28, 0.7));
+  }
 
-    &.contractor {
-      background: repeating-linear-gradient(
-          45deg,
-          #044a64,
-          #044a64 10px,
-          #465298 10px,
-          #465298 20px)
+  .person-node {
+    background-color: transparent;
+    border-radius: 2px;
+    overflow: visible;
+    display: block;
+
+    .person-box {
+      fill: white;
+      stroke: lightgray;
+      stroke-width: 1px;
     }
-    &.employee {
-      background-color: #3AB6E3;
+
+    img {
+      overflow: hidden;
     }
-    &.openreq {
-      background: repeating-linear-gradient(
-          45deg,
-          #3AB6E3,
-          #3AB6E3 10px,
-          #74e776 10px,
-          #74e776 20px)
+
+    .employment-id {
+      text-anchor: end;
     }
-  }
 
-  person-info {
-    padding:20px;
-    padding-top:35px;
-    text-align:center;
-    display:block;
-  }
+    .person-bar {
+      height: 10px;
 
-  person-name {
-    color:#111672;
-    font-size:16px;
-    font-weight:bold;
-    display:block;
-  }
+      &.contractor {
+        fill: #465298;
+      }
 
-  person-title {
-    color:#404040;
-    font-size:16px;
-    margin-top:4px;
-    display:block;
+      &.employee {
+        fill: #3AB6E3;
+      }
+
+      &.openreq {
+        fill: #74e776l
+      }
+    }
+
+    person-info {
+      padding: 20px;
+      padding-top: 35px;
+      text-align: center;
+      display: block;
+    }
+
+    .person-name {
+      fill: #111672;
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+    }
+
+    .person-title {
+      color: #404040;
+      font-size: 16px;
+      margin-top: 4px;
+      display: block;
+      text-align: center;
+    }
   }
 }
