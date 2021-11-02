@@ -1,6 +1,6 @@
 def add_episode(e, episodes, season)
   key = "s" + season.to_s + "e" + e.to_s.rjust(2, "0")
-  episodes[key.to_sym] = @episode_counter.weeks.from_now.to_date
+  episodes[key.to_sym] = @episode_counter.days.from_now.to_date
   @episode_counter += 1
 end
 

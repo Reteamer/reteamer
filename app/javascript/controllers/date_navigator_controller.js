@@ -2,6 +2,9 @@ import { Controller } from "stimulus"
 import { toISODate } from "../date_helpers"
 import { emitDatePickedEvent } from "../event_emitter"
 import * as d3 from "d3"
+import dayjs from "dayjs";
+import weekOfYear from "dayjs/plugin/weekOfYear"
+dayjs.extend(weekOfYear)
 
 export default class extends Controller {
   static targets = [ "dateInput" ]
@@ -137,8 +140,8 @@ export default class extends Controller {
 
     self.x.domain(
       [
-        new Date(self.xExtent[0]).setDate(new Date(self.xExtent[0]).getDate()-30),
-        new Date(self.xExtent[1]).setDate(new Date(self.xExtent[1]).getDate()+30)
+        new Date(self.xExtent[0]).setDate(new Date(self.xExtent[0]).getDate()-5),
+        new Date(self.xExtent[1]).setDate(new Date(self.xExtent[1]).getDate()+5)
       ]
     );
 
@@ -177,5 +180,18 @@ export default class extends Controller {
       .attr("width", 8)
       .attr("x", (d, i) => self.x(d.date))
       .attr("y", d => self.y(d.value))
+
+    const startDate = dayjs(self.x.domain()[0]).day(0)
+    const endDate = self.x.domain()[1];
+    for (let i = startDate; i <= endDate; i = dayjs(i).add(7, "days").toDate()) {
+      self.svg.append("rect")
+        .attr("fill", (dayjs(i).week())%2 == 0 ? "none": "#dddddd")
+        .attr("fill-opacity", ".5")
+        .attr("x", self.x(i))
+        .attr("y", 0)
+        .attr("width", self.x(dayjs(i).add(7, "days")) - self.x(i))
+        .attr("height", self.height)
+        .lower()
+    }
   }
 }
