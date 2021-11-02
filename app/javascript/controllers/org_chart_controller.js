@@ -172,10 +172,11 @@ export default class extends Controller {
       })
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
-      .nodeContent(function(d, index, arr, state) {
+      .nodeContent(function(d, i, nodes, attrs) {
         const avatarRadius = 30;
         const avatarDiameter = 60;
-        return `
+        d3.select(this).html(`
+          <foreignObject width="${d.width}" height="${d.height}">
             <person-node class="${d.depth == 0 ? "fake-root-node" : ""}" style="padding-top:${avatarRadius}px;height:${d.height}px;">
               <person-box style="height:${d.height - 32}px;">
                 <img src="${d.data.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${d.width / 2 - avatarRadius}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
@@ -195,7 +196,8 @@ export default class extends Controller {
                 </div>` : ""}
               </person-box>
             </person-node>
-  `;
+          </foreignObject>
+        `);
       })
   }
 }
