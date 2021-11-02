@@ -20,57 +20,6 @@ export default class extends Controller {
       .data(this.teamData.chart)
       .render()
       .expandAll()
-
-    d3.selectAll("g.nodes-wrapper g.node")
-      .selectAll(".people-box")
-      .data(function(d) { return [d]; });
-
-    d3.selectAll(".people-box")
-      .selectAll("g.person-node")
-      .data(d => d.data.members)
-      .join("g")
-      .classed("person-node", true)
-      .attr("transform",(d, i) => {
-        const x = i%2 * (this.personNodeWidth() + this.personPadding());
-        const y = Math.floor(i/2) * (this.personNodeHeight() + this.personPadding());
-        return `translate(${x},${y})`
-      })
-      .html(member => `
-          <rect class="person-box" width="${this.personNodeWidth()}" height="${this.personNodeHeight()-this.avatarRadius()}" y="${this.avatarRadius()}" />
-          <rect class="person-bar ${member.type}" width="${this.personNodeWidth()}" y="${this.avatarRadius()}" />
-          <clipPath id="clipCircle">
-            <circle r="${this.avatarRadius()}" cx="${this.personNodeWidth()/2}" cy="${this.avatarRadius()}"/>
-          </clipPath>
-          <image href="${member.image_url || ''}" x="${this.personNodeWidth()/2 - this.avatarRadius()}" width="${this.avatarDiameter()}" height="${this.avatarDiameter()}" clip-path="url(#clipCircle)" />
-          <text class="employment-id" x="${this.personNodeWidth()-15}" y="70">${member.employee_id}</text>
-          <text class="person-name" x="${this.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
-          <foreignObject  y="110" width="${this.personNodeWidth()}" height="40">
-            <div class="person-title">${member.title}</div>
-          </foreignObject>
-        `)
-
-    const self = this;
-    d3.selectAll("g.nodes-wrapper g.node")
-      .on("mouseover", function(event, d) {
-        self.handleMouseOver(this, d);
-      })
-      .on("mouseout", function(event, d) {
-        self.handleMouseOut(this, d);
-      })
-    d3.selectAll("g.nodes-wrapper .person-node")
-      .call(d3.drag()
-        .on("start", function(event, d) {
-          self.initiateDrag(d, this)
-        })
-        .on("drag", function(event, d) {
-          let [newX, newY] = self.chart.getCoords(this)
-          d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
-        })
-        .on("end", function(event, d) {
-          self.endDrag(this);
-        })
-      )
-
   }
 
   handleCancelChange(event) {
@@ -126,8 +75,8 @@ export default class extends Controller {
       .childrenMargin(d => 40)
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
-      .nodeContent(function(d, index, arr, state) {
-        return `
+      .nodeContent(function(d, i, nodes, attrs) { //this is the dom node
+        d3.select(this).html(`
             <rect class="team-box" width="${d.width}" height="${d.height}" />
             <rect class="team-bar" width="${d.width}" />
             <foreignObject y="30" height="75" width="${d.width}">
@@ -137,7 +86,57 @@ export default class extends Controller {
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
             <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
-        `;
+        `)
+
+        d3.selectAll("g.nodes-wrapper g.node")
+          .selectAll(".people-box")
+          .data(function(d) { return [d]; });
+
+        d3.selectAll(".people-box")
+          .selectAll("g.person-node")
+          .data(d => d.data.members)
+          .join("g")
+          .classed("person-node", true)
+          .attr("transform",(d, i) => {
+            const x = i%2 * (self.personNodeWidth() + self.personPadding());
+            const y = Math.floor(i/2) * (self.personNodeHeight() + self.personPadding());
+            return `translate(${x},${y})`
+          })
+          .html(member => `
+            <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}" />
+            <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}" />
+            <clipPath id="clipCircle">
+              <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
+            </clipPath>
+            <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
+            <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
+            <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
+            <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
+              <div class="person-title">${member.title}</div>
+            </foreignObject>
+        `)
+
+        d3.selectAll("g.nodes-wrapper g.node")
+          .on("mouseover", function(event, d) {
+            self.handleMouseOver(this, d);
+          })
+          .on("mouseout", function(event, d) {
+            self.handleMouseOut(this, d);
+          })
+        d3.selectAll("g.nodes-wrapper .person-node")
+          .call(d3.drag()
+            .on("start", function(event, d) {
+              self.initiateDrag(d, this)
+            })
+            .on("drag", function(event, d) {
+              let [newX, newY] = self.chart.getCoords(this)
+              d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
+            })
+            .on("end", function(event, d) {
+              self.endDrag(this);
+            })
+          )
+
       })
   }
 

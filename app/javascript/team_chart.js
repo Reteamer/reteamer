@@ -299,6 +299,7 @@ export class TeamChart {
   }
 
   render() {
+    console.error("=============>", "RENDER");
     //InnerFunctions which will update visuals
     const attrs = this.getChartState();
     if (!attrs.data || attrs.data.length == 0) {
@@ -535,6 +536,7 @@ export class TeamChart {
 
   // This function basically redraws visible graph, based on nodes state
   update({ x0, y0, x = 0, y = 0, width, height }) {
+    console.error("=============>", "UPDATE");
     const attrs = this.getChartState();
     const calc = attrs.calc;
 
@@ -560,13 +562,14 @@ export class TeamChart {
   }
 
   restyleForeignObjectElements() {
+    console.error("=============>", "RESET");
     const attrs = this.getChartState();
 
     attrs.svg
       .selectAll(".node-foreign-object")
       .attr("width", ({ width }) => `${width}`)
       .attr("height", ({ height }) => `${height}`)
-      .html(function (d, i, arr) { return attrs.nodeContent.bind(this)(d, i, arr, attrs) })
+      .each(function (d, i, nodes) { return attrs.nodeContent.bind(this)(d, i, nodes, attrs) })
   }
 
   // Toggle children on click.
