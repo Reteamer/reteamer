@@ -20,4 +20,6 @@ prepared for the obstacles that lie ahead.
 
 ## The Benefits
 
+- When you use Reteamer, you'll create organizational stability by regularly changing your teams
+- When you use Reteamer, you'll know what lies ahead for you and your teams
 - When you use Reteamer, you tell your new hires that they're getting a level of autonomy that's greater than anywhere else they might want to work
