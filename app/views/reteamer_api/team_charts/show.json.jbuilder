@@ -19,6 +19,7 @@ json.chart do
       json.image_url(member.image_url || 'https://www.gravatar.com/avatar/?s=50')
       json.employee_id(member.employee_id)
       json.type(member.type.demodulize.downcase)
+      json.team_id(team.key)
     end
   end
 end

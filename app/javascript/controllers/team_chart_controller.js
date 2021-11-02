@@ -178,14 +178,18 @@ export default class extends Controller {
     const node = d3.select(domNode);
     node
       .attr('pointer-events', 'none')
-      .classed('activeDrag', true)
+      .classed('active-drag', true)
+      .raise()
+
+    d3.selectAll('g.node')
+      .filter((group) => group.id === d.team_id)
       .raise()
   }
 
   endDrag(domNode) {
     d3.select(domNode)
       .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
-      .classed("activeDrag", false)
+      .classed("active-drag", false)
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {

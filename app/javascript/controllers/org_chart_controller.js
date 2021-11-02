@@ -23,7 +23,7 @@ export default class extends Controller {
       .expandAll()
 
     const self = this;
-    d3.selectAll("g.nodes-wrapper g.node")
+    d3.selectAll("g.nodes-wrapper .person-node")
       .on("mouseover", function(event, d) {
         self.handleMouseOver(this, d);
       })
@@ -102,14 +102,16 @@ export default class extends Controller {
     const node = d3.select(domNode);
     node
       .attr('pointer-events', 'none')
-      .classed('activeDrag', true)
+      .classed('active-drag', true)
+    d3.selectAll('g.node')
+      .filter((group) => group.id === d.id)
       .raise()
   }
 
   endDrag(domNode) {
     d3.select(domNode)
       .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
-      .classed("activeDrag", false)
+      .classed("active-drag", false)
 
     const attrs = this.chart.getChartState()
     if (this.destinationDatum !== null) {
@@ -131,12 +133,21 @@ export default class extends Controller {
     }
   }
 
+  avatarDiameter() { return 60; }
+
+  avatarRadius() { return this.avatarDiameter()/2; }
+
+  personNodeWidth() { return 250; }
+
+  personNodeHeight() {return 190;}
+
   async connect() {
     this.firstRender = true;
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
 
+    const self = this;
     this.chart = new TeamChart()
       .container('.chart-container')
       .connectionsUpdate(function (d, i, arr) {
@@ -173,31 +184,33 @@ export default class extends Controller {
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, i, nodes, attrs) {
-        const avatarRadius = 30;
-        const avatarDiameter = 60;
-        d3.select(this).html(`
-          <foreignObject width="${d.width}" height="${d.height}">
-            <person-node class="${d.depth == 0 ? "fake-root-node" : ""}" style="padding-top:${avatarRadius}px;height:${d.height}px;">
-              <person-box style="height:${d.height - 32}px;">
-                <img src="${d.data.image_url || ''}" style="margin-top:-${avatarRadius}px;margin-left:${d.width / 2 - avatarRadius}px;border-radius:${avatarRadius}px;height:${avatarDiameter}px;width:${avatarDiameter}px;" />
+        d3.select(this).html(d => {
+          const member = d.data;
+          return `
+          <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
+            <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}" />
+            <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}" />
+            <clipPath id="clipCircle">
+              <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
+            </clipPath>
+            <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
+            <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
+            <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
+            <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
+              <div class="person-title">${member.title}</div>
+              ${d.data._directSubordinates > 0 ? `
+                  <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
+                    <div > Manages:  ${d.data._directSubordinates} 👤</div>
+                    <div > Oversees: ${d.data._totalSubordinates} 👤</div>
+                  </div>` : ""
+              }
+            </foreignObject>
+          </g>
+        `});
 
-                <employment-type style="margin-right:10px;margin-top:15px;float:right">${d.data.employee_id}</employment-type>
-
-                <person-bar class="${d.data.type}" style="margin-top:-${avatarRadius}px;height:10px;width:${d.width - 2}px;border-radius:1px"></person-bar>
-
-                <person-info>
-                  <person-name>${d.data.name}</person-name>
-                  <person-title>${d.data.title}</person-title>
-                </person-info>
-                ${d.data._directSubordinates > 0 ? `
-                <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
-                  <div > Manages:  ${d.data._directSubordinates} 👤</div>
-                  <div > Oversees: ${d.data._totalSubordinates} 👤</div>
-                </div>` : ""}
-              </person-box>
-            </person-node>
-          </foreignObject>
-        `);
+        d3.selectAll("g.nodes-wrapper g.node")
+          .selectAll(".person-node")
+          .data(function(d) { return [d]; });
       })
   }
 }
