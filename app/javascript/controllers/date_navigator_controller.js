@@ -25,7 +25,7 @@ export default class extends Controller {
 
     self.margin = {
       top: 20,
-      right: 80,
+      right: 50,
       bottom: 30,
       left: 50
     }
@@ -39,7 +39,7 @@ export default class extends Controller {
       .attr("width", "100%")
     self.element.appendChild(self.svg.node()); //must do this before we can read the width of the node
 
-    self.width = self.svg.node().clientWidth - self.margin.left - self.margin.right;
+    self.width = self.svg.node().clientWidth;
     self.x = d3.scaleUtc().range([0, self.width]);
     self.xAxis = d3.axisBottom(self.x)
 
