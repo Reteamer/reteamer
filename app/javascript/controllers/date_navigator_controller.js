@@ -186,7 +186,7 @@ export default class extends Controller {
     for (let i = startDate; i <= endDate; i = dayjs(i).add(7, "days").toDate()) {
       self.svg.append("rect")
         .attr("fill", (dayjs(i).week())%2 == 0 ? "none": "#dddddd")
-        .attr("fill-opacity", ".5")
+        .attr("fill-opacity", ".8")
         .attr("x", self.x(i))
         .attr("y", 0)
         .attr("width", self.x(dayjs(i).add(7, "days")) - self.x(i))
