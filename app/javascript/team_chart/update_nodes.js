@@ -22,7 +22,7 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
       const yj = attrs.layoutBindings[attrs.layout].nodeJoinY({x: x0, y: y0, width, height});
       return `translate(${xj},${yj})`
     })
-    .attr("cursor", "pointer")
+    .attr("cursor", "grab")
     .on("click", (event, {data}) => {
       if ([...event.srcElement.classList].includes("node-button-foreign-object")) {
         return;
@@ -101,7 +101,7 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
     .attr("height", ({height}) => height)
     .attr("x", ({width}) => 0)
     .attr("y", ({height}) => 0)
-    .attr("cursor", "pointer")
+    .attr("cursor", "grab")
     .attr('rx', 3)
     .attr("fill", attrs.nodeDefaultBackground)
 

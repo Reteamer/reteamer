@@ -122,7 +122,7 @@ export default class extends Controller {
             </g>
         `)
         d3.selectAll(".person-button")
-          .attr("cursor", "crosshair")
+          .attr("cursor", "pointer")
           .on("click", (e) => {
             console.error("=============>", "button clicked!");
           })

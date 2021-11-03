@@ -801,13 +801,13 @@ export class TeamChart {
   }
 
   getCoords(myElement) {
-    var xforms = myElement.transform.baseVal; // An SVGTransformList
-    var firstXForm = xforms.getItem(0);       // An SVGTransform
-    if (firstXForm.type == SVGTransform.SVG_TRANSFORM_TRANSLATE){
-      var firstX = firstXForm.matrix.e,
-        firstY = firstXForm.matrix.f;
+    var transforms = myElement.transform.baseVal; // An SVGTransformList
+    var firstTransform = transforms.getItem(0);       // An SVGTransform
+    if (firstTransform.type == SVGTransform.SVG_TRANSFORM_TRANSLATE){
+      var x = parseInt(firstTransform.matrix.e),
+        y = parseInt(firstTransform.matrix.f);
     }
-    return [parseInt(firstX), parseInt(firstY)]
+    return [x, y]
   }
 }
 
