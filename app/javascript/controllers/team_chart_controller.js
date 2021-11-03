@@ -24,7 +24,7 @@ export default class extends Controller {
 
   handleCancelChange(event) {
     const attrs = this.chart.getChartState()
-    this.chart.restoreNodePosition(d3.select(this.draggingNode), attrs.duration, this.dragStartX, this.dragStartY);
+    this.chart.restoreNodePosition(d3.select(this.chart.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
     this.chart.finalizeDrop()
   }
 
@@ -165,22 +165,22 @@ export default class extends Controller {
   }
 
   handleMouseOver(domNode, d) {
-    this.destinationDatum = d;
-    if(this.draggingDatum) {
+    this.chart.setDestinationDatum(d);
+    if(this.chart.getDraggingDatum()) {
       d3.select(domNode).classed("drop-target", true)
     }
   };
 
   handleMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
-    if(this.draggingDatum) {
-      this.destinationDatum = null;
+    if(this.chart.getDraggingDatum()) {
+      this.chart.setDestinationDatum(null);
     }
   };
 
   initiateDrag(d, domNode) {
-    this.draggingDatum = d;
-    this.draggingNode = domNode;
+    this.chart.setDraggingDatum(d);
+    this.chart.setDraggingNode(domNode);
 
     let startCoords = this.chart.getCoords(domNode)
     this.dragStartX = startCoords[0]
@@ -202,9 +202,9 @@ export default class extends Controller {
       .classed("active-drag", false)
 
     const attrs = this.chart.getChartState()
-    if (this.destinationDatum !== null) {
-      const assignment_key = this.draggingDatum.id;
-      const team_key = this.destinationDatum.data.id
+    if (this.chart.getDestinationDatum() !== null) {
+      const assignment_key = this.chart.getDraggingDatum().id;
+      const team_key = this.chart.getDestinationDatum().data.id
       this.dropped = {assignment_key: assignment_key, team_key: team_key}
       const personDroppedEvent = new CustomEvent("personDropped", {})
       window.dispatchEvent(personDroppedEvent)
