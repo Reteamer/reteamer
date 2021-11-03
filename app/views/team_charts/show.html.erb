@@ -12,6 +12,39 @@
        style="padding-left:0; padding-right:0"></div>
   <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked" data-team-data-starting-date-value="<%= @selected_date %>"></div>
   <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
+
+
+  <div class="fab-container">
+    <div class="fab fab-icon-holder">
+      <i class="fas fa-plus"></i>
+    </div>
+
+    <ul class="fab-options">
+      <li>
+        <span class="fab-label">Add New Team</span>
+        <div class="fab-icon-holder">
+          <i class="fas fa-users"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label">Add New Person</span>
+        <div class="fab-icon-holder">
+          <i class="fas fa-user"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label">Add New Assignment</span>
+        <div class="fab-icon-holder">
+          <i class="fas fa-network-wired"></i>
+        </div>
+      </li>
+      <li>
+        <span class="fab-label">Feedback</span>
+        <div class="fab-icon-holder">
+          <i class="fas fa-comment-alt"></i>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 <%= render "shared/effective_date_selector_modal", selected_date: @selected_date %>
-

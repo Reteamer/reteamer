@@ -119,6 +119,10 @@ export default class extends Controller {
                 <circle r="10" cx="10" cy="10"></circle>
                 <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
               </g>
+              <g class="person-button" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
+              </g>
             </g>
         `)
         d3.selectAll(".person-button")
