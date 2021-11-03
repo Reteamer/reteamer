@@ -79,7 +79,7 @@ export default function updateNodes(attrs, nodes, x0, y0, width, height, x, y) {
       selector: "node-button-div",
       data: (d) => [d]
     })
-    .style('pointer-events', 'none')
+    // .style('pointer-events', 'none')
     .style('display', 'flex')
     .style('width', '100%')
     .style('height', '100%')

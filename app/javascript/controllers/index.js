@@ -25,6 +25,7 @@ import OrgChartController from "./org_chart_controller"
 import OrgDataController from "./org_data_controller"
 import TeamChartController from "./team_chart_controller"
 import TeamDataController from "./team_data_controller"
+import PersonButtonsController from "./person_buttons_controller"
 import UrlDateManager from "./url_date_manager_controller"
 application.register("effective-date-picker", EffectiveDatePickerController)
 application.register("date-navigator", DateNavigatorController)
@@ -32,6 +33,7 @@ application.register("org-chart", OrgChartController)
 application.register("org-data", OrgDataController)
 application.register("team-chart", TeamChartController)
 application.register("team-data", TeamDataController)
+application.register("person-buttons", PersonButtonsController)
 application.register("url-date-manager", UrlDateManager)
 
 

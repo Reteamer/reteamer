@@ -114,7 +114,18 @@ export default class extends Controller {
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>
             </foreignObject>
+            <g class="people-buttons">
+              <g class="person-button" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
+              </g>
+            </g>
         `)
+        d3.selectAll(".person-button")
+          .attr("cursor", "crosshair")
+          .on("click", (e) => {
+            console.error("=============>", "button clicked!");
+          })
 
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
@@ -136,7 +147,6 @@ export default class extends Controller {
               self.endDrag(this);
             })
           )
-
       })
   }
 
