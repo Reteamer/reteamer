@@ -804,8 +804,8 @@ export class TeamChart {
     var transforms = myElement.transform.baseVal; // An SVGTransformList
     var firstTransform = transforms.getItem(0);       // An SVGTransform
     if (firstTransform.type == SVGTransform.SVG_TRANSFORM_TRANSLATE){
-      var x = parseInt(firstTransform.matrix.e),
-        y = parseInt(firstTransform.matrix.f);
+      var x = parseFloat(firstTransform.matrix.e),
+        y = parseFloat(firstTransform.matrix.f);
     }
     return [x, y]
   }
