@@ -123,6 +123,8 @@ export default class extends Controller {
         `)
         d3.selectAll(".person-button")
           .attr("cursor", "pointer")
+          .call(d3.drag()
+            .on("start", null))
           .on("click", (e) => {
             console.error("=============>", "button clicked!");
           })
@@ -134,7 +136,7 @@ export default class extends Controller {
           .on("mouseout", function(event, d) {
             self.handleMouseOut(this, d);
           })
-        d3.selectAll("g.nodes-wrapper .person-node")
+        d3.selectAll("g.nodes-wrapper g.person-node")
           .call(d3.drag()
             .on("start", function(event, d) {
               self.initiateDrag(d, this)
