@@ -28,7 +28,7 @@
       </li>
       <li>
         <span class="fab-label">Add New Person</span>
-        <div class="fab-icon-holder">
+        <div class="fab-icon-holder" onclick="(() => { window.dispatchEvent(new CustomEvent('newPersonStarted', {}) )})()">
           <i class="fas fa-user"></i>
         </div>
       </li>
@@ -48,3 +48,4 @@
   </div>
 </div>
 <%= render "shared/effective_date_selector_modal", selected_date: @selected_date %>
+<%= render "people/new_person_modal", selected_date: @selected_date %>
