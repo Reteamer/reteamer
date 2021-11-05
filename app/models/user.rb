@@ -54,7 +54,12 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, andle :trackable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :confirmable, :omniauthable
+  # :invitable, :masqueradable, :confirmable
+  if ENV["ALLOW_SIGN_UP"] == "true"
+    devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :confirmable, :omniauthable
+  else
+    devise :database_authenticatable, :recoverable, :rememberable, :validatable, :confirmable, :omniauthable
+  end
 
   has_noticed_notifications
   has_person_name

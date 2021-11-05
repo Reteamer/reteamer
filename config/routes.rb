@@ -61,12 +61,19 @@ Rails.application.routes.draw do
   end
 
   # User account
-  devise_for :users,
-    controllers: {
-      omniauth_callbacks: "users/omniauth_callbacks",
-      registrations: "users/registrations",
-      sessions: "users/sessions"
-    }
+  if ENV["ALLOW_SIGN_UP"] == "true"
+    devise_for :users,
+      controllers: {
+        omniauth_callbacks: "users/omniauth_callbacks",
+        registrations: "users/registrations",
+        sessions: "users/sessions"
+      }
+  else
+    devise_for :users,
+      controllers: {
+        sessions: "users/sessions"
+      }
+  end
   devise_scope :user do
     get "session/otp", to: "sessions#otp"
   end
