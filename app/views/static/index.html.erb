@@ -28,6 +28,8 @@
   <link href="marketing/css/magnific-popup.css" rel="stylesheet">
   <link href="marketing/css/styles.css" rel="stylesheet">
 
+  <%= render 'subscription_form_js' %>
+
 </head>
 <body data-spy="scroll" data-target=".fixed-top">
 
@@ -62,18 +64,20 @@
           <a class="nav-link page-scroll" href="#video">Video</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Drop</a>
+          <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Legal</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item page-scroll" href="article.html">Article Details</a>
-            <div class="dropdown-divider"></div>
             <a class="dropdown-item page-scroll" href="terms.html">Terms Conditions</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item page-scroll" href="privacy.html">Privacy Policy</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item page-scroll" href="cookie.html">Cookie Policy</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item page-scroll" href="acceptable_use.html">Acceptable Use</a>
           </div>
         </li>
       </ul>
       <span class="nav-item">
-        <a class="btn-solid-sm page-scroll" href="#header">Join the Beta</a>
+        <a class="btn-solid-sm page-scroll" href="#register">Join the Beta</a>
       </span>
       <span class="nav-item">
         <a class="btn-solid-sm btn-primary page-scroll" href="/users/sign_in">Log In</a>
@@ -91,19 +95,11 @@
       <div class="col-lg-6 col-xl-5">
         <div class="text-container">
           <h1>Staffing changes are inevitable. Be ready.</h1>
-          <p class="p-large">So easy that you'll forget you ever tried t visualize your organization with a mess of
+          <p class="p-large">So easy that you'll forget you ever tried to visualize your organization with a mess of
             spreadsheets and slides</p>
 
           <!-- Sign Up Form -->
-          <form>
-            <div class="form-group">
-              <input type="email" class="form-control-input" id="semail" required>
-              <label class="label-control" for="semail">Email address</label>
-            </div>
-            <div class="form-group">
-              <button type="submit" class="form-control-submit-button">I'm Interested!</button>
-            </div>
-          </form>
+          <%= render 'subscription_form' %>
           <!-- end of sign up form -->
         </div> <!-- end of text-container -->
       </div> <!-- end of col -->
@@ -137,8 +133,8 @@
           </div>
           <div class="card-body">
             <h5 class="card-title">Save A Lot Of Time</h5>
-            <div class="card-text">No more copying and pasting information to innumerable cells in a spreadsheet. All
-              your data is ready to be used.
+            <div class="card-text">No more copying and pasting information to innumerable cells in a spreadsheet.
+              Quickly explore different plans for your people.
             </div>
           </div>
         </div>
@@ -171,7 +167,7 @@
     <div class="row">
       <div class="col-lg-12">
 
-        <p class="p-large"><a class="page-scroll" href="#header">Sign up today</a> to join the beta to use Reteamer for
+        <p class="p-large"><a class="page-scroll" href="#register">Sign up today</a> to join the beta to use Reteamer for
           your project staffing needs</p>
 
       </div> <!-- end of col -->
@@ -187,7 +183,7 @@
     <div class="row">
       <div class="col-lg-12">
         <h2 class="h2-heading">Enjoy all these features and more</h2>
-        <img class="img-fluid" src="marketing/images/features.jpg" alt="alternative">
+        <img class="img-fluid" src="marketing/images/features2.png" alt="alternative">
       </div> <!-- end of col -->
     </div> <!-- end of row -->
     <div class="row">
@@ -251,10 +247,11 @@
     <div class="row">
       <div class="col-lg-5">
         <div class="text-container">
-          <h2>Manage tasks easier and keep track of things</h2>
-          <p>Nor engrossed affection excellent. Dissimilar compliment cultivated preference eat sufficient may. Well
-            next door soon we mr he four. Assistance impression set insipidity now connection off you should arrive
-            sooner</p>
+          <h2>Easily manage team assignments and keep track of things</h2>
+          <p>
+            See what's happening today, tomorrow, and beyond. Drill in to see team charters and what metrics drive
+            them forward. Plan for attrition, promotions, and career growth.
+          </p>
           <a class="read-more no-line blue" href="article.html">Learn more
             <span class="fas fa-long-arrow-alt-right"></span></a>
         </div> <!-- end of text-container -->
@@ -269,76 +266,22 @@
 </div> <!-- end of basic-2 -->
 <!-- end of details 1 -->
 
-
-<!-- Details 2 -->
-<div class="basic-3">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-7">
-        <div class="image-container">
-          <img class="img-fluid" src="marketing/images/details-2.png" alt="alternative">
-        </div> <!-- end of image-container -->
-      </div> <!-- end of col -->
-      <div class="col-lg-5">
-        <div class="text-container">
-          <h2>Integrate Alfy seamlessly in all your business flows</h2>
-          <p>Solicitude under as seems we me stuff those style at. Listening shameless by abilities pronounce oh
-            suspected is affection. Next it draw in draw much bred. Game of as rest time eyes with of this it. Add was
-            music</p>
-          <a class="read-more no-line blue" href="article.html">Learn more
-            <span class="fas fa-long-arrow-alt-right"></span></a>
-        </div> <!-- end of text-container -->
-      </div> <!-- end of col -->
-    </div> <!-- end of row -->
-  </div> <!-- end of container -->
-</div> <!-- end of basic-3 -->
-<!-- end of details 2 -->
-
-
-<!-- Details 3 -->
-<div class="basic-4">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-5">
-        <div class="text-container">
-          <h2>Improved communication with friends and colleagues</h2>
-          <p>She amiable all without say spirits shy clothes morning. Frankness in extensive to belonging improving so
-            certainty. Resolution devonshire pianoforte assistance an he particun middletons is of and of course it's
-            true today</p>
-          <a class="read-more no-line blue" href="article.html">Learn more
-            <span class="fas fa-long-arrow-alt-right"></span></a>
-        </div> <!-- end of text-container -->
-      </div> <!-- end of col -->
-      <div class="col-lg-7">
-        <div class="image-container">
-          <img class="img-fluid" src="marketing/images/details-3.png" alt="alternative">
-        </div> <!-- end of image-container -->
-      </div> <!-- end of col -->
-    </div> <!-- end of row -->
-  </div> <!-- end of container -->
-</div> <!-- end of basic-4 -->
-<!-- end of details 3 -->
-
-
 <!-- Video -->
 <div id="video" class="basic-5 bg-gray">
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
         <div class="text-container">
-          <h2>Powering communication and team collaboration</h2>
-          <p>Explain ten man uncivil engaged conduct. Am likewise betrayed as declared absolute do. Taste oh spoke about
-            no solid of hills up shade. Occasion so bachelor humoured striking by attended doubtful be it and all
-            right</p>
-          <a class="read-more no-line" href="article.html">Learn more <span class="fas fa-long-arrow-alt-right"></span></a>
+          <h2>Bringing stability in the face of change</h2>
+          <p>For a quick preview, check out the video and see if Reteamer is right for you.</p>
         </div> <!-- end of text-container -->
       </div> <!-- end of col -->
       <div class="col-lg-6">
 
         <!-- Video Preview -->
         <div class="video-wrapper">
-          <a class="popup-youtube" href="https://www.youtube.com/watch?v=fLCjQJCekTs" data-effect="fadeIn">
-            <img class="img-fluid" src="marketing/images/video-preview.jpg" alt="alternative">
+          <a class="popup-youtube" href="https://share.vidyard.com/watch/uHCqBQDCy7mgxbf8f7kZRk?" data-effect="fadeIn">
+            <img class="img-fluid" src="marketing/images/video-preview2.png" alt="alternative">
             <span class="video-play-button">
                                 <span></span>
                             </span>
@@ -353,33 +296,23 @@
 <!-- end of video -->
 
 <!-- Registration -->
-<div class="form-1">
+<div class="form-1" id="register">
   <img class="decoration" src="marketing/images/registration-envelope.png" alt="alternative">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-        <h2 class="h2-heading">Sign up to start your free trial</h2>
-        <p class="p-heading">Passage its ten led hearted removal cordial. Preference any astonished unreserved mrs
-          nowster prosperous understood middletons in conviction an uncommonly do. Supposing so be</p>
+        <h2 class="h2-heading">Sign up to our newsletter and get early access to Reteamer</h2>
+        <p class="p-heading">
+          We'll contact you as soon as we're ready for folks to start using Reteamer. In the
+          meantime you'll get regular updates on our progress as well as our thoughts about reteaming.
+        </p>
       </div> <!-- end of col -->
     </div> <!-- end of row -->
     <div class="row">
       <div class="col-lg-12">
 
         <!-- Sign Up Form -->
-        <form>
-          <div class="form-group mail">
-            <input type="email" class="form-control-input" id="nemail" required>
-            <label class="label-control" for="nemail">Email address</label>
-            <div class="help-block with-errors"></div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="form-control-submit-button">Start free trial</button>
-          </div>
-          <div class="form-message">
-            <div id="nmsgSubmit" class="h3 text-center hidden"></div>
-          </div>
-        </form>
+        <%= render 'subscription_form' %>
         <!-- end of sign up form -->
 
       </div> <!-- end of col -->
@@ -395,15 +328,16 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="footer-col first">
-          <h6>About Alfy</h6>
-          <p class="p-small">Valley by oh twenty direct me so. Departure defective arranging rapturous did believing him
-            all had supp and of course the words having the business</p>
+          <h6>About Reteamer</h6>
+          <p class="p-small">
+            Started in 2021 to fill an unmet need in the market to track and maintain team assignments. We value
+            learning and building software that continues to solve problems for our customers.
+          </p>
         </div> <!-- end of footer-col -->
         <div class="footer-col second">
           <h6>Links</h6>
           <ul class="list-unstyled li-space-lg p-small">
-            <li>Important: <a href="terms.html">Terms & Conditions</a>, <a href="privacy.html">Privacy Policy</a></li>
-            <li>Useful: <a href="#">Colorpicker</a>, <a href="#">Icon Library</a>, <a href="#">Illustrations</a></li>
+            <li>Important: <a href="terms.html">Terms & Conditions</a>, <a href="privacy.html">Privacy Policy</a>, <a href="cookie.html">Cookie Policy</a>, <a href="acceptable_use.html">Acceptable Use</a></li>
             <li>Menu: <a class="page-scroll" href="#header">Home</a>,
               <a class="page-scroll" href="#features">Features</a>, <a class="page-scroll" href="#details">Details</a>,
               <a class="page-scroll" href="#video">Video</a></li>
@@ -411,31 +345,20 @@
         </div> <!-- end of footer-col -->
         <div class="footer-col third">
                         <span class="fa-stack">
-                            <a href="#your-link">
+                            <a href="https://www.linkedin.com/company/reteamer" target="linkedin">
                                 <i class="fas fa-circle fa-stack-2x"></i>
-                                <i class="fab fa-facebook-f fa-stack-1x"></i>
+                                <i class="fab fa-linkedin-in fa-stack-1x"></i>
                             </a>
                         </span>
           <span class="fa-stack">
-                            <a href="#your-link">
+                            <a href="https://github.com/TildeWill/reteamer" target="github">
                                 <i class="fas fa-circle fa-stack-2x"></i>
-                                <i class="fab fa-twitter fa-stack-1x"></i>
+                                <i class="fab fa-github fa-stack-1x"></i>
                             </a>
                         </span>
-          <span class="fa-stack">
-                            <a href="#your-link">
-                                <i class="fas fa-circle fa-stack-2x"></i>
-                                <i class="fab fa-pinterest-p fa-stack-1x"></i>
-                            </a>
-                        </span>
-          <span class="fa-stack">
-                            <a href="#your-link">
-                                <i class="fas fa-circle fa-stack-2x"></i>
-                                <i class="fab fa-instagram fa-stack-1x"></i>
-                            </a>
-                        </span>
+
           <p class="p-small">We would love to hear from you
-            <a href="mailto:contact@site.com"><strong>contact@site.com</strong></a></p>
+            <a href="mailto:contact@reteamer.com"><strong>contact@reteamer.com</strong></a></p>
         </div> <!-- end of footer-col -->
       </div> <!-- end of col -->
     </div> <!-- end of row -->
@@ -449,7 +372,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-        <p class="p-small">Copyright © <a href="#your-link">Your name</a></p>
+        <p class="p-small">Copyright © Reteamer</p>
       </div> <!-- end of col -->
     </div> <!-- enf of row -->
   </div> <!-- end of container -->

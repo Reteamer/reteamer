@@ -128,6 +128,8 @@ Rails.application.routes.draw do
     get :terms
     get :privacy
     get :pricing
+    get :cookie
+    get :acceptable_use
   end
 
   post :sudo, to: "users/sudo#create"
