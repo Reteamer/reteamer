@@ -56,9 +56,8 @@ jobs:
       - name: Standardrb Check
         run: bundle exec standardrb
 
-# Uncomment to enable Brakeman checks in CI
-#     - name: Brakeman Check
-#       run: bundle exec brakeman
+     - name: Brakeman Check
+       run: bundle exec brakeman
 
       - name: Run tests
         env:
@@ -71,6 +70,15 @@ jobs:
           bin/rails db:test:prepare
           bin/rails test
 
-# Uncomment to run system tests in CI
-#     - name: System Tests
-#       run:          bin/rails test:system
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # Install NPM dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm start
