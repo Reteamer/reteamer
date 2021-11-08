@@ -26,7 +26,7 @@ group :development, :test do
   gem "pry-rails"
   gem "rspec-rails"
   gem "annotate"
-  gem "brakeman"
+  gem "brakeman", ">= 5.1.2"
   gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "letter_opener_web", "~> 1.3", ">= 1.3.4"
   gem "standard"
