@@ -13,9 +13,9 @@ end
 
 CypressRails.hooks.after_transaction_start do
   # Called after the transaction is started (at launch and after each reset)
-  thirtyRockUser = User.create!(first_name: "30", last_name: "Rock", email: "demo@thirtyrock.com", admin: true, password: 'password', password_confirmation: 'password', :terms_of_service => true)
+  thirty_rock_user = User.create!(first_name: "30", last_name: "Rock", email: "demo@thirtyrock.com", admin: true, password: "password", password_confirmation: "password", terms_of_service: true)
 
-  peopleOfThirtyRock(thirtyRockUser.accounts.first)
+  peopleOfThirtyRock(thirty_rock_user.accounts.first)
 end
 
 CypressRails.hooks.after_state_reset do

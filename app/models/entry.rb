@@ -30,14 +30,14 @@ class Entry < ApplicationRecord
   end
 
   def self.histogram
-    self.select('COUNT(*) AS value, effective_at::date AS date')
-        .group('date')
-        .order(:date)
+    self.select("COUNT(*) AS value, effective_at::date AS date")
+      .group("date")
+      .order(:date)
   end
 
   def self.find_for(effective_date)
     where(effective_at:
-      group(:key).where(effective_at: ..effective_date.end_of_day).select('max(effective_at) as effective_at'))
+      group(:key).where(effective_at: ..effective_date.end_of_day).select("max(effective_at) as effective_at"))
       .includes(:versionable) # avoid n+1 queries
   end
 end

@@ -12,6 +12,7 @@ class Meta
   end
 
   private
+
   attr_writer :proto_id, :effective_at
   attr_accessor :model_class
 

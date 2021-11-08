@@ -5,14 +5,13 @@ module MetaModel
 
   module ClassMethods
     def find_for(effective_date)
-      self
-        .where(
-          effective_at: ..effective_date.end_of_day
-        )
+      where(
+        effective_at: ..effective_date.end_of_day
+      )
         .order(effective_at: :desc)
         .group_by(&:proto_id)
-        .map{|_, models| models.first}
-        .select{ |model| model.active? }
+        .map { |_, models| models.first }
+        .select { |model| model.active? }
     end
   end
 

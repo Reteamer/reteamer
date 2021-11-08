@@ -15,7 +15,7 @@
 #
 #  index_entries_on_versionable  (versionable_type,versionable_id)
 #
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Entry, type: :model do
   describe "find_for" do
