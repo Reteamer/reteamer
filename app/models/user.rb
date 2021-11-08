@@ -55,7 +55,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, andle :trackable
   # :invitable, :masqueradable, :confirmable
-  if ENV["ALLOW_SIGN_UP"] == "true"
+  if Rails.configuration.allow_sign_up
     devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable, :confirmable, :omniauthable
   else
     devise :database_authenticatable, :recoverable, :rememberable, :validatable, :confirmable, :omniauthable

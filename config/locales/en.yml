@@ -168,6 +168,14 @@ en:
     show:
       title: "Dashboard"
 
+  team_charts:
+    show:
+      title: "Teams"
+
+  org_charts:
+    show:
+      title: "Org Chart"
+
   payments:
     success: "Thanks for subscribing!"
     show:
