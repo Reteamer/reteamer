@@ -22,11 +22,12 @@
   },
   "image": "heroku/ruby",
   "addons": [
-    "heroku-postgresql:hobby-dev",
-    "heroku-redis:hobby-dev",
-    "scheduler:standard"
+    "heroku-postgresql:hobby-dev"
   ],
-  "buildpacks": [{ "url": "heroku/ruby" }],
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "heroku/ruby" }
+  ],
   "environments": {
     "test": {
       "scripts": {
