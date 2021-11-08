@@ -1,7 +1,8 @@
 require "rails_helper"
 
 describe MetaModel do
-  let(:test_model) do Class.new{
+  let(:test_model) do
+    Class.new {
       include MetaModel
       attr_accessor :proto_id
       attr_accessor :effective_at
