@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   end
 
   # User account
-  if ENV["ALLOW_SIGN_UP"] == "true"
+  if Rails.configuration.allow_sign_up
     devise_for :users,
       controllers: {
         omniauth_callbacks: "users/omniauth_callbacks",

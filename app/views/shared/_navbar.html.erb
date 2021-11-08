@@ -73,7 +73,7 @@
                 <%= link_to t(".password"), account_password_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <%= link_to t(".org_chart"), org_chart_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <%= link_to t(".team_chart"), team_chart_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
-                <% unless Rails.env.production? %>
+                <% if Rails.configuration.can_reset_data %>
                   <%= link_to t(".reset_data"), reset_data_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <% end %>
                 <%= link_to t(".connected_accounts"), user_connected_accounts_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' if Devise.omniauth_configs.any? %>
@@ -110,7 +110,7 @@
 
       <% else %>
         <%= link_to t(".log_in"), new_user_session_path, class: 'nav-link' %>
-        <% if ENV["ALLOW_SIGN_UP"] == "true" %>
+        <% if Rails.configuration.allow_sign_up %>
           <%= link_to t(".sign_up"), new_user_registration_path, class: 'btn btn-primary' %>
         <% end %>
       <% end %>
