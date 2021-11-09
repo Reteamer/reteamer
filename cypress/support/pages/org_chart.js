@@ -26,9 +26,9 @@ export default class OrgChart {
         });
     });
 
-    cy.get("input[type='radio'][value='other']").click()
-
-    cy.get("input[type='date']#other_effective_date")
+    cy.contains("Pick a date for the change to take effect").should("be.visible")
+    cy.get("#effective-date-selector input[type='radio'][value='other']").click()
+    cy.get("#effective-date-selector input#other_effective_date")
       .type(toISODate(effectiveDate))
       .trigger("change")
 

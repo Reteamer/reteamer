@@ -53,7 +53,7 @@ export default class extends Controller {
       .style("stroke", "black")
       .style("stroke-width", "1px")
 
-    self.barLayer = self.xAxisElement = self.svg.append("g")
+    self.barLayer = self.svg.append("g")
       .attr("class", "bar-layer") // append this layer first so the chart doesn't hide the cursor and markers
 
     self.chartCursor = self.svg.append("g")
@@ -80,11 +80,11 @@ export default class extends Controller {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + self.height + ")")
 
-    self.mouseMovementRectangle = self.svg.append('svg:rect') // append a rect to catch mouse movements on canvas
+    self.mouseCatcher = self.svg.append('svg:rect') // append a rect to catch mouse movements on canvas
       .classed("mouse-catcher", true)
       .attr('width', self.width) // can't catch mouse events on a g element
       .attr('height', self.height)
-      .attr('fill', 'none')
+      .attr('fill', "none")
       .attr('pointer-events', 'all')
 
     self.selectedDateMarker = self.svg.append("line")
@@ -92,14 +92,17 @@ export default class extends Controller {
       .style("stroke", "yellow")
       .style("stroke-width", "1px")
       .style("opacity", "1")
+      .attr("pointer-events", "none")
 
     self.todayMarker = self.svg.append("line")
       .attr("class", "today-marker")
       .style("stroke", "red")
       .style("stroke-width", "1px")
       .style("opacity", "1")
+      .attr("pointer-events", "none")
 
-    self.mouseMovementRectangle
+
+    self.mouseCatcher
       .on('mouseout', function() { // on mouse out hide line, circles and text
         d3.select(".cursor")
           .style("opacity", "0");
@@ -161,7 +164,8 @@ export default class extends Controller {
       .attr("y1", 0)
       .attr("y2", self.height)
 
-    const selectedDate = new Date(self.dateInputTarget.value);
+    const dateString = `${self.dateInputTarget.value} ${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
+    const selectedDate = new Date(dateString);
     self.selectedDateMarker
       .attr("x1", self.x(selectedDate))
       .attr("x2", self.x(selectedDate))
