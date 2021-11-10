@@ -1,5 +1,7 @@
+import dayjs from "dayjs"
+
 export function toISODate(myDate) {
-  return myDate.toISOString().split('T')[0]
+  return dayjs(myDate).format("YYYY-MM-DD")
 }
 
 export function newISODate() {

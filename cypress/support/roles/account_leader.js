@@ -4,6 +4,7 @@ import OrgChart from "../pages/org_chart";
 export default class AccountLeader {
   static login() {
     System.login("demo@thirtyrock.com", "password")
+    cy.contains("Team Chart").should("exist")
   }
 
   static changeSupervisor(name, newSupervisorName, effectiveDate) {
@@ -25,7 +26,7 @@ export default class AccountLeader {
   }
 
   static seesTheInputHasDate(expectedDate) {
-    cy.get("date-navigator input[type='date']").invoke("val").should('eq', expectedDate.format("YYYY-MM-DD"))
+    cy.get("date-navigator input").invoke("val").should('eq', expectedDate.format("YYYY-MM-DD"))
   }
 
   static seesTodayMarkedOnTheSlider() {
@@ -43,7 +44,7 @@ export default class AccountLeader {
   static seesTheSelectedDateIs(expectedDate) {
     cy.get(".selected-date-marker").then($marker => {
       cy.get(".mouse-catcher")
-        .trigger("mouseover")
+        .trigger("mouseover", {force: true})
         .trigger("mousemove", parseFloat($marker.attr("x1")), 0, {force: true})
     })
     cy.get(".cursor-date").invoke("text").then($text => {

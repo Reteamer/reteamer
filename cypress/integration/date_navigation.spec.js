@@ -31,14 +31,14 @@ describe('Date Navigation Test', () => {
   describe("When clicking on the slider", () => {
     beforeEach(() => {
       cy.get(".mouse-catcher")
-        .trigger("mouseover")
+        .trigger("mouseover", {force: true})
         .trigger("mousemove",100, 0, {force:true})
         .trigger("click",100, 0, {force:true})
       cy.get(".cursor-date").invoke("text").as('expectedSelectedDate')
     })
 
     it("Updates the selected date in the component and the URL", function() {
-      cy.get("date-navigator input[type='date']")
+      cy.get("date-navigator input")
         .invoke("val")
         .should('eq', this.expectedSelectedDate)
       cy.location("search")
@@ -54,13 +54,13 @@ describe('Date Navigation Test', () => {
     const twoMonthsFromNow = dayjs().add(2, "months")
 
     beforeEach(() => {
-      cy.get("date-navigator input[type='date']")
+      cy.get("date-navigator input")
         .type(toISODate(twoMonthsFromNow))
         .trigger("change")
     })
 
     it("Updates the selected date in the component and the URL", function() {
-      cy.get("date-navigator input[type='date']")
+      cy.get("date-navigator input")
         .invoke("val")
         .should('eq', toISODate(twoMonthsFromNow))
       AccountLeader.seesTheSearchParamsChangeTo(`?effective_date=${toISODate(twoMonthsFromNow)}`)
