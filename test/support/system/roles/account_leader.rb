@@ -1,8 +1,12 @@
 class AccountLeader
   class << self
     delegate :visit_org_chart,
-      :drag,
+      :drag_person,
       to: OrgChartComponent
+
+    delegate :visit_team_chart,
+      :drag_team_member,
+      to: TeamChartComponent
 
     delegate :select_custom_date,
       to: EffectiveDateSelector

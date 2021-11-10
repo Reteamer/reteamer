@@ -48,6 +48,5 @@ class DateNavigatorTest < ApplicationSystemTestCase
     assert_external_components_are_updated(future_date)
   end
 
-  #TODO: test "can navigate with url"
-
+  # TODO: test "can navigate with url"
 end

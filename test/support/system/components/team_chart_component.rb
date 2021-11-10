@@ -1,7 +1,7 @@
-class OrgChartComponent < ComponentUnderTest
+class TeamChartComponent < ComponentUnderTest
   class << self
-    def visit_org_chart
-      visit org_chart_path
+    def visit_team_chart
+      visit team_chart_path
       assert_selector("text", text: "Jack Donaghy")
     end
 
@@ -9,8 +9,8 @@ class OrgChartComponent < ComponentUnderTest
       ["text", text: "Howard Jorgensen"]
     end
 
-    def drag_person(text)
-      dragging_element = find("g.node", text: text)
+    def drag_team_member(person_name)
+      dragging_element = find("g.person-node", text: person_name)
       dragging_element.hover
       Draggable.new(dragging_element)
     end
@@ -23,8 +23,8 @@ class OrgChartComponent < ComponentUnderTest
       @element = element
     end
 
-    def to(text)
-      @element.drag_to(find("g.node", text: text))
+    def to(team_name)
+      @element.drag_to(find("g.node", text: team_name))
     end
   end
 end
