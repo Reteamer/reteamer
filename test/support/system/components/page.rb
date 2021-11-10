@@ -7,7 +7,7 @@ class Page
 
   class QueryString
     def initialize(query_string)
-      @query_string =  Rack::Utils.parse_nested_query(query_string)
+      @query_string = Rack::Utils.parse_nested_query(query_string)
     end
 
     def has_date?(expected_date)

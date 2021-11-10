@@ -3,7 +3,7 @@ class DateNavigatorComponent < ComponentUnderTest
     def clicks_on_future_date
       hovered_date = nil
       within("date-navigator") do
-        some_place_in_the_future = all('.change-counts', visible: :all)[2]
+        some_place_in_the_future = all(".change-counts", visible: :all)[2]
         x = some_place_in_the_future.rect.x.to_i
         y = 20
         find(".mouse-catcher").click(x: x, y: y)
@@ -11,7 +11,7 @@ class DateNavigatorComponent < ComponentUnderTest
         hovered_date = find(".cursor-date", visible: :all).text
         raise unless hovered_date.present?
       end
-      return hovered_date
+      hovered_date
     end
 
     def hover_on(selector)
