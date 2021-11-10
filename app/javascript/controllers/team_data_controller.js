@@ -1,5 +1,4 @@
-import { Controller } from "stimulus"
-import { newISODate } from "../date_helpers"
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = { startingDate: String }

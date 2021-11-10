@@ -23,22 +23,6 @@ GIT
       railties (>= 5.2)
 
 GIT
-  remote: https://github.com/rails/cssbundling-rails.git
-  revision: 9ef387e8f345514f44e74f0d245d791239f7dbc4
-  specs:
-    cssbundling-rails (0.1.7)
-      railties (>= 6.0.0)
-      sprockets-rails (>= 2.0.0)
-
-GIT
-  remote: https://github.com/rails/jsbundling-rails.git
-  revision: 54b57b614ce1c202670ef8fb7320a8be444ec404
-  specs:
-    jsbundling-rails (0.1.5)
-      railties (>= 6.0.0)
-      sprockets-rails (>= 2.0.0)
-
-GIT
   remote: https://github.com/rubysec/bundler-audit.git
   revision: ebfca35b2e47eae7aaba42f0e37d61bb3e26049e
   specs:
@@ -149,9 +133,8 @@ GEM
     coderay (1.1.3)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
-    cypress-rails (0.5.3)
-      puma (>= 3.8.0)
-      railties (>= 5.2.0)
+    cssbundling-rails (0.2.4)
+      railties (>= 6.0.0)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
     devise (4.8.0)
@@ -162,7 +145,6 @@ GEM
       warden (~> 1.2.3)
     devise-i18n (1.10.0)
       devise (>= 4.8.0)
-    diff-lcs (1.4.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     encryptor (3.0.0)
@@ -172,32 +154,10 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faraday (1.8.0)
-      faraday-em_http (~> 1.0)
-      faraday-em_synchrony (~> 1.0)
-      faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0.1)
-      faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.1)
-      faraday-patron (~> 1.0)
-      faraday-rack (~> 1.0)
-      multipart-post (>= 1.2, < 3)
-      ruby2_keywords (>= 0.0.4)
-    faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.0)
-    faraday-excon (1.1.0)
-    faraday-httpclient (1.0.1)
-    faraday-net_http (1.0.1)
-    faraday-net_http_persistent (1.2.0)
-    faraday-patron (1.0.0)
-    faraday-rack (1.0.0)
     ffi (1.15.4)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    gibbon (3.4.2)
-      faraday (>= 1.0)
-      multi_json (>= 1.11.0)
     globalid (0.5.2)
       activesupport (>= 5.0)
     hashids (1.0.5)
@@ -206,7 +166,7 @@ GEM
       rails (>= 6.0.0)
       stimulus-rails
       turbo-rails
-    http (5.0.2)
+    http (5.0.4)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
@@ -231,6 +191,8 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
+    jsbundling-rails (0.1.9)
+      railties (>= 6.0.0)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.1)
@@ -272,8 +234,6 @@ GEM
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     msgpack (1.4.2)
-    multi_json (1.15.0)
-    multipart-post (2.1.1)
     name_of_person (1.1.1)
       activesupport (>= 5.2.0)
     nio4r (2.5.8)
@@ -284,7 +244,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.12.5-x86_64-linux)
       racc (~> 1.4)
-    noticed (1.4.1)
+    noticed (1.5.0)
       http (>= 4.0.0)
       rails (>= 5.2.0)
     oj (3.13.6)
@@ -300,7 +260,7 @@ GEM
       childprocess (>= 0.6.3, < 5)
       iniparse (~> 1.4)
       rexml (~> 3.2)
-    pagy (4.11.0)
+    pagy (5.2.3)
     parallel (1.21.0)
     parser (3.0.2.0)
       ast (~> 2.4.1)
@@ -381,23 +341,6 @@ GEM
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
     rqrcode_core (1.2.0)
-    rspec-core (3.10.1)
-      rspec-support (~> 3.10.0)
-    rspec-expectations (3.10.1)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
-    rspec-mocks (3.10.2)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.10.0)
-    rspec-rails (5.0.2)
-      actionpack (>= 5.2)
-      activesupport (>= 5.2)
-      railties (>= 5.2)
-      rspec-core (~> 3.10)
-      rspec-expectations (~> 3.10)
-      rspec-mocks (~> 3.10)
-      rspec-support (~> 3.10)
-    rspec-support (3.10.2)
     rubocop (1.20.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
@@ -416,7 +359,6 @@ GEM
     ruby-progressbar (1.11.0)
     ruby-vips (2.1.3)
       ffi (~> 1.12)
-    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sassc (2.4.0)
       ffi (~> 1.9)
@@ -484,7 +426,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  acts_as_tenant
+  acts_as_tenant (~> 0.5.1)
   administrate!
   administrate-field-active_storage (~> 0.3.0)
   annotate
@@ -494,30 +436,28 @@ DEPENDENCIES
   bundler-audit!
   byebug
   capybara (>= 2.15)
-  cssbundling-rails!
-  cypress-rails
+  cssbundling-rails (~> 0.2.4)
   devise (>= 4.7.1)
-  devise-i18n (~> 1.9)
+  devise-i18n (~> 1.10)
   factory_bot_rails
-  gibbon
   hotwire-rails (~> 0.1.2)
   image_processing (~> 1.9, >= 1.9.2)
   inline_svg (~> 1.6)
   invisible_captcha (~> 2.0)
   jbuilder (~> 2.5)
-  jsbundling-rails!
+  jsbundling-rails (~> 0.1.9)
   jumpstart!
   letter_opener_web (~> 1.3, >= 1.3.4)
   listen (~> 3.2, >= 3.2.1)
   local_time (~> 2.1)
   name_of_person (~> 1.0)
-  nokogiri (>= 1.10.8)
-  noticed (~> 1.3)
+  nokogiri (>= 1.12.5)
+  noticed (~> 1.5)
   oj (~> 3.8, >= 3.8.1)
   omniauth (~> 2.0, >= 2.0.4)
   omniauth-rails_csrf_protection (~> 1.0)
   overcommit
-  pagy (~> 4.1)
+  pagy (~> 5.1)
   pay (~> 3.0.0)
   pg
   pg_search (~> 2.3)
@@ -531,8 +471,7 @@ DEPENDENCIES
   redis (~> 4.0)
   responders!
   rotp (~> 6.2)
-  rqrcode
-  rspec-rails
+  rqrcode (~> 2.1)
   ruby-oembed (~> 0.15.0)
   selenium-webdriver
   standard
@@ -540,7 +479,7 @@ DEPENDENCIES
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
-  whenever
+  whenever (~> 1.0)
 
 RUBY VERSION
    ruby 3.0.2p107

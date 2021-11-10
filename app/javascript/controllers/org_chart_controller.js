@@ -1,4 +1,4 @@
-import {Controller} from "stimulus"
+import { Controller } from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3"
 import { emitDatePickedEvent } from "../event_emitter";

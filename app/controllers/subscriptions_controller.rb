@@ -10,7 +10,7 @@ class SubscriptionsController < ApplicationController
 
   def index
     @payment_processor = current_account.payment_processor
-    @subscriptions = current_account.subscriptions.active.order(created_at: :asc)
+    @subscriptions = current_account.subscriptions.active.order(created_at: :asc).includes([:customer])
   end
 
   def show
@@ -51,6 +51,7 @@ class SubscriptionsController < ApplicationController
     @subscription.swap @plan.id_for_processor(current_account.payment_processor.processor)
     redirect_to subscriptions_path, notice: t(".success")
   rescue Pay::Error => e
+    edit # Reload plans
     flash[:alert] = e.message
     render :edit, status: :unprocessable_entity
   end

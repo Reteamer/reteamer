@@ -12,6 +12,14 @@
     "RAILS_ENV": {
       "description": "The Rails environment to run: production or staging",
       "value": "production"
+    },
+    "ALLOW_SIGN_UP": {
+      "description": "Whether or not to show the link for creating a new account",
+      "value": "false"
+    },
+    "CAN_RESET_DATA": {
+      "description": "Enable or disable the link to wipe the db and create the fixture (30 Rock) data",
+      "value": "false"
     }
   },
   "formation": {
@@ -22,7 +30,9 @@
   },
   "image": "heroku/ruby",
   "addons": [
-    "heroku-postgresql:hobby-dev"
+    "heroku-postgresql:hobby-dev",
+    "heroku-redis:hobby-dev",
+    "scheduler:standard"
   ],
   "buildpacks": [
     { "url": "heroku/nodejs" },

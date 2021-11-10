@@ -1,4 +1,4 @@
-import { Controller } from "stimulus"
+import { Controller } from "@hotwired/stimulus"
 import { toISODate } from "../date_helpers"
 import { emitDatePickedEvent } from "../event_emitter"
 import * as d3 from "d3"
