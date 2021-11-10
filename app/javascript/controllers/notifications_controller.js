@@ -1,4 +1,4 @@
-import { Controller } from "stimulus"
+import { Controller } from "@hotwired/stimulus"
 import consumer from "../channels/consumer"
 
 export default class extends Controller {
@@ -47,7 +47,7 @@ export default class extends Controller {
   // Called when the notifications view opens
   open() {
     this.hideUnreadBadge()
-    this.markAsRead()
+    this.markAllAsRead()
   }
 
   hasUnread() {
