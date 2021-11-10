@@ -27,6 +27,20 @@ class DateNavigatorComponent < ComponentUnderTest
       end
     end
 
+    def enters_future_date
+      within("date-navigator") do
+        find("input").click
+      end
+
+      find(".open .flatpickr-next-month", visible: :all).click
+      find(".open .flatpickr-next-month", visible: :all).click
+      find(".open .flatpickr-day", text: "17").click
+
+      within("date-navigator") do
+        find("input").value
+      end
+    end
+
     def date_cursor
       element = nil
       within("date-navigator") do

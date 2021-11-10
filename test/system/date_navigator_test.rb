@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class OrgChartTest < ApplicationSystemTestCase
+class DateNavigatorTest < ApplicationSystemTestCase
   setup do
     thirty_rock_user = User.create!(first_name: "30", last_name: "Rock", email: "demo@thirtyrock.com", admin: true, password: "password", password_confirmation: "password", terms_of_service: true)
     peopleOfThirtyRock(thirty_rock_user.accounts.first)
@@ -21,16 +21,31 @@ class OrgChartTest < ApplicationSystemTestCase
     assert_equal(DateNavigatorComponent.date_cursor.date, Date.today.iso8601)
   end
 
+  def assert_external_components_are_updated(hovered_date)
+    assert(Page.query_string.has_date?(hovered_date))
+    assert_selector(*OrgChartComponent.future_people_selector)
+  end
+
   test "Using the slider" do
     AccountLeader.visit_org_chart
     assert_no_selector(*OrgChartComponent.future_people_selector)
 
-    hovered_date = AccountLeader.clicks_on_future_date
+    future_date = AccountLeader.clicks_on_future_date
 
-    assert_equal(DateNavigatorComponent.input_value, hovered_date)
-    assert(Page.query_string.has_date?(hovered_date))
-    assert_selector(*OrgChartComponent.future_people_selector)
+    assert_equal(DateNavigatorComponent.input_value, future_date)
+    assert_external_components_are_updated(future_date)
   end
-  # test "can navigate with date navigator"
+
+  test "Using the input" do
+    AccountLeader.visit_org_chart
+    assert_no_selector(*OrgChartComponent.future_people_selector)
+
+    future_date = AccountLeader.enters_future_date
+
+    AccountLeader.hover_on(".selected-date-marker")
+    assert_equal(DateNavigatorComponent.date_cursor.date, future_date)
+
+    assert_external_components_are_updated(future_date)
+  end
   # test "can navigate with url"
 end
