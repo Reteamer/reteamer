@@ -8,6 +8,52 @@ on:
     branches:
       - main
 jobs:
+  code_quality:
+    runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgres:13
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+          ports: [ '5432:5432' ]
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: 3.0
+            bundler: default
+            bundler-cache: true
+
+        - name: Setup Node
+          uses: actions/setup-node@v2
+          with:
+            node-version: 14.x
+
+        - name: Get yarn cache
+          id: yarn-cache
+          run: echo "::set-output name=dir::$(yarn cache dir)"
+
+        - name: Cache yarn
+          uses: actions/cache@v2
+          with:
+            path: ${{ steps.yarn-cache.outputs.dir }}
+            key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+            restore-keys: |
+              ${{ runner.os }}-yarn-
+
+        - name: Install dependencies
+          run: |
+            yarn install --frozen-lockfile
+
+        - name: Standardrb Check
+          run: bundle exec standardrb
+
+        - name: Brakeman Check
+          run: bundle exec brakeman
+
   test:
     runs-on: ubuntu-latest
     services:
@@ -17,10 +63,6 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
         ports: ['5432:5432']
-      redis:
-        image: redis
-        ports: ['6379:6379']
-        options: --entrypoint redis-server
 
     steps:
       - uses: actions/checkout@v2
@@ -53,16 +95,9 @@ jobs:
         run: |
           yarn install --frozen-lockfile
 
-      - name: Standardrb Check
-        run: bundle exec standardrb
-
-      - name: Brakeman Check
-        run: bundle exec brakeman
-
       - name: Run tests
         env:
           DATABASE_URL: postgres://postgres:password@localhost:5432/test
-          REDIS_URL: redis://localhost:6379/0
           RAILS_ENV: test
           PG_USER: postgres
         run: |
@@ -70,15 +105,3 @@ jobs:
           bin/rails db:test:prepare
           bin/rails test
 
-  cypress-run:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          build: npm run build
-          start: "rake cypress:run"
