@@ -4,7 +4,7 @@
          id="effective_date"
          class="form-control-inline flatpickr-input active"
          data-date-navigator-target="dateInput"
-         data-action="change->date-navigator#handleInputChange"
+         data-action="datePicked@window->date-navigator#handleDateChange change->date-navigator#handleInputChange"
          data-controller="flatpickr"
          readonly="readonly"
          value="<%= selected_date %>"

@@ -8,5 +8,23 @@ class OrgChartComponent < ComponentUnderTest
     def future_people_selector
       ["text", text: "Howard Jorgensen"]
     end
+
+    def drag(text)
+      dragging_element = find("g.node", text: text)
+      dragging_element.hover
+      Draggable.new(dragging_element)
+    end
+  end
+
+  class Draggable
+    include Capybara::DSL
+
+    def initialize(element)
+      @element = element
+    end
+
+    def to(text)
+      @element.drag_to(find("g.node", text: text))
+    end
   end
 end

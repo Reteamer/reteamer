@@ -43,10 +43,19 @@ class DateNavigatorComponent < ComponentUnderTest
 
     def date_cursor
       element = nil
+      sleep(1)
       within("date-navigator") do
         element = find(".cursor-date", visible: :all)
       end
       DateCursor.new(element)
+    end
+
+    def selected_date
+      hover_on(".selected-date-marker")
+      slider_date = date_cursor.date
+      input_date = input_value
+      raise "date navigator component is inconsistent! slider is: #{slider_date} while input is: #{input_date}" unless slider_date == input_date
+      input_date
     end
   end
 
