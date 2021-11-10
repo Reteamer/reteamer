@@ -130,7 +130,6 @@ export default class extends Controller {
 
         d3.select('.cursor-date')
           .text(() => {
-            console.error("=============> INVERTED", self.x.invert(mouse[0]));
             return toISODate(self.x.invert(mouse[0]))
           })
       });
@@ -161,7 +160,6 @@ export default class extends Controller {
     self.xAxisElement.call(self.xAxis);
 
     const today = new Date();
-    console.error("=============>", today);
     self.todayMarker
       .attr("x1", self.x(today))
       .attr("x2", self.x(today))
