@@ -129,7 +129,10 @@ export default class extends Controller {
           .attr("transform", "translate(" + mouse[0] + ",0)")
 
         d3.select('.cursor-date')
-          .text(toISODate(self.x.invert(mouse[0])))
+          .text(() => {
+            console.error("=============> INVERTED", self.x.invert(mouse[0]));
+            return toISODate(self.x.invert(mouse[0]))
+          })
       });
   }
 
@@ -158,6 +161,7 @@ export default class extends Controller {
     self.xAxisElement.call(self.xAxis);
 
     const today = new Date();
+    console.error("=============>", today);
     self.todayMarker
       .attr("x1", self.x(today))
       .attr("x2", self.x(today))

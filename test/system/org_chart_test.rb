@@ -12,35 +12,24 @@ class OrgChartTest < ApplicationSystemTestCase
   end
 
   test "The date navigator is initialized correctly" do
-    visit org_chart_path
-    within("date-navigator") do
-      assert_selector "input[value='#{Date.today.iso8601}']"
-
-      assert_nil(URI.parse(current_url).query)
-
-      sleep(2)
-      find('.today-marker', visible: :all).hover
-      assert_selector(".cursor-date", text: Date.today.iso8601, visible: :all)
-
-      find('.selected-date-marker', visible: :all).hover
-      selected_date = find(".cursor-date", visible: :all).text
-      assert_equal(selected_date, Date.today.iso8601)
-    end
+    AccountLeader.visit_org_chart
+    assert_equal(DateNavigatorComponent.input_value, Date.today.iso8601)
+    assert(Page.query_string.has_no_date?)
+    AccountLeader.hover_on(".today-marker")
+    assert_equal(DateNavigatorComponent.date_cursor.date, Date.today.iso8601)
+    AccountLeader.hover_on(".selected-date-marker")
+    assert_equal(DateNavigatorComponent.date_cursor.date, Date.today.iso8601)
   end
 
   test "Using the slider" do
-    visit org_chart_path
-    within("date-navigator") do
-      some_place_in_the_future = all('.change-counts', visible: :all)[2]
-      x = some_place_in_the_future.rect.x.to_i
-      y = 20
-      take_screenshot
-      find(".mouse-catcher").click(x: x, y: y)
-      hovered_date = find(".cursor-date", visible: :all).text
-      assert_not_empty(hovered_date)
-      assert_equal(find("input").value, hovered_date)
-      assert_equal(URI.parse(current_url).query, "effective_date=#{hovered_date}")
-    end
+    AccountLeader.visit_org_chart
+    assert_no_selector(*OrgChartComponent.future_people_selector)
+
+    hovered_date = AccountLeader.clicks_on_future_date
+
+    assert_equal(DateNavigatorComponent.input_value, hovered_date)
+    assert(Page.query_string.has_date?(hovered_date))
+    assert_selector(*OrgChartComponent.future_people_selector)
   end
   # test "can navigate with date navigator"
   # test "can navigate with url"
