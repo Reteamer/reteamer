@@ -139,6 +139,12 @@ Rails.application.routes.draw do
     get :acceptable_use
   end
 
+  scope :style_guide, controller: :style_guide do
+    get :date_navigator
+    get :effective_date_picker
+  end
+
+
   post :sudo, to: "users/sudo#create"
 
   match "/404", via: :all, to: "errors#not_found"
