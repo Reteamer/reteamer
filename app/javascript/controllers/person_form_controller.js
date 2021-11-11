@@ -14,6 +14,10 @@ export default class extends Controller {
     this.sectionThreeTarget.classList.remove("hidden")
   }
 
+  handleSubmit(event) {
+    console.error("=============>", event);
+  }
+
   connect() {
   }
 }

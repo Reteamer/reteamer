@@ -13,7 +13,7 @@
       <!-- Modal Card -->
       <div class="m-1 bg-white rounded shadow">
         <div class="p-8">
-          <form>
+          <form data-action="submit->person-form#handleSubmit">
             <section-one data-person-form-target="sectionOne">
               <h2 class="text-xl mb-4">Pick a date for the new person to take effect</h2>
               <label><input type="radio" name="effective_date" value="<%= selected_date %>" data-effective-date-picker-target="selectedDateInput" checked /> The selected date: <span data-effective-date-picker-target="selectedDate"><%= l(selected_date, format: :people_date) %></span></label>
