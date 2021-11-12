@@ -144,7 +144,6 @@ Rails.application.routes.draw do
     get :effective_date_fields
   end
 
-
   post :sudo, to: "users/sudo#create"
 
   match "/404", via: :all, to: "errors#not_found"
