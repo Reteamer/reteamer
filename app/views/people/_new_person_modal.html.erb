@@ -13,7 +13,7 @@
       <!-- Modal Card -->
       <div class="m-1 bg-white rounded shadow">
         <div class="p-8">
-          <form data-action="submit->person-form#handleSubmit">
+          <form data-action="submit->person-form#handleSubmit" id="person-form" method="post" action="<%= reteamer_api_people_path %>">
             <section-one data-person-form-target="sectionOne">
               <h2 class="text-xl mb-4">Pick a date for the new person to take effect</h2>
               <%= render 'shared/effective_date_fields', selected_date: selected_date %>
@@ -28,9 +28,9 @@
               <label>This is
                 <select name="type" class="select" data-action="change->person-form#handlePersonTypePicked">
                   <option selected="true">Pick one...</option>
-                  <option value="employee">an Employee</option>
-                  <option value="contractor">a Contractor</option>
-                  <option value="open_req">an Open Req</option>
+                  <option value="Employee">an Employee</option>
+                  <option value="Contractor">a Contractor</option>
+                  <option value="OpenReq">an Open Req</option>
                 </select>
               </label>
               <ul>
@@ -60,9 +60,15 @@
                 <div class="form-group">
                   <label for="supervisor_key">Supervisor</label>
                   <select name="supervisor_key" class="select">
-                    <option value="" selected=""></option>
-                    <option value=""></option>
-                    <option value=""></option>
+                    <option disabled selected>Pick one...</option>
+                    <option>&lt;No Supervisor&gt;</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="team_key">Initial Team</label>
+                  <select name="team_key" class="select">
+                    <option disabled selected>Pick one...</option>
+                    <option>&lt;Unassigned&gt;</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -70,13 +76,17 @@
                   <input type="text" class="form-control" name="employee_id" />
                 </div>
                 <div class="form-group">
+                  <label>Job Title</label>
+                  <input type="text" class="form-control" name="title" />
+                </div>
+                <div class="form-group">
                   <label>Email (used for notifying employee as well as Gravatar for avatar)</label>
                   <input type="email" class="form-control" name="email" />
                 </div>
 
                 <div class="flex justify-end items-center flex-wrap mt-6">
-                  <button class="btn btn-cancel" data-action="">Cancel</button>
-                  <button class="btn btn-primary" data-action="">Submit</button>
+                  <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
+                  <button class="btn btn-primary">Submit</button>
                 </div>
               </div>
             </section-three>
