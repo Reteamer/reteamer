@@ -11,7 +11,8 @@ class AccountLeader
     delegate :select_custom_date,
       to: EffectiveDateSelector
 
-    delegate :clicks_on_future_date,
+    delegate :visit_date_navigator_style_guide,
+      :clicks_on_future_date,
       :hover_on,
       :enters_future_date,
       to: DateNavigatorComponent

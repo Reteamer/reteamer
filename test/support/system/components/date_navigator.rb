@@ -1,5 +1,9 @@
 class DateNavigatorComponent < ComponentUnderTest
   class << self
+    def visit_date_navigator_style_guide
+      visit date_navigator_path
+    end
+
     def clicks_on_future_date
       hovered_date = nil
       within("date-navigator") do
