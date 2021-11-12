@@ -16,7 +16,7 @@
           <form data-action="submit->person-form#handleSubmit">
             <section-one data-person-form-target="sectionOne">
               <h2 class="text-xl mb-4">Pick a date for the new person to take effect</h2>
-              <%= render 'effective_date_fields' %>
+              <%= render 'shared/effective_date_fields', selected_date: selected_date %>
 
               <div class="flex justify-end items-center flex-wrap mt-6">
                 <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
@@ -33,15 +33,18 @@
                   <option value="open_req">an Open Req</option>
                 </select>
               </label>
-              <p>An <em>employee</em> is expected to have a supervisor and an Employee ID from your HR system</p>
-              <p>
+              <ul>
+
+              <li>An <em>employee</em> is expected to have a supervisor and an Employee ID from your HR system</li>
+              <li>
                 A <em>contractor</em> optionally has a supervisor and Employee ID from your HR system. Contractors
                 are highlightable in the charts.
-              </p>
-              <p>
-                <em>Open Reqs</em> or open requisitions indicate where a hire needs to be made. These do
+              </li>
+              <li>
+                <em>Open Reqs</em>, or open requisitions, indicate where a hire needs to be made. These do
                 not need a name, employee ID, or avatar. Open Reqs are also highlightable in the charts
-              </p>
+              </li>
+              </ul>
             </section-two>
             <section-three data-person-form-target="sectionThree" class="hidden">
               <h2 class="text-xl mb-4">Fill in the details</h2>
@@ -69,10 +72,6 @@
                 <div class="form-group">
                   <label>Email (used for notifying employee as well as Gravatar for avatar)</label>
                   <input type="email" class="form-control" name="email" />
-                </div>
-                <div class="form-group">
-                  <label>Upload an avatar (optional)</label>
-                  <input type="file" id="avatar" name="avatar" class="input-file" data-multiple-caption="{count} files selected">
                 </div>
 
                 <div class="flex justify-end items-center flex-wrap mt-6">
