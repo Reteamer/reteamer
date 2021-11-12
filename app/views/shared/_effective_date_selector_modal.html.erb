@@ -6,7 +6,7 @@
       <div class="m-1 bg-white rounded shadow">
         <div class="p-8">
           <h2 class="text-xl mb-4">Pick a date for the change to take effect</h2>
-          <form data-controller="new-supervisor-form" data-action="datePicked@window->new-supervisor-form#handleDatePicked">
+          <form data-controller="new-supervisor-form" id="new-supervisor-form">
             <%= render 'shared/effective_date_fields', selected_date: selected_date %>
 
             <div class="flex justify-end items-center flex-wrap mt-6">

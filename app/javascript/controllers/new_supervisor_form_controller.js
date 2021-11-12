@@ -10,10 +10,7 @@ export default class extends Controller {
   }
 
   completeChange() {
-    let newDate = document.querySelector('input[name="effective_date"]:checked').value
-    if (newDate == "other") {
-      newDate = document.getElementById("other_effective_date").value
-    }
+    const newDate = document.querySelector('#new-supervisor-form input[name="effective_at"]').value
     emitCompleteChangeEvent(newDate)
   }
 
