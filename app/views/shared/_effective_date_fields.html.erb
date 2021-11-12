@@ -1,6 +1,7 @@
 <effective-date-fields
   data-controller="effective-date-fields"
   data-action="datePicked@window->effective-date-fields#handleDatePicked"
+  data-effective-date-fields-selected-date-value="<%= selected_date %>"
 >
   <label>
     <input type="radio"
@@ -49,7 +50,6 @@
       />
   </label>
   <input type="text"
-         value="<%= selected_date %>"
          name="effective_at"
          data-effective-date-fields-target="hiddenInput"
     />

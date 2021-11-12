@@ -1,5 +1,9 @@
-class EffectiveDateSelector < ComponentUnderTest
+class EffectiveDateFields < ComponentUnderTest
   class << self
+    def visit_effective_date_fields_style_guide
+      visit effective_date_fields_path
+    end
+
     def select_custom_date
       within("#effective-date-selector") do
         find("input[type='radio'][value='other']").click
