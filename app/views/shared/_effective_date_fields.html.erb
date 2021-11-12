@@ -1,4 +1,7 @@
-<effective-date-fields data-controller="effective-date-fields" data-action="datePicked@window->effective-date-fields#handleDatePicked">
+<effective-date-fields
+  data-controller="effective-date-fields"
+  data-action="datePicked@window->effective-date-fields#handleDatePicked"
+>
   <label>
     <input type="radio"
            name="effective_date_radio"
@@ -30,6 +33,7 @@
     <input type="radio"
            name="effective_date_radio"
            value="other"
+           data-effective-date-fields-target="otherDateRadio"
            data-action="change->effective-date-fields#handleRadioChange"
     />
     A different date:
@@ -41,6 +45,7 @@
            readonly="readonly"
            value="<%= selected_date %>"
            data-effective-date-fields-target="otherDateInput"
+           data-action="change->effective-date-fields#handleOtherChange"
       />
   </label>
   <input type="text"

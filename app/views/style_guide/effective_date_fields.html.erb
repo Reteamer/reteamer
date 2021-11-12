@@ -2,7 +2,7 @@
 <br />
 <hr/>
 <br />
-<p>Effective Date Is: <span id="selected_date">???</span></p>
+<p>Effective Date Is: <span id="selected_date_preview">???</span></p>
 Pick a new selected date:
   <input type="text"
        class="form-control-inline flatpickr-input active"
@@ -14,9 +14,11 @@ Pick a new selected date:
   />
 
 <script>
-  // window.addEventListener("effectiveDatePicked", function(event) {
-  //   document.getElementById("selected_date").innerText = event.detail.newDate;
-  // });
+  const hiddenInput = document.querySelector("input[name='effective_at']");
+  hiddenInput.addEventListener('change', (event) => {
+    document.getElementById("selected_date_preview").innerText = event.target.value;
+  });
+
 
   const selectedDateInput = document.querySelector("#selected-date-input");
 
