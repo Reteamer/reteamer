@@ -4,13 +4,6 @@ import { emitCompleteChangeEvent } from "../event_emitter";
 export default class extends Controller {
   static targets = [ "selectedDate", "selectedDateInput", "otherDateInput" ]
 
-  handleDatePicked(event) {
-    this.selectedDate = event.detail.newDate;
-    this.selectedDateTarget.innerHTML = this.selectedDate;
-    this.selectedDateInputTarget.value = this.selectedDate;
-    this.otherDateInputTarget.value = this.selectedDate;
-  }
-
   cancelChange() {
     const event = new CustomEvent("cancelChange", {})
     window.dispatchEvent(event)
@@ -25,6 +18,6 @@ export default class extends Controller {
   }
 
   connect() {
-    this.selectedDate = null;
+
   }
 }

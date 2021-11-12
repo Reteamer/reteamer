@@ -141,7 +141,7 @@ Rails.application.routes.draw do
 
   scope :style_guide, controller: :style_guide do
     get :date_navigator
-    get :effective_date_picker
+    get :effective_date_fields
   end
 
 

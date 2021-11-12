@@ -5,6 +5,6 @@ class StyleGuideController < ApplicationController
   def date_navigator
   end
 
-  def effective_date_picker
+  def effective_date_fields
   end
 end
