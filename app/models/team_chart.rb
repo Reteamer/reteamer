@@ -13,6 +13,9 @@ class TeamChart
       assigned_team = teams.find { |t| t.key == assignment.team_key }
       assigned_team.members << Assignee.new(assignee, assignment) if assignee && assigned_team
     end
+    fake_root_node = FakeRootNode.new
+    teams.select { |team| team.parent_key.nil? }.map { |team| team.parent_key = fake_root_node.key }
+    teams << fake_root_node
     teams
   end
 
@@ -28,7 +31,11 @@ class TeamChart
     end
 
     def parent_key
-      @team_entry.versionable.parent_key
+      @parent_key || @team_entry.versionable.parent_key
+    end
+
+    def parent_key=(value)
+      @parent_key = value
     end
 
     def initialize(team_entry)
@@ -47,6 +54,24 @@ class TeamChart
     def initialize(person_entry, assignment_entry)
       @person = person_entry.versionable
       @assignment_entry = assignment_entry
+    end
+  end
+
+  class FakeRootNode
+    def members
+      []
+    end
+
+    def key
+      "fake_root_node_key"
+    end
+
+    def name
+      ActsAsTenant.current_tenant.name
+    end
+
+    def parent_key
+      nil
     end
   end
 end

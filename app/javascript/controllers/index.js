@@ -74,6 +74,9 @@ application.register("team-chart", TeamChartController)
 import TeamDataController from "./team_data_controller.js"
 application.register("team-data", TeamDataController)
 
+import TeamFormController from "./team_form_controller.js"
+application.register("team-form", TeamFormController)
+
 import TooltipController from "./tooltip_controller.js"
 application.register("tooltip", TooltipController)
 

@@ -22,7 +22,7 @@
     <ul class="fab-options">
       <li>
         <span class="fab-label">Add New Team</span>
-        <div class="fab-icon-holder">
+        <div class="fab-icon-holder" onclick="(() => { window.dispatchEvent(new CustomEvent('newTeamStarted', {}) )})()">
           <i class="fas fa-users"></i>
         </div>
       </li>
@@ -49,3 +49,4 @@
 </div>
 <%= render "shared/effective_date_selector_modal", selected_date: @selected_date %>
 <%= render "people/new_person_modal", selected_date: @selected_date %>
+<%= render "teams/team_modal", selected_date: @selected_date %>
