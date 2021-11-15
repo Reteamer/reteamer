@@ -1,0 +1,64 @@
+<%= render "shared/date_navigator", selected_date: Date.today %>
+<hr/>
+<button class="btn btn-primary" onclick="loadDataSetOne()">Emit New Data Set 1</button>
+<button class="btn btn-primary" onclick="loadDataSetTwo()">Emit New Data Set 2</button>
+
+<p>Selected Date Is: <span id="selected_date">???</span></p>
+
+<script>
+  window.addEventListener("datePicked", function(event) {
+    document.getElementById("selected_date").innerText = event.detail.newDate;
+  });
+
+  function loadDataSetOne() {
+    const eventPayload = {
+      detail: {
+        histogram: [
+          {"date": "2021-11-07", "value": 39},
+          {"date": "2021-11-12", "value": 2},
+          {"date": "2021-11-13", "value": 2},
+          {"date": "2021-11-20", "value": 5},
+          {"date": "2021-11-24", "value": 2},
+          {"date": "2021-11-30", "value": 1},
+          {"date": "2022-01-04", "value": 3},
+          {"date": "2022-01-08", "value": 4},
+          {"date": "2022-01-17", "value": 6},
+          {"date": "2022-02-05", "value": 3},
+          {"date": "2022-02-06", "value": 4},
+          {"date": "2022-02-07", "value": 3},
+          {"date": "2022-02-18", "value": 1}
+        ]
+      }
+    }
+    const event = new CustomEvent("newData", eventPayload)
+    window.dispatchEvent(event)
+  }
+
+  function loadDataSetTwo() {
+    const eventPayload = {
+      detail: {
+        histogram: [
+          {"date": "2021-12-07", "value": 1},
+          {"date": "2021-12-12", "value": 1},
+          {"date": "2021-12-13", "value": 1},
+          {"date": "2021-12-20", "value": 5},
+          {"date": "2021-12-24", "value": 2},
+          {"date": "2021-12-30", "value": 1},
+          {"date": "2022-02-17", "value": 6},
+          {"date": "2022-03-05", "value": 3},
+          {"date": "2022-03-06", "value": 4},
+          {"date": "2022-03-07", "value": 3},
+          {"date": "2022-03-18", "value": 39}
+        ]
+      }
+    }
+    const event = new CustomEvent("newData", eventPayload)
+    window.dispatchEvent(event)
+  }
+
+  document.onreadystatechange = () => {
+    if (document.readyState === 'complete') {
+      loadDataSetOne();
+    }
+  };
+</script>

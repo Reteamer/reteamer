@@ -1,0 +1,34 @@
+<%= render "shared/effective_date_fields", selected_date: Date.today %>
+<br />
+<hr/>
+<br />
+<p>Effective Date Is: <span id="selected_date_preview">???</span></p>
+Pick a new selected date:
+  <input type="text"
+       class="form-control-inline flatpickr-input active"
+       data-controller="flatpickr"
+       readonly="readonly"
+       value="<%= Date.today %>"
+       data-effective-date-picker-target="otherDateInput"
+       id="selected-date-input"
+  />
+
+<script>
+  const hiddenInput = document.querySelector("input[name='effective_at']");
+  hiddenInput.addEventListener('change', (event) => {
+    document.getElementById("selected_date_preview").innerText = event.target.value;
+  });
+
+
+  const selectedDateInput = document.querySelector("#selected-date-input");
+
+  selectedDateInput.addEventListener('change', (event) => {
+    const eventPayload = {
+      detail: {
+        newDate: event.target.value
+      }
+    }
+    const newDateEvent = new CustomEvent("datePicked", eventPayload)
+    window.dispatchEvent(newDateEvent);
+  });
+</script>

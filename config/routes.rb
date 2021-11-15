@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resource :reset_data, only: :show
 
   namespace :reteamer_api do
+    resources :supervisors, only: :index
+    resources :teams, only: [:index, :create]
+    resources :people, only: :create
     resource :org_chart, only: :show
     resource :team_chart, only: :show
     post "people/update_supervisor", to: "people#update_supervisor"
@@ -137,6 +140,11 @@ Rails.application.routes.draw do
     get :pricing
     get :cookie
     get :acceptable_use
+  end
+
+  scope :style_guide, controller: :style_guide do
+    get :date_navigator
+    get :effective_date_fields
   end
 
   post :sudo, to: "users/sudo#create"

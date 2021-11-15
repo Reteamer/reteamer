@@ -1,0 +1,56 @@
+<effective-date-fields
+  data-controller="effective-date-fields"
+  data-action="datePicked@window->effective-date-fields#handleDatePicked"
+  data-effective-date-fields-selected-date-value="<%= selected_date %>"
+>
+  <label>
+    <input type="radio"
+           name="effective_date_radio"
+           value="<%= selected_date %>"
+           data-action="change->effective-date-fields#handleRadioChange"
+           data-effective-date-fields-target="selectedDateInput"
+           checked
+    />
+    The selected date:
+    <span data-effective-date-fields-target="selectedDate"><%= l(selected_date, format: :people_date) %></span>
+  </label>
+  <label>
+    <input type="radio"
+           name="effective_date_radio"
+           value="<%= Date.today %>"
+           data-action="change->effective-date-fields#handleRadioChange"
+    />
+    Today: <%= l(Date.today, format: :people_date) %>
+  </label>
+  <label>
+    <input type="radio"
+           name="effective_date_radio"
+           value="<%= Date.today.next_week(:monday) %>"
+           data-action="change->effective-date-fields#handleRadioChange"
+    />
+    Beginning of next week: <%= l(Date.today.next_week(:monday), format: :people_date) %>
+  </label>
+  <label>
+    <input type="radio"
+           name="effective_date_radio"
+           value="other"
+           data-effective-date-fields-target="otherDateRadio"
+           data-action="change->effective-date-fields#handleRadioChange"
+    />
+    A different date:
+    <input type="text"
+           name="other_effective_date"
+           id="other_effective_date"
+           class="form-control-inline flatpickr-input active"
+           data-controller="flatpickr"
+           readonly="readonly"
+           value="<%= selected_date %>"
+           data-effective-date-fields-target="otherDateInput"
+           data-action="change->effective-date-fields#handleOtherChange"
+      />
+  </label>
+  <input type="hidden"
+         name="effective_at"
+         data-effective-date-fields-target="hiddenInput"
+    />
+</effective-date-fields>
