@@ -73,10 +73,33 @@ export default class extends Controller {
       .initialZoom(0.7)
       .nodeHeight(d => this.getNodeHeight(d))
       .childrenMargin(d => 40)
+      .buttonContent(({ node, state }) => {
+        return `
+          <div class="${node.depth == 0 ? "fake-root-node" : ""}" style="px;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> 
+            <span style="font-size:9px">
+              ${node.children
+                ? `<i class="fas fa-angle-up"></i>`
+                : `<i class="fas fa-angle-down"></i>`
+              }
+            </span>
+          </div>
+        `;
+      })
+      .linkUpdate(function (d, i, arr) {
+        d3.select(this)
+          .attr("stroke", d => d.data._upToTheRootHighlighted ? '#152785' : 'lightgray')
+          .attr("stroke-width", d => d.data._upToTheRootHighlighted ? 5 : 2)
+          .classed("fake-root-node", d => d.depth == 1)
+
+        if (d.data._upToTheRootHighlighted) {
+          d3.select(this).raise()
+        }
+      })
       .compactMarginBetween(d => 15)
       .compactMarginPair(d => 80)
       .nodeContent(function(d, i, nodes, attrs) { //this is the dom node
         d3.select(this).html(`
+          <g class="team-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
             <rect class="team-box" width="${d.width}" height="${d.height}" />
             <rect class="team-bar" width="${d.width}" />
             <foreignObject y="30" height="75" width="${d.width}">
@@ -86,6 +109,7 @@ export default class extends Controller {
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
             <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
+          </g>
         `)
 
         d3.selectAll("g.nodes-wrapper g.node")
