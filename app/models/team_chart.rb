@@ -21,6 +21,7 @@ class TeamChart
 
   class AssignedTeam
     attr_reader :members
+    attr_writer :parent_key
 
     def name
       @team_entry.versionable.name
@@ -32,10 +33,6 @@ class TeamChart
 
     def parent_key
       @parent_key || @team_entry.versionable.parent_key
-    end
-
-    def parent_key=(value)
-      @parent_key = value
     end
 
     def initialize(team_entry)
