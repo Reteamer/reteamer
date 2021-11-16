@@ -40,4 +40,9 @@ class Entry < ApplicationRecord
       group(:key).where(effective_at: ..effective_date.end_of_day).select("max(effective_at) as effective_at"))
       .includes(:versionable) # avoid n+1 queries
   end
+
+  def self.merge_conflicts(effective_date, key)
+    where(effective_at:
+      group_by_day(:effective_at).where(key: key, effective_at: effective_date.beginning_of_day..).select("max(effective_at) as effective_at"))
+  end
 end

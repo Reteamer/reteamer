@@ -104,9 +104,32 @@ export default class extends Controller {
     }
   };
 
-  deletePerson(data) {
-    //open the modal
-    //wait for callback
+  deletePerson(d) {
+    const event = new CustomEvent("personDeactivated",
+      {
+        detail: {
+          data: d,
+          callback: function(effectiveDate) {
+            fetch("/reteamer_api/people/"+d.data.id, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              redirect: 'follow',
+              body: JSON.stringify(
+                {
+                  "effective_at": effectiveDate,
+                  "key": d.data.id
+                }
+              )
+            }).then(() => {
+              emitDatePickedEvent(effectiveDate)
+            });
+          }
+        }
+      }
+    )
+    window.dispatchEvent(event)
   };
 
   isDragging() {
@@ -243,7 +266,7 @@ export default class extends Controller {
           .data(function(d) { return [d]; });
 
         d3.selectAll(".person-node").each(function(d) {
-          d3.selectAll(".delete-person").on("click", function(e) {
+          d3.select(this).selectAll(".delete-person").on("click", function(e) {
             self.deletePerson(d)
           })
         })
@@ -252,7 +275,6 @@ export default class extends Controller {
           .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
-
       })
   }
 }

@@ -15,9 +15,19 @@
 </div>
 
 <effective-date-modal
+  id="change-supervisor-effective-date-modal"
   data-controller="effective-date-modal"
   data-effective-date-modal-selected-date-value="<%= @selected_date %>"
   data-effective-date-modal-completed-event-value="completeSupervisorChange"
   data-effective-date-modal-canceled-event-value="cancelSupervisorChange"
   data-effective-date-modal-open-event-value="personDropped"
-/>
+></effective-date-modal>
+
+<effective-date-modal
+  id="deactivate-person-effective-date-modal"
+  data-controller="effective-date-modal"
+  data-effective-date-modal-selected-date-value="<%= @selected_date %>"
+  data-effective-date-modal-completed-event-value="completeDeactivatePersonChange"
+  data-effective-date-modal-canceled-event-value="cancelDeactivatePersonChange"
+  data-effective-date-modal-open-event-value="personDeactivated"
+></effective-date-modal>

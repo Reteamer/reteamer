@@ -16,6 +16,10 @@ export default class extends Controller {
     id: String
   }
 
+  handleOpenEvent(e) {
+    this.callback = e.detail.callback
+  }
+
   cancelChange() {
     const event = new CustomEvent(this.canceledEventValue, {})
     window.dispatchEvent(event)
@@ -24,11 +28,12 @@ export default class extends Controller {
   completeChange() {
     const newDate = this.effectiveDateFormTarget.querySelector('input[name="effective_at"]').value
     emitCompleteChangeEvent(newDate, this.completedEventValue)
+    if(this.callback) { this.callback(newDate) }
   }
 
   connect() {
     this.element.innerHTML = `
-      <div data-controller="modal" data-action="${this.openEventValue}@window->modal#open">
+      <div data-controller="modal" data-action="${this.openEventValue}@window->modal#open ${this.openEventValue}@window->effective-date-modal#handleOpenEvent">
         <div data-modal-target="container" data-action="click->modal#closeBackground keyup@window->modal#closeWithKeyboard" class="hidden animated fadeIn fixed inset-0 overflow-y-auto flex items-center justify-center" style="z-index: 9999;">
           <!-- Modal Inner Container -->
           <div class="max-w-sm max-h-screen w-full relative">

@@ -20,5 +20,12 @@ module People
     delegate :key, to: :entry
     acts_as_tenant :account
     has_person_name
+
+    def self.has_subordinates?(effective_date, key)
+      where(supervisor_key: key)
+        .includes(:entry)
+        .where(entry: {effective_at: effective_date.beginning_of_day..})
+        .exists?
+    end
   end
 end
