@@ -80,17 +80,38 @@ export default class extends Controller {
 
   handleMouseOver(domNode, d) {
     this.chart.setDestinationDatum(d);
-    if(this.chart.getDraggingDatum()) {
+    if(this.isDragging()) {
       d3.select(domNode).classed("drop-target", true)
+    } else {
+      this.showButtons(domNode);
     }
   };
 
+  showButtons(domNode) {
+    d3.select(domNode).select(".people-buttons").classed("hidden", false)
+  }
+
+  hideButtons(domNode) {
+    d3.select(domNode).select(".people-buttons").classed("hidden", true)
+  }
+
   handleMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
-    if(this.chart.getDraggingDatum()) {
+    if(this.isDragging()) {
       this.chart.setDestinationDatum(null);
+    } else {
+      this.hideButtons(domNode);
     }
   };
+
+  deletePerson(data) {
+    //open the modal
+    //wait for callback
+  };
+
+  isDragging() {
+    return this.chart.getDraggingDatum();
+  }
 
   initiateDrag(d, domNode) {
     this.chart.setDraggingDatum(d);
@@ -205,12 +226,33 @@ export default class extends Controller {
                   </div>` : ""
               }
             </foreignObject>
+            <g class="people-buttons hidden">
+              <g class="person-button cursor-pointer" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+                <circle r="10" cx="10" cy="10"/>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
+              </g>
+              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+                <circle r="10" cx="10" cy="10"/>
+                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
+              </g>
+            </g>
           </g>
         `});
-
         d3.selectAll("g.nodes-wrapper g.node")
           .selectAll(".person-node")
           .data(function(d) { return [d]; });
+
+        d3.selectAll(".person-node").each(function(d) {
+          d3.selectAll(".delete-person").on("click", function(e) {
+            self.deletePerson(d)
+          })
+        })
+
+        d3.selectAll(".person-button")
+          .attr("cursor", "pointer")
+          .call(d3.drag()
+            .on("start", null))
+
       })
   }
 }
