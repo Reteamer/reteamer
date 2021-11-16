@@ -9,8 +9,8 @@ export function emitDatePickedEvent(newDate) {
   window.dispatchEvent(dateChangedEvent)
 }
 
-export function  emitCompleteChangeEvent(selectedDate) {
-  const event = new CustomEvent("completeChange",
+export function  emitCompleteChangeEvent(selectedDate, eventName) {
+  const event = new CustomEvent(eventName,
     {
       detail: {
         selectedDate: selectedDate

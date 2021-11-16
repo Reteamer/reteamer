@@ -6,8 +6,8 @@
   <div class="team-chart" data-controller="team-chart"
        data-action="
        newData@window->team-chart#handleNewTeamData
-       completeChange@window->team-chart#handleCompleteChange
-       cancelChange@window->team-chart#handleCancelChange
+       completeTeamChange@window->team-chart#handleCompleteChange
+       cancelTeamChange@window->team-chart#handleCancelChange
         "
        style="padding-left:0; padding-right:0"></div>
   <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked" data-team-data-starting-date-value="<%= @selected_date %>"></div>
@@ -47,6 +47,12 @@
     </ul>
   </div>
 </div>
-<%= render "shared/modals/new_supervisor_modal", selected_date: @selected_date %>
+<effective-date-modal
+  data-controller="effective-date-modal"
+  data-effective-date-modal-selected-date-value="<%= @selected_date %>"
+  data-effective-date-modal-completed-event-value="completeTeamChange"
+  data-effective-date-modal-canceled-event-value="cancelTeamChange"
+  data-effective-date-modal-open-event-value="personDropped"
+/>
 <%= render "people/new_person_modal", selected_date: @selected_date %>
 <%= render "teams/team_modal", selected_date: @selected_date %>

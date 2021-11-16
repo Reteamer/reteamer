@@ -6,12 +6,18 @@
   <div class="org-chart" data-controller="org-chart"
        data-action="
        newData@window->org-chart#handleNewOrgData
-       completeChange@window->org-chart#handleCompleteChange
-       cancelChange@window->org-chart#handleCancelChange
+       completeSupervisorChange@window->org-chart#handleCompleteChange
+       cancelSupervisorChange@window->org-chart#handleCancelChange
       "
        style="padding-left:0; padding-right:0"></div>
   <div data-controller="org-data" data-action="datePicked@window->org-data#handleDatePicked" data-org-data-starting-date-value="<%= @selected_date %>"></div>
   <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
 </div>
 
-<%= render "shared/new_supervisor_modal", selected_date: @selected_date %>
+<effective-date-modal
+  data-controller="effective-date-modal"
+  data-effective-date-modal-selected-date-value="<%= @selected_date %>"
+  data-effective-date-modal-completed-event-value="completeSupervisorChange"
+  data-effective-date-modal-canceled-event-value="cancelSupervisorChange"
+  data-effective-date-modal-open-event-value="personDropped"
+/>
