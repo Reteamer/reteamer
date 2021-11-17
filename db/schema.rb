@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_16_215526) do
+ActiveRecord::Schema.define(version: 2021_11_17_063444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -271,6 +271,12 @@ ActiveRecord::Schema.define(version: 2021_11_16_215526) do
     t.string "currency"
     t.integer "interval_count", default: 1
     t.string "description"
+  end
+
+  create_table "reteamer_plans", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "account_id", null: false
+    t.datetime "created_at"
   end
 
   create_table "teams", force: :cascade do |t|

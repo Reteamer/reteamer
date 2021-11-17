@@ -3,6 +3,7 @@
     <h1><%= t(".title") %></h1>
   </div>
   <%= render "shared/date_navigator", selected_date: @selected_date %>
+  <%= render "shared/plan_navigator", selected_plan: @selected_plan, plan_names: @plan_names %>
   <div class="team-chart" data-controller="team-chart"
        data-action="
        newData@window->team-chart#handleNewTeamData
@@ -11,8 +12,6 @@
         "
        style="padding-left:0; padding-right:0"></div>
   <div data-controller="team-data" data-action="datePicked@window->team-data#handleDatePicked" data-team-data-starting-date-value="<%= @selected_date %>"></div>
-  <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
-
 
   <div class="fab-container">
     <div class="fab fab-icon-holder">
@@ -39,9 +38,9 @@
         </div>
       </li>
       <li>
-        <span class="fab-label">Feedback</span>
+        <span class="fab-label">Plan</span>
         <div class="fab-icon-holder">
-          <i class="fas fa-comment-alt"></i>
+          <i class="fas fa-clipboard-list" onclick="(() => { window.dispatchEvent(new CustomEvent('newPlanStarted', {}) )})()"></i>
         </div>
       </li>
     </ul>
@@ -54,6 +53,11 @@
   data-effective-date-modal-completed-event-value="completeTeamChange"
   data-effective-date-modal-canceled-event-value="cancelTeamChange"
   data-effective-date-modal-open-event-value="personDropped"
-/>
+></effective-date-modal>
 <%= render "people/new_person_modal", selected_date: @selected_date %>
 <%= render "teams/team_modal", selected_date: @selected_date %>
+<%= render "plans/new_plan_modal" %>
+<div
+  data-controller="url-date-manager"
+  data-action="datePicked@window->url-date-manager#handleDatePicked planPicked@window->url-date-manager#handlePlanPicked"
+></div>

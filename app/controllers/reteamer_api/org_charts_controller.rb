@@ -12,7 +12,7 @@ module ReteamerApi
     private
 
     def org_chart(selected_date, plan_name = nil)
-      plan_names = ["main", plan_name].compact
+      plan_names = [Reteamer::Plan::MAIN_PLAN_NAME, plan_name].compact
       people = Entry.find_for(selected_date).where(versionable_type: People::Person.name, plan_name: plan_names).select(&:active).map(&:versionable)
       fake_root_node = FakeRootNode.new
       people.select { |person| person.supervisor_key.nil? }.map { |person| person.supervisor_key = fake_root_node.key }

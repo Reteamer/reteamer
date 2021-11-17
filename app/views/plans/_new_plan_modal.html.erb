@@ -1,0 +1,25 @@
+<new-plan-modal data-controller="modal plan-form" data-action="newPlanStarted@window->modal#open planCompleted@window->modal#close">
+  <div data-modal-target="container" data-action="click->modal#closeBackground keyup@window->modal#closeWithKeyboard" class="hidden animated fadeIn fixed inset-0 overflow-y-auto flex items-center justify-center" style="z-index: 9999;">
+    <!-- Modal Inner Container -->
+    <div class="max-w-lg max-h-screen w-full relative">
+      <!-- Modal Card -->
+      <div class="m-1 bg-white rounded shadow">
+        <div class="p-8">
+          <form data-action="submit->plan-form#handleSubmit" id="plan-form">
+            <h2 class="text-xl mb-4">Pick a name for your plan</h2>
+            <div class="form-group">
+              <label>Plan name
+                <input type="text" class="form-control" name="plan_name" data-action="keypress->plan-form#resetForm change->plan-form#resetForm" data-plan-form-target="input" />
+                <p class="form-hint error" data-plan-form-target="hint">&nbsp;</p>
+              </label>
+            </div>
+            <div class="flex justify-end items-center flex-wrap mt-6">
+              <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
+              <button class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</new-plan-modal>

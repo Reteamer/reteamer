@@ -20,6 +20,7 @@
 #
 class Entry < ApplicationRecord
   belongs_to :versionable, polymorphic: true
+  belongs_to :plan
   acts_as_tenant :account
 
   before_create :set_values

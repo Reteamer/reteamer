@@ -60,11 +60,11 @@ export default class extends Controller {
   async handleCompleteChange(event) {
     const planName = document.querySelector("plan-navigator select").value;
     await fetch("/reteamer_api/people/update_supervisor", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
-      redirect: 'follow',
+      redirect: "follow",
       body: JSON.stringify(
         {
           "person": {

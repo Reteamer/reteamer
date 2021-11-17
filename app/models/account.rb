@@ -99,9 +99,9 @@ class Account < ApplicationRecord
   # If you need to create some associated records when an Account is created,
   # use a `with_tenant` block to change the current tenant temporarily
   #
-  # after_create do
-  #   ActsAsTenant.with_tenant(self) do
-  #     association.create(name: "example")
-  #   end
-  # end
+  after_create do
+    ActsAsTenant.with_tenant(self) do
+      Reteamer::Plan.create(name: Reteamer::Plan::MAIN_PLAN_NAME)
+    end
+  end
 end
