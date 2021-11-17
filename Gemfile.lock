@@ -423,6 +423,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.5.1)
+    zonebie (0.6.1)
 
 PLATFORMS
   ruby
@@ -486,6 +487,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   webdrivers
   whenever (~> 1.0)
+  zonebie
 
 RUBY VERSION
    ruby 3.0.2p107

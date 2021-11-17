@@ -30,6 +30,7 @@ group :development, :test do
   gem "letter_opener_web", "~> 1.3", ">= 1.3.4"
   gem "standard"
   gem "factory_bot_rails"
+  gem "zonebie"
 end
 
 group :development do

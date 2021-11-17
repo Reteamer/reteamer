@@ -7,6 +7,7 @@ require "minitest/mock"
 # Rails.backtrace_cleaner.remove_silencers!
 
 require "sidekiq/testing" if defined?(Sidekiq)
+Zonebie.set_random_timezone
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
