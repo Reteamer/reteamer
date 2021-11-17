@@ -2,6 +2,7 @@ ActiveRecord::Base.logger = Logger.new(STDOUT)
 class AddPlans < ActiveRecord::Migration[6.1]
   # module Reteamer
   #   class Plan < ApplicationRecord
+  #     self.table_name = "reteamer_plans"
   #     acts_as_tenant :account
   #   end
   # end
