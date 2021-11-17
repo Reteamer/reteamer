@@ -22,7 +22,7 @@ class Entry < ApplicationRecord
   self.ignored_columns = ["plan_name"]
 
   belongs_to :versionable, polymorphic: true
-  belongs_to :plan, class_name: 'Reteamer::Plan'
+  belongs_to :plan, class_name: "Reteamer::Plan", optional: true
   acts_as_tenant :account
 
   before_create :set_values
@@ -30,8 +30,8 @@ class Entry < ApplicationRecord
   def set_values
     number_of_events = self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).count
     self.effective_at = effective_at.to_date + number_of_events.seconds
-    self.key = SecureRandom.uuid unless self.key.present?
-    self.plan = Reteamer::Plan.find_by(name: Reteamer::Plan::MAIN_PLAN_NAME) unless self.key.plan
+    self.key = SecureRandom.uuid unless key.present?
+    self.plan_id = Reteamer::Plan.find_by(name: Reteamer::Plan::MAIN_PLAN_NAME).id unless plan_id
   end
 
   def self.histogram

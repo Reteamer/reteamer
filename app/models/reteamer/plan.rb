@@ -16,7 +16,7 @@ module Reteamer
 
     class << self
       def plan_names
-        Plan.pluck(:plan_name).sort{|a,b| b == MAIN_PLAN_NAME ? 1 : a <=> b}
+        pluck(:name).sort { |a, b| b == MAIN_PLAN_NAME ? 1 : a <=> b }
       end
     end
   end

@@ -8,7 +8,7 @@
 #  account_id :integer          not null
 #
 FactoryBot.define do
-  factory :reteamer_plan, class: 'Reteamer::Plan' do
+  factory :reteamer_plan, class: "Reteamer::Plan" do
     name { "MyString" }
     account_id { "" }
   end

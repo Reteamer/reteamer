@@ -13,7 +13,7 @@ export default class extends Controller {
   handleNewData(event) {
     this.histogramData = event.detail.histogram
     this.histogramData.forEach(function(d) {
-      d.date = Date.parse(d.date);
+      d.date = dayjs(d.date).startOf('day');
     });
     this.renderChart()
   }
@@ -164,18 +164,17 @@ export default class extends Controller {
 
     self.xAxisElement.call(self.xAxis);
 
-    const today = new Date();
+    const today = dayjs().startOf('day');
     self.todayMarker
-      .attr("x1", self.x(today))
-      .attr("x2", self.x(today))
+      .attr("x1", Math.ceil(self.x(today)))
+      .attr("x2", Math.ceil(self.x(today)))
       .attr("y1", 0)
       .attr("y2", self.height)
 
-    const dateString = `${self.dateInputTarget.value} ${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`
-    const selectedDate = new Date(dateString);
+    const selectedDate = dayjs(self.dateInputTarget.value).startOf('day');
     self.selectedDateMarker
-      .attr("x1", self.x(selectedDate))
-      .attr("x2", self.x(selectedDate))
+      .attr("x1", Math.ceil(self.x(selectedDate)))
+      .attr("x2", Math.ceil(self.x(selectedDate)))
       .attr("y1", 0)
       .attr("y2", self.height)
 
@@ -189,7 +188,9 @@ export default class extends Controller {
       .attr("fill", "steelblue")
       .attr("height", d => self.height - self.y(d.value))
       .attr("width", 8)
-      .attr("x", (d, i) => self.x(d.date))
+      .attr("x", d => {
+        return self.x(d.date)
+      })
       .attr("y", d => self.y(d.value))
 
     const startDate = dayjs(self.x.domain()[0]).day(0)

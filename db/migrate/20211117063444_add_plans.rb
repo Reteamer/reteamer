@@ -1,4 +1,3 @@
-ActiveRecord::Base.logger = Logger.new(STDOUT)
 class AddPlans < ActiveRecord::Migration[6.1]
   # module Reteamer
   #   class Plan < ApplicationRecord

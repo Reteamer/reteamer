@@ -5,7 +5,7 @@ module ReteamerApi
 
     def create
       if params[:plan_name].empty? || Reteamer::Plan.plan_names.include?(params[:plan_name])
-        render :json => {:error => "Plan name must be unique"}.to_json, :status => 422
+        render json: {error: "Plan name must be unique"}.to_json, status: 422
         return
       end
 
