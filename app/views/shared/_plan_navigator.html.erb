@@ -1,0 +1,8 @@
+<plan-navigator data-controller="plan-navigator">
+  <select class="select" data-action="change->plan-navigator#handleChange">
+    <% plan_names.each do |plan_name| %>
+      <option value="<%= plan_name %>" <%= plan_name == selected_plan ? "selected" : "" %>><%= plan_name %></option>
+    <% end %>
+    <option value="donkey" <%= "donkey" == selected_plan ? "selected" : "" %>>donkey</option>
+  </select>
+</plan-navigator>

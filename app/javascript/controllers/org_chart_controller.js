@@ -58,6 +58,9 @@ export default class extends Controller {
   }
 
   async handleCompleteChange(event) {
+    const planSelect = document.querySelector("plan-navigator select");
+    const planName = planSelect.options[planSelect.selectedIndex].value;
+    console.error("=============>", planName);
     const response = await fetch("/reteamer_api/people/update_supervisor", {
       method: 'POST',
       headers: {
@@ -69,7 +72,8 @@ export default class extends Controller {
           "person": {
             "effective_date": event.detail.selectedDate,
             "supervisor_key": this.dropped.supervisor_key,
-            "key": this.dropped.person_key
+            "key": this.dropped.person_key,
+            "plan_name": planName
           }
         }
       )

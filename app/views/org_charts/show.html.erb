@@ -3,6 +3,7 @@
     <h1><%= t(".title") %></h1>
   </div>
   <%= render "shared/date_navigator", selected_date: @selected_date %>
+  <%= render "shared/plan_navigator", selected_plan: @selected_plan, plan_names: @plan_names %>
   <div class="org-chart" data-controller="org-chart"
        data-action="
        newData@window->org-chart#handleNewOrgData
@@ -10,8 +11,15 @@
        cancelSupervisorChange@window->org-chart#handleCancelChange
       "
        style="padding-left:0; padding-right:0"></div>
-  <div data-controller="org-data" data-action="datePicked@window->org-data#handleDatePicked" data-org-data-starting-date-value="<%= @selected_date %>"></div>
-  <div data-controller="url-date-manager" data-action="datePicked@window->url-date-manager#handleDatePicked"></div>
+  <div
+    data-controller="org-data"
+    data-action="datePicked@window->org-data#handleDatePicked planPicked@window->org-data#handlePlanPicked"
+    data-org-data-starting-date-value="<%= @selected_date %>">
+  </div>
+  <div
+    data-controller="url-date-manager"
+    data-action="datePicked@window->url-date-manager#handleDatePicked planPicked@window->url-date-manager#handlePlanPicked"
+  ></div>
 </div>
 
 <effective-date-modal

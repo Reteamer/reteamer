@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_030300) do
+ActiveRecord::Schema.define(version: 2021_11_16_215526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_030300) do
     t.bigint "versionable_id"
     t.integer "account_id", null: false
     t.datetime "created_at"
+    t.string "plan_name", default: "main", null: false
     t.index ["versionable_type", "versionable_id"], name: "index_entries_on_versionable"
   end
 

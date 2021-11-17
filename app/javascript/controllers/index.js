@@ -59,6 +59,9 @@ application.register("person-buttons", PersonButtonsController)
 import PersonFormController from "./person_form_controller.js"
 application.register("person-form", PersonFormController)
 
+import PlanNavigatorController from "./plan_navigator_controller.js"
+application.register("plan-navigator", PlanNavigatorController)
+
 import PricingController from "./pricing_controller.js"
 application.register("pricing", PricingController)
 

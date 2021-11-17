@@ -17,7 +17,7 @@ module ReteamerApi
       person_entry = Entry.create!(effective_at: effective_date, versionable: new_person)
 
       if params[:team_key]
-        Entry.create!(effective_at: effective_date, versionable: Assignment.new(person_key: person_entry.key, team_key: params[:team_key]))
+        Entry.create!(plan_name: params.fetch(:plan_name, "main"), effective_at: effective_date, versionable: Assignment.new(person_key: person_entry.key, team_key: params[:team_key]))
       end
 
       redirect_to team_chart_path(effective_date: effective_date)
@@ -29,7 +29,7 @@ module ReteamerApi
         #  render 404 in JSON and return because we can't yet deactivate this person
       end
       person = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: params[:key]).first.versionable.dup
-      Entry.create(active: false, effective_at: effective_date, key: params[:key], versionable: person)
+      Entry.create(plan_name: params.fetch(:plan_name, "main"), active: false, effective_at: effective_date, key: params[:key], versionable: person)
 
       # what about future entries?
       # _person = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: params[:key]).first.versionable.dup
@@ -42,20 +42,20 @@ module ReteamerApi
       effective_date = Date.parse(person_params[:effective_date])
       person = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: person_params[:key]).first.versionable.dup
       person.supervisor_key = person_params[:supervisor_key]
-      Entry.create(effective_at: effective_date, key: person_params[:key], versionable: person)
+      Entry.create(plan_name: person_params.fetch(:plan_name, "main"),effective_at: effective_date, key: person_params[:key], versionable: person)
     end
 
     def update_team
       effective_date = Date.parse(person_params[:effective_date])
       assignment = Entry.find_for(effective_date).where(versionable_type: Assignment.name, key: person_params[:key]).first.versionable.dup
       assignment.team_key = person_params[:team_key]
-      Entry.create(effective_at: effective_date, key: person_params[:key], versionable: assignment)
+      Entry.create(plan_name: params.fetch(:plan_name, "main"), effective_at: effective_date, key: person_params[:key], versionable: assignment)
     end
 
     private
 
     def person_params
-      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key)
+      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key, :plan_name)
     end
   end
 end
