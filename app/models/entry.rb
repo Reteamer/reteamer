@@ -8,10 +8,10 @@
 #  active           :boolean          default(TRUE), not null
 #  effective_at     :datetime         not null
 #  key              :string           not null
-#  plan_name        :string           default("main"), not null
 #  versionable_type :string
 #  created_at       :datetime
 #  account_id       :integer          not null
+#  plan_id          :bigint           not null
 #  versionable_id   :bigint
 #
 # Indexes
@@ -19,8 +19,10 @@
 #  index_entries_on_versionable  (versionable_type,versionable_id)
 #
 class Entry < ApplicationRecord
+  self.ignored_columns = ["plan_name"]
+
   belongs_to :versionable, polymorphic: true
-  belongs_to :plan
+  belongs_to :plan, class_name: 'Reteamer::Plan'
   acts_as_tenant :account
 
   before_create :set_values
@@ -28,7 +30,8 @@ class Entry < ApplicationRecord
   def set_values
     number_of_events = self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).count
     self.effective_at = effective_at.to_date + number_of_events.seconds
-    self.key = SecureRandom.uuid unless key.present?
+    self.key = SecureRandom.uuid unless self.key.present?
+    self.plan = Reteamer::Plan.find_by(name: Reteamer::Plan::MAIN_PLAN_NAME) unless self.key.plan
   end
 
   def self.histogram

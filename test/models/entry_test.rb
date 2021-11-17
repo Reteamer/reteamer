@@ -6,10 +6,10 @@
 #  active           :boolean          default(TRUE), not null
 #  effective_at     :datetime         not null
 #  key              :string           not null
-#  plan_name        :string           default("main"), not null
 #  versionable_type :string
 #  created_at       :datetime
 #  account_id       :integer          not null
+#  plan_id          :bigint           not null
 #  versionable_id   :bigint
 #
 # Indexes
