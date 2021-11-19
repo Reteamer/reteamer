@@ -32,11 +32,11 @@ application.register("date-navigator", DateNavigatorController)
 import EffectiveDateFieldsController from "./effective_date_fields_controller.js"
 application.register("effective-date-fields", EffectiveDateFieldsController)
 
+import EffectiveDateModalController from "./effective_date_modal_controller.js"
+application.register("effective-date-modal", EffectiveDateModalController)
+
 import MentionsController from "./mentions_controller.js"
 application.register("mentions", MentionsController)
-
-import NewSupervisorFormController from "./new_supervisor_form_controller.js"
-application.register("new-supervisor-form", NewSupervisorFormController)
 
 import NotificationsController from "./notifications_controller.js"
 application.register("notifications", NotificationsController)
@@ -58,6 +58,12 @@ application.register("person-buttons", PersonButtonsController)
 
 import PersonFormController from "./person_form_controller.js"
 application.register("person-form", PersonFormController)
+
+import PlanFormController from "./plan_form_controller.js"
+application.register("plan-form", PlanFormController)
+
+import PlanNavigatorController from "./plan_navigator_controller.js"
+application.register("plan-navigator", PlanNavigatorController)
 
 import PricingController from "./pricing_controller.js"
 application.register("pricing", PricingController)

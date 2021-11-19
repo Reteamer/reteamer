@@ -20,7 +20,7 @@ class DateNavigatorComponent < ComponentUnderTest
 
     def hover_on(selector)
       within("date-navigator") do
-        sleep(2)
+        sleep(1)
         find(selector, visible: :all).hover
       end
     end

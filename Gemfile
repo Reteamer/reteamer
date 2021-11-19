@@ -30,6 +30,7 @@ group :development, :test do
   gem "letter_opener_web", "~> 1.3", ">= 1.3.4"
   gem "standard"
   gem "factory_bot_rails"
+  gem "zonebie"
 end
 
 group :development do
@@ -59,7 +60,9 @@ gem "administrate-field-active_storage", "~> 0.3.0"
 gem "attr_encrypted", "~> 3.1"
 gem "cssbundling-rails", "~> 0.2.4"
 gem "devise", ">= 4.7.1"
+gem "deep_cloneable"
 gem "devise-i18n", "~> 1.10"
+gem "groupdate"
 gem "hotwire-rails", "~> 0.1.2"
 gem "image_processing", "~> 1.9", ">= 1.9.2"
 gem "inline_svg", "~> 1.6"

@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   namespace :reteamer_api do
     resources :supervisors, only: :index
     resources :teams, only: [:index, :create]
-    resources :people, only: :create
+    resources :people, only: [:create, :destroy]
+    resources :plans, only: [:create]
     resource :org_chart, only: :show
     resource :team_chart, only: :show
     post "people/update_supervisor", to: "people#update_supervisor"

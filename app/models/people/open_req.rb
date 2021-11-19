@@ -16,6 +16,8 @@
 #
 module People
   class OpenReq < Person
+    self.ignored_columns = ["first_name", "last_name", "employee_id", "email"]
+
     def name
       "TBH"
     end

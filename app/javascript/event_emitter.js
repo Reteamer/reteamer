@@ -1,21 +1,12 @@
 export function emitDatePickedEvent(newDate) {
-  const dateChangedEvent = new CustomEvent("datePicked",
-    {
-      detail: {
-        newDate: newDate
-      }
-    }
-  )
-  window.dispatchEvent(dateChangedEvent)
+  emitEvent("datePicked", {newDate})
 }
 
-export function  emitCompleteChangeEvent(selectedDate) {
-  const event = new CustomEvent("completeChange",
-    {
-      detail: {
-        selectedDate: selectedDate
-      }
-    }
-  )
+export function  emitCompleteChangeEvent(selectedDate, eventName) {
+  emitEvent(eventName, {selectedDate})
+}
+
+export function emitEvent(eventName, detail) {
+  const event = new CustomEvent(eventName, { detail })
   window.dispatchEvent(event)
 }

@@ -137,6 +137,4 @@ def peopleOfThirtyRock(account)
 
     # TODO: Kaylee Hooper s5e16
   end
-
-  p "30 ROCK has been seeded!"
 end
