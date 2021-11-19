@@ -26,18 +26,10 @@ module ReteamerApi
 
     def destroy
       effective_date = Date.parse(params[:effective_at])
-      if People::Person.has_subordinates?(effective_date, params[:key]) || Entry.merge_conflicts(effective_date, params[:key])
-        #  render 404 in JSON and return because we can't yet deactivate this person
-      end
-      person = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: params[:key]).first.versionable.dup
+      person_key = params[:key]
       plan = Reteamer::Plan.find_by(name: params.fetch(:plan_name, Reteamer::Plan::MAIN_PLAN_NAME))
-      Entry.create(plan: plan, active: false, effective_at: effective_date, key: params[:key], versionable: person)
 
-      # what about future entries?
-      # _person = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: params[:key]).first.versionable.dup
-
-      # what about all the people they supervise now and in the future?
-      # People::Person.where(supervisor_key: params[:key])
+      Support::PersonDeactivator.deactivate(plan, person_key, effective_date)
     end
 
     def update_supervisor

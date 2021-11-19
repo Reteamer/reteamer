@@ -19,10 +19,6 @@
 require "test_helper"
 
 class EntryTest < ActiveSupport::TestCase
-  setup do
-    ActsAsTenant.current_tenant = accounts(:company)
-  end
-
   test ".find_for returns only the most recent entries for a given date" do
     versionable = People::Person.create!(first_name: "Blueshirt", last_name: "Guy")
     first = Entry.create!(effective_at: 1.day.from_now, versionable: versionable.dup)

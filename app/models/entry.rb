@@ -50,4 +50,9 @@ class Entry < ApplicationRecord
     where(effective_at:
       group_by_day(:effective_at).where(key: key, effective_at: effective_date.beginning_of_day..).select("max(effective_at) as effective_at"))
   end
+
+  def mark_inactive
+    self.active = false
+    self
+  end
 end
