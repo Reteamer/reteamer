@@ -17,7 +17,9 @@ export default class extends Controller {
   }
 
   handleOpenEvent(e) {
-    this.callback = e.detail.callback
+    if(e.detail) {
+      this.callback = e.detail.callback
+    }
   }
 
   cancelChange() {

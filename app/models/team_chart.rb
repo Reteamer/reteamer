@@ -45,6 +45,10 @@ class TeamChart
     delegate :name, :title, :image_url, :employee_id, :type, to: :@person
 
     def key
+      @person.key
+    end
+
+    def assignment_key
       @assignment_entry.key
     end
 

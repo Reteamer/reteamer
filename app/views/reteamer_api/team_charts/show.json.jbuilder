@@ -14,6 +14,7 @@ json.chart do
     json.name(team.name)
     json.members team.members do |member|
       json.id(member.key)
+      json.assignment_key(member.assignment_key)
       json.name(member.name)
       json.title(member.title)
       json.image_url(member.image_url || "https://www.gravatar.com/avatar/?s=50")

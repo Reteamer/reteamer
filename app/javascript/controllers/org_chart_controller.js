@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3"
 import { emitDatePickedEvent } from "../event_emitter";
+import deletePerson from "./support/delete_person";
 
 export default class extends Controller {
 
@@ -104,34 +105,6 @@ export default class extends Controller {
     } else {
       this.hideButtons(domNode);
     }
-  };
-
-  deletePerson(d) {
-    const event = new CustomEvent("personDeactivated",
-      {
-        detail: {
-          data: d,
-          callback: function(effectiveDate) {
-            fetch("/reteamer_api/people/"+d.data.id, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              redirect: 'follow',
-              body: JSON.stringify(
-                {
-                  "effective_at": effectiveDate,
-                  "key": d.data.id
-                }
-              )
-            }).then(() => {
-              emitDatePickedEvent(effectiveDate)
-            });
-          }
-        }
-      }
-    )
-    window.dispatchEvent(event)
   };
 
   isDragging() {
@@ -252,13 +225,13 @@ export default class extends Controller {
               }
             </foreignObject>
             <g class="people-buttons hidden">
-              <g class="person-button cursor-pointer" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
-                <circle r="10" cx="10" cy="10"/>
-                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
-              </g>
-              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
+              </g>
+              <g class="person-button hidden cursor-pointer" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+                <circle r="10" cx="10" cy="10"/>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
               </g>
             </g>
           </g>
@@ -269,7 +242,7 @@ export default class extends Controller {
 
         d3.selectAll(".person-node").each(function(d) {
           d3.select(this).selectAll(".delete-person").on("click", function(e) {
-            self.deletePerson(d)
+            deletePerson(d.data)
           })
         })
 

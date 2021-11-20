@@ -61,3 +61,12 @@
   data-controller="url-date-manager"
   data-action="datePicked@window->url-date-manager#handleDatePicked planPicked@window->url-date-manager#handlePlanPicked"
 ></div>
+
+<effective-date-modal
+  id="deactivate-person-effective-date-modal"
+  data-controller="effective-date-modal"
+  data-effective-date-modal-selected-date-value="<%= @selected_date %>"
+  data-effective-date-modal-completed-event-value="completeDeactivatePersonChange"
+  data-effective-date-modal-canceled-event-value="cancelDeactivatePersonChange"
+  data-effective-date-modal-open-event-value="personDeactivated"
+></effective-date-modal>

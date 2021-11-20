@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { TeamChart } from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
+import deletePerson from "./support/delete_person";
 
 export default class extends Controller {
 
@@ -138,24 +139,28 @@ export default class extends Controller {
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>
             </foreignObject>
-            <g class="people-buttons">
-              <g class="person-button" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
-                <circle r="10" cx="10" cy="10"/>
-                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
-              </g>
-              <g class="person-button" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+            <g class="people-buttons hidden">
+              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
               </g>
+              <g class="person-button hidden cursor-pointer" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+                <circle r="10" cx="10" cy="10"/>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
+              </g>
             </g>
+          </g>
         `)
         d3.selectAll(".person-button")
           .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
-          .on("click", (e) => {
-            console.error("=============>", "button clicked!");
+
+        d3.selectAll(".person-node").each(function(d) {
+          d3.select(this).selectAll(".delete-person").on("click", function(e) {
+            deletePerson(d)
           })
+        })
 
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
@@ -177,6 +182,12 @@ export default class extends Controller {
               self.endDrag(this);
             })
           )
+          .on("mouseover", function(event, d) {
+            self.showButtons(this);
+          })
+          .on("mouseout", function(event, d) {
+            self.hideButtons(this);
+          })
       })
   }
 
@@ -200,6 +211,14 @@ export default class extends Controller {
       d3.select(domNode).classed("drop-target", true)
     }
   };
+
+  showButtons(domNode) {
+    d3.select(domNode).select(".people-buttons").classed("hidden", false)
+  }
+
+  hideButtons(domNode) {
+    d3.select(domNode).select(".people-buttons").classed("hidden", true)
+  }
 
   handleMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
@@ -233,7 +252,7 @@ export default class extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.chart.getDestinationDatum() !== null) {
-      const assignment_key = this.chart.getDraggingDatum().id;
+      const assignment_key = this.chart.getDraggingDatum().assignment_key;
       const team_key = this.chart.getDestinationDatum().data.id
       this.dropped = {assignment_key: assignment_key, team_key: team_key}
       const personDroppedEvent = new CustomEvent("personDropped", {})
