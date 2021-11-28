@@ -9,12 +9,17 @@ Rails.application.routes.draw do
   namespace :reteamer_api do
     resources :supervisors, only: :index
     resources :teams, only: [:index, :create]
-    resources :people, only: [:create, :destroy]
-    resources :plans, only: [:create]
+    resources :people, only: [:create, :destroy] do
+      collection do
+        post :update_supervisor
+        post :update_team
+      end
+    end
+    resources :proposals, only: [:create] do
+      post :switch, on: :collection
+    end
     resource :org_chart, only: :show
     resource :team_chart, only: :show
-    post "people/update_supervisor", to: "people#update_supervisor"
-    post "people/update_team", to: "people#update_team"
   end
 
   # Jumpstart views

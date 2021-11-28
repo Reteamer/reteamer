@@ -46,4 +46,9 @@ class CurrentHelperTest < ActionView::TestCase
     Current.account = accounts(:company)
     assert_equal [:admin], current_roles
   end
+
+  test "current_reteamer_plan" do
+    Current.proposal = proposals(:main)
+    assert_equal(proposals(:main), current_reteamer_plan)
+  end
 end

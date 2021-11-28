@@ -14,8 +14,8 @@ export default class extends Controller {
   handleSubmit(event) {
     event.preventDefault();
     const selectedDate = document.querySelector("date-navigator input").value
-    const planName = event.target[0].value;
-    fetch("/reteamer_api/plans.json", {
+    const proposalName = event.target[0].value;
+    fetch("/reteamer_api/proposals.json", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -23,7 +23,7 @@ export default class extends Controller {
       redirect: "follow",
       body: JSON.stringify(
         {
-          "plan_name": planName,
+          "proposal_name": proposalName,
           "effective_date": selectedDate,
         }
       )
@@ -35,8 +35,8 @@ export default class extends Controller {
       .then(() => {
         this.resetForm()
         this.inputTarget.value = null;
-        emitEvent("planCompleted")
-        emitEvent("planPicked", {planName: planName})
+        emitEvent("proposalCompleted")
+        emitEvent("proposalPicked", {proposalName: proposalName})
       })
       .catch((jsonPromise) => {
         jsonPromise.then((json) => {

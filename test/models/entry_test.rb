@@ -9,7 +9,7 @@
 #  versionable_type :string
 #  created_at       :datetime
 #  account_id       :integer          not null
-#  plan_id          :bigint           not null
+#  proposal_id      :bigint           not null
 #  versionable_id   :bigint
 #
 # Indexes

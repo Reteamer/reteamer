@@ -8,7 +8,7 @@ export default class extends Controller {
     this.getOrgData(event.detail.newDate);
   }
 
-  handlePlanPicked(event) {
+  handleProposalPicked(event) {
     const selectedDate = document.querySelector("date-navigator input").value
     this.getOrgData(selectedDate);
   }
@@ -17,15 +17,14 @@ export default class extends Controller {
     this.getOrgData(this.startingDateValue)
   }
 
-  async getOrgData(newDate) {
-    const planSelect = document.querySelector("plan-navigator select");
-    const planName = planSelect.options[planSelect.selectedIndex].value;
-
-    const response = await fetch(`/reteamer_api/org_chart.json?effective_date=${newDate}&plan_name=${planName}`)
-    const orgData = await response.json()
-    emitEvent("newData", {
-      orgData: orgData,
-      histogram: orgData.histogram
+  getOrgData(newDate) {
+    fetch(`/reteamer_api/org_chart.json?effective_date=${newDate}`).then(response => {
+      response.json().then(orgData => {
+        emitEvent("newData", {
+          orgData: orgData,
+          histogram: orgData.histogram
+        })
+      })
     })
   }
 }

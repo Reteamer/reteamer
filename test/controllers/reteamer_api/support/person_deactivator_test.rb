@@ -5,7 +5,7 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
     yesterday = Date.yesterday
     today = Date.today
     person_entry = FactoryBot.create(:person_entry, active: true, effective_at: yesterday)
-    ReteamerApi::Support::PersonDeactivator.deactivate(reteamer_plans(:main), person_entry.key, today)
+    ReteamerApi::Support::PersonDeactivator.deactivate(person_entry.key, today)
     new_entry = Entry.find_for(today).where(key: person_entry.key).first
     assert_equal(new_entry.active, false)
     assert_equal(new_entry.effective_at.to_date, today)
@@ -15,7 +15,7 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
     today = Date.today
     person_entry = FactoryBot.create(:person_entry, active: true)
     people_count_before = People::Person.count
-    ReteamerApi::Support::PersonDeactivator.deactivate(reteamer_plans(:main), person_entry.key, today)
+    ReteamerApi::Support::PersonDeactivator.deactivate(person_entry.key, today)
     people_count_after = People::Person.count
     assert_equal(people_count_after - people_count_before, 1)
   end
@@ -28,7 +28,7 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
     _future_person_entry = FactoryBot.create(:person_entry, key: key, active: true, effective_at: the_future)
 
     people_count_before = People::Person.count
-    ReteamerApi::Support::PersonDeactivator.deactivate(reteamer_plans(:main), key, today)
+    ReteamerApi::Support::PersonDeactivator.deactivate(key, today)
     people_count_after = People::Person.count
 
     assert_equal(Entry.find_for(today).where(key: key).first.active, false)
@@ -49,7 +49,7 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
 
     people_count_before = People::Person.count
     entry_count_before = Entry.count
-    ReteamerApi::Support::PersonDeactivator.deactivate(reteamer_plans(:main), boss.key, today)
+    ReteamerApi::Support::PersonDeactivator.deactivate(boss.key, today)
     entry_count_after = Entry.count
     people_count_after = People::Person.count
 

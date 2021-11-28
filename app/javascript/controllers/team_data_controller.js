@@ -8,16 +8,23 @@ export default class extends Controller {
     this.getTeamData(event.detail.newDate);
   }
 
-  async connect() {
+  handleProposalPicked(event) {
+    const selectedDate = document.querySelector("date-navigator input").value
+    this.getTeamData(selectedDate);
+  }
+
+  connect() {
     this.getTeamData(this.startingDateValue)
   }
 
-  async getTeamData(newDate) {
-    const response = await fetch(`/reteamer_api/team_chart.json?effective_date=${newDate}`)
-    const teamData = await response.json()
-    emitEvent("newData", {
-      teamData: teamData,
-      histogram: teamData.histogram
+  getTeamData(newDate) {
+    fetch(`/reteamer_api/team_chart.json?effective_date=${newDate}`).then(response => {
+      response.json().then(teamData => {
+        emitEvent("newData", {
+          teamData: teamData,
+          histogram: teamData.histogram
+        })
+      })
     })
   }
 }

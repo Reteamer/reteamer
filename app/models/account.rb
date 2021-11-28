@@ -101,7 +101,7 @@ class Account < ApplicationRecord
   #
   after_create do
     ActsAsTenant.with_tenant(self) do
-      Reteamer::Plan.create(name: Reteamer::Plan::MAIN_PLAN_NAME)
+      Proposal.create(name: Proposal::MAIN_PROPOSAL_NAME)
     end
   end
 end

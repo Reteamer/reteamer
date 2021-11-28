@@ -6,8 +6,8 @@ export default class extends Controller {
     window.history.pushState('', '', pageUrl);
   }
 
-  handlePlanPicked(event) {
-    var pageUrl = updateUrlParameter(window.location.href, "plan_name", event.detail.planName)
+  handleProposalPicked(event) {
+    const pageUrl = updateUrlParameter(window.location.href, "proposal_name", event.detail.proposalName)
     window.history.pushState('', '', pageUrl);
   }
 }

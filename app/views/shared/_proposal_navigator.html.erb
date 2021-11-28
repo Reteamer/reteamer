@@ -1,0 +1,12 @@
+<proposal-navigator data-controller="proposal-navigator">
+  <select
+    class="select"
+    name="proposal_name"
+    data-proposal-navigator-target="select"
+    data-action="change->proposal-navigator#handleProposalChanged proposalPicked@window->proposal-navigator#handleNewProposal"
+  >
+    <% proposal_names.each do |proposal_name| %>
+      <option value="<%= proposal_name %>" <%= proposal_name == selected_proposal ? "selected" : "" %>><%= proposal_name %></option>
+    <% end %>
+  </select>
+</proposal-navigator>

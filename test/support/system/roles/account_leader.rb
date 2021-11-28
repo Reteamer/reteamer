@@ -8,6 +8,9 @@ class AccountLeader
       :drag_team_member,
       to: TeamChartComponent
 
+    delegate :deactivate_person,
+      to: ChartComponent
+
     delegate :visit_effective_date_fields_style_guide,
       :select_custom_date,
       to: EffectiveDateFields
@@ -17,5 +20,11 @@ class AccountLeader
       :hover_on,
       :enters_future_date,
       to: DateNavigatorComponent
+
+    delegate :make_new_proposal,
+      to: FloatingActionMenuComponent
+
+    delegate :switch_to_proposal,
+      to: ProposalNavigatorComponent
   end
 end

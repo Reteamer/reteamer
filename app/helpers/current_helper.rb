@@ -3,6 +3,10 @@ module CurrentHelper
     Current.account
   end
 
+  def current_reteamer_plan
+    Current.proposal
+  end
+
   def current_account_user
     @account_user ||= current_account.account_users.find_by(user: current_user)
   end

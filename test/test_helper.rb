@@ -30,10 +30,12 @@ class ActiveSupport::TestCase
 
   setup do
     ActsAsTenant.current_tenant = accounts(:company)
+    ActsAsProposable.current_proposal = proposals(:main)
   end
 
   teardown do
     ActsAsTenant.current_tenant = nil
+    ActsAsProposable.current_proposal = nil
   end
 end
 

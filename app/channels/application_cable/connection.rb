@@ -2,7 +2,7 @@ module ApplicationCable
   class Connection < ActionCable::Connection::Base
     include SetCurrentRequestDetails
 
-    identified_by :current_user, :current_account, :true_user
+    identified_by :current_user, :current_account, :current_proposal, :true_user
     impersonates :user
 
     delegate :session, to: :request
@@ -11,8 +11,9 @@ module ApplicationCable
       self.current_user = find_verified_user
       set_request_details
       self.current_account = Current.account
+      self.current_proposal = Current.proposal
 
-      logger.add_tags "ActionCable", "User #{current_user.id}", "Account #{current_account.id}"
+      logger.add_tags "ActionCable", "User #{current_user.id}", "Account #{current_account.id}", "Proposal #{current_proposal&.id}"
     end
 
     protected
@@ -32,6 +33,11 @@ module ApplicationCable
     # Used by set_request_details
     def set_current_tenant(account)
       ActsAsTenant.current_tenant = account
+    end
+
+    # Used by set_request_details
+    def set_current_proposal(proposal)
+      ActsAsProposable.current_proposal = proposal
     end
   end
 end

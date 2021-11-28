@@ -7,10 +7,6 @@ class TeamChartTest < ApplicationSystemTestCase
     login_as(thirty_rock_user)
   end
 
-  teardown do
-    logout
-  end
-
   test "Changing a person's team" do
     AccountLeader.visit_team_chart
     AccountLeader.drag_team_member("Cerie Xerox").to("Actors")

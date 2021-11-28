@@ -6,7 +6,7 @@ module ReteamerApi
     end
 
     def create
-      plan = Reteamer::Plan.find_by(name: params.fetch(:plan_name, Reteamer::Plan::MAIN_PLAN_NAME))
+      plan = Reteamer::Plan.find_by(name: params.fetch(:plan_name, Reteamer::Plan::MAIN_PROPOSAL_NAME))
       Entry.create!(plan: plan, effective_at: params[:effective_at], versionable: Team.new(name: params[:name], parent_key: params[:parent_key]))
       redirect_to team_chart_path(effective_date: effective_date)
     end

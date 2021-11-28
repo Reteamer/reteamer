@@ -480,6 +480,7 @@ DEPENDENCIES
   rails (~> 6.1.4)
   receipts (~> 1.1.0)
   redis (~> 4.0)
+  request_store
   responders!
   rotp (~> 6.2)
   rqrcode (~> 2.1)
