@@ -22,6 +22,10 @@ class TeamChartComponent < ComponentUnderTest
     def has_person?(person_name)
       has_selector?(".person-node", text: person_name)
     end
+
+    def has_team?(team_name)
+      has_selector?(".team-node", text: team_name)
+    end
   end
 
   class Draggable

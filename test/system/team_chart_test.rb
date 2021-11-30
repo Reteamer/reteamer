@@ -15,4 +15,10 @@ class TeamChartTest < ApplicationSystemTestCase
 
     # TODO: assert Cerie is now on the Actors team. Maybe through snapshot comparisons?
   end
+
+  test "creating a new team" do
+    AccountLeader.visit_team_chart
+    AccountLeader.make_new_team("The A Team")
+    assert(TeamChartComponent.has_team?("The A Team"))
+  end
 end

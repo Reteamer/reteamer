@@ -7,7 +7,7 @@ module ReteamerApi
 
     def create
       Entry.create!(effective_at: params[:effective_at], versionable: Team.new(name: params[:name], parent_key: params[:parent_key]))
-      redirect_to team_chart_path(effective_date: effective_date)
+      redirect_to team_chart_path(effective_date: params[:effective_at].to_date)
     end
   end
 end

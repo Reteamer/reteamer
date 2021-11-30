@@ -22,6 +22,7 @@ class AccountLeader
       to: DateNavigatorComponent
 
     delegate :make_new_proposal,
+      :make_new_team,
       to: FloatingActionMenuComponent
 
     delegate :switch_to_proposal,
