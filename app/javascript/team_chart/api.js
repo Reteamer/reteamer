@@ -1,4 +1,4 @@
-import getNodeChildren from "./getNodeChildren";
+import get_node_children from "./get_node_children";
 
 export default {
   collapseAll() {
@@ -52,7 +52,7 @@ export default {
     node.descendants()
       .forEach(d => d.data._filteredOut = true)
 
-    const descendants = getNodeChildren(node, []);
+    const descendants = get_node_children(node, []);
     descendants.forEach(d => d._filtered = true)
 
     // Filter out retrieved nodes and reassign data

@@ -23,28 +23,6 @@ export default class extends Controller {
       .render()
       .expandAll()
 
-    const self = this;
-    d3.selectAll("g.nodes-wrapper .person-node")
-      .on("mouseover", function(event, d) {
-        self.handleMouseOver(this, d);
-      })
-      .on("mouseout", function(event, d) {
-        self.handleMouseOut(this, d);
-      })
-      .call(d3.drag()
-        .on("start", function(event, d) {
-          self.initiateDrag(d, this)
-        })
-        .on("drag", function(event, d) {
-          let [newX, newY] = self.chart.getCoords(this)
-          d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
-        })
-        .on("end", function(event, d) {
-          self.endDrag(this);
-        })
-      )
-
-
     if(this.firstRender) {
       const {svg, zoomBehavior} = this.chart.getChartState();
       svg.transition().call(zoomBehavior.translateBy, 0, -200)
@@ -258,6 +236,27 @@ export default class extends Controller {
           .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
+
+        d3.selectAll("g.nodes-wrapper .person-node")
+          .on("mouseover", function(event, d) {
+            self.handleMouseOver(this, d);
+          })
+          .on("mouseout", function(event, d) {
+            self.handleMouseOut(this, d);
+          })
+          .call(d3.drag()
+            .on("start", function(event, d) {
+              self.initiateDrag(d, this)
+            })
+            .on("drag", function(event, d) {
+              let [newX, newY] = self.chart.getCoords(this)
+              d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
+            })
+            .on("end", function(event, d) {
+              self.endDrag(this);
+            })
+          )
+
       })
   }
 }

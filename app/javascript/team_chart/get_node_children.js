@@ -1,5 +1,5 @@
 // This method retrieves passed node's children IDs (including node)
-export default function getNodeChildren({ data, children, _children }, nodeStore) {
+export default function get_node_children({ data, children, _children }, nodeStore) {
   // Store current node ID
   nodeStore.push(data);
 
