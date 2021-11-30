@@ -70,8 +70,8 @@ export default class TeamChartController extends Controller {
           <div class="${node.depth == 0 ? "fake-root-node" : ""}" style="cursor: pointer;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> 
             <span style="font-size:9px">
               ${node.children
-                ? `<i class="fas fa-angle-up"></i>`
-                : `<i class="fas fa-angle-down"></i>`
+                ? `<i class="fas fa-minus-square"></i>`
+                : `<i class="fas fa-plus-square"></i>`
               }
             </span>
           </div>
