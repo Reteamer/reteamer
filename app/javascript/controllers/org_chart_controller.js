@@ -82,7 +82,12 @@ export default class extends Controller {
   handleMouseOver(domNode, d) {
     this.chart.setDestinationDatum(d);
     if(this.isDragging()) {
-      d3.select(domNode).classed("drop-target", true)
+      if(this.chart.getDraggingDatum().descendants().includes(d)) {
+        d3.select(domNode)
+          .classed("blur", true)
+      } else {
+        d3.select(domNode).classed("drop-target", true)
+      }
     } else {
       this.showButtons(domNode);
     }
@@ -97,7 +102,9 @@ export default class extends Controller {
   }
 
   handleMouseOut(domNode, d) {
-    d3.select(domNode).classed("drop-target", false)
+    d3.select(domNode)
+      .classed("drop-target", false)
+      .classed("blur", false)
     if(this.isDragging()) {
       this.chart.setDestinationDatum(null);
     } else {
@@ -131,9 +138,12 @@ export default class extends Controller {
       .classed("active-drag", false)
 
     const attrs = this.chart.getChartState()
-    if (this.chart.getDestinationDatum() !== null) {
-      const person_key = this.chart.getDraggingDatum().data.id;
-      const supervisor_key = this.chart.getDestinationDatum().data.id
+    const destinationDatum = this.chart.getDestinationDatum();
+    const draggingDatum = this.chart.getDraggingDatum();
+
+    if (destinationDatum !== null && !draggingDatum.descendants().includes(destinationDatum)) {
+      const person_key = draggingDatum.data.id;
+      const supervisor_key = destinationDatum.data.id
       this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
       const personDroppedEvent = new CustomEvent("personDropped",
         {
