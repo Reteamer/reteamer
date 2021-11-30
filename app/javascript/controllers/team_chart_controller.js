@@ -3,18 +3,9 @@ import { TeamChart } from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
 import deletePerson from "./support/delete_person";
+import buttonActions from "./team_chart_controller_button_actions";
 
-export default class extends Controller {
-
-  exportSvg() {
-    this.chart.fit();
-    this.chart.exportSvg()
-  }
-
-  fit() {
-    this.chart.fit();
-  }
-
+export default class TeamChartController extends Controller {
   handleNewTeamData(event) {
     this.teamData = event.detail.teamData;
     this.chart
@@ -76,7 +67,7 @@ export default class extends Controller {
       .childrenMargin(d => 40)
       .buttonContent(({ node, state }) => {
         return `
-          <div class="${node.depth == 0 ? "fake-root-node" : ""}" style="px;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> 
+          <div class="${node.depth == 0 ? "fake-root-node" : ""}" style="cursor: pointer;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> 
             <span style="font-size:9px">
               ${node.children
                 ? `<i class="fas fa-angle-up"></i>`
@@ -101,8 +92,8 @@ export default class extends Controller {
       .nodeContent(function(d, i, nodes, attrs) { //this is the dom node
         d3.select(this).html(`
           <g class="team-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
-            <rect class="team-box" width="${d.width}" height="${d.height}" />
-            <rect class="team-bar" width="${d.width}" />
+            <rect class="team-box" width="${d.width}" height="${d.height}" ></rect>
+            <rect class="team-bar" width="${d.width}" ></rect>
             <foreignObject y="30" height="75" width="${d.width}">
               <div class="team-name">${d.data.name}</div>
             </foreignObject>
@@ -263,3 +254,6 @@ export default class extends Controller {
     }
   }
 }
+
+Object.assign(TeamChartController.prototype, buttonActions);
+

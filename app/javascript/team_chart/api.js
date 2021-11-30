@@ -1,10 +1,11 @@
 import get_node_children from "./get_node_children";
+import * as d3 from "d3";
 
 export default {
-  collapseAll() {
+  collapseAll(expandLevel) {
     const { allNodes, root } = this.getChartState();
     allNodes.forEach(d => d.data._expanded = false);
-    this.expandLevel(0)
+    this.expandLevel(expandLevel || 0)
     this.render();
     return this;
   },
@@ -69,6 +70,49 @@ export default {
     const { svg } = this.getChartState();
     this.downloadImage({ node: svg.node(), scale: 3, isSvg: true })
     return this;
+  },
+
+  exportImg({ full = false, scale = 3, onLoad = d => d, save = true } = {}) {
+    const that = this;
+    const attrs = this.getChartState();
+    const { svg: svgImg, root } = attrs
+    let count = 0;
+    const embeddedImages = svgImg.selectAll('image')
+    let total = embeddedImages.size()
+
+    const exportImage = () => {
+      const transform = JSON.parse(JSON.stringify(that.lastTransform()));
+      const duration = that.duration();
+      if (full) {
+        that.fit();
+      }
+      const { svg } = that.getChartState()
+
+      setTimeout(d => {
+        that.downloadImage({
+          node: svg.node(), scale, isSvg: false,
+          onAlreadySerialized: d => {
+            that.update(root)
+          },
+          onLoad: onLoad,
+          save
+        })
+      }, full ? duration + 10 : 0)
+    }
+
+    if (total > 0) {
+      embeddedImages
+        .each(function () {
+          that.toDataURL(this.href.baseVal, (dataUrl) => {
+            this.setAttribute('href', dataUrl);
+            if (++count == total) {
+              exportImage();
+            }
+          })
+        })
+    } else {
+      exportImage();
+    }
   },
 
   downloadImage({ node, scale = 2, isSvg = false, save = true, onAlreadySerialized = d => { }, onLoad = d => { } }) {
@@ -153,51 +197,6 @@ export default {
       const string = serializer.serializeToString(svg);
       return string;
     }
-  },
-
-  exportImg({ full = false, scale = 3, onLoad = d => d, save = true } = {}) {
-    const that = this;
-    const attrs = this.getChartState();
-    const { svg: svgImg, root } = attrs
-    let count = 0;
-    const selection = svgImg.selectAll('img')
-    let total = selection.size()
-
-    const exportImage = () => {
-      const transform = JSON.parse(JSON.stringify(that.lastTransform()));
-      const duration = that.duration();
-      if (full) {
-        that.fit();
-      }
-      const { svg } = that.getChartState()
-
-      setTimeout(d => {
-        that.downloadImage({
-          node: svg.node(), scale, isSvg: false,
-          onAlreadySerialized: d => {
-            that.update(root)
-          },
-          onLoad: onLoad,
-          save
-        })
-      }, full ? duration + 10 : 0)
-    }
-
-    if (total > 0) {
-      selection
-        .each(function () {
-          that.toDataURL(this.src, (dataUrl) => {
-            this.src = dataUrl;
-            if (++count == total) {
-              exportImage();
-            }
-          })
-        })
-    } else {
-      exportImage();
-    }
-
-
   },
 
   // Zoom in exposed method

@@ -10,7 +10,9 @@
        completeSupervisorChange@window->org-chart#handleCompleteChange
        cancelSupervisorChange@window->org-chart#handleCancelChange
       "
-       style="padding-left:0; padding-right:0"></div>
+       style="padding-left:0; padding-right:0">
+    <%= render "shared/chart_remote_controls", chart_controller: "org-chart" %>
+  </div>
   <div
     data-controller="org-data"
     data-action="

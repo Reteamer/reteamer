@@ -3,18 +3,9 @@ import {TeamChart} from '../team_chart';
 import * as d3 from "d3"
 import { emitDatePickedEvent } from "../event_emitter";
 import deletePerson from "./support/delete_person";
+import buttonActions from "./team_chart_controller_button_actions"
 
-export default class extends Controller {
-
-  exportSvg() {
-    this.chart.fit();
-    this.chart.exportSvg()
-  }
-
-  fit() {
-    this.chart.fit();
-  }
-
+export default class OrgChartController extends Controller {
   handleNewOrgData(event) {
     this.orgData = event.detail.orgData;
     this.chart
@@ -170,10 +161,10 @@ export default class extends Controller {
       .nodeHeight(d => 200)
       .childrenMargin(d => 40)
       .buttonContent(({ node, state }) => {
-        return `<div class="${node.depth == 0 ? "fake-root-node" : ""}" style="px;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> <span style="font-size:9px">${
+        return `<div class="${node.depth == 0 ? "fake-root-node" : ""}" style="cursor:pointer;color:#716E7B;border-radius:5px;padding:4px;font-size:10px;margin:auto auto;background-color:white;border: 1px solid #E4E2E9"> <span style="font-size:9px">${
           node.children
-            ? `<i class="fas fa-angle-up"></i>`
-            : `<i class="fas fa-angle-down"></i>`
+            ? `<i class="fas fa-minus-square"></i>`
+            : `<i class="fas fa-plus-square"></i>`
         }</span> ${node.data._totalSubordinates}  </div>`;
       })
       .linkUpdate(function (d, i, arr) {
@@ -193,31 +184,31 @@ export default class extends Controller {
           const member = d.data;
           return `
           <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
-            <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}" />
-            <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}" />
+            <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}"></rect>
+            <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}"></rect>
             <clipPath id="clipCircle">
-              <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
+              <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"></circle>
             </clipPath>
-            <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
+            <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" ></image>
             <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
             <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>
               ${d.data._directSubordinates > 0 ? `
                   <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
-                    <div > Manages:  ${d.data._directSubordinates} 👤</div>
-                    <div > Oversees: ${d.data._totalSubordinates} 👤</div>
+                    <div> Manages:  ${d.data._directSubordinates} 👤</div>
+                    <div> Oversees: ${d.data._totalSubordinates} 👤</div>
                   </div>` : ""
               }
             </foreignObject>
             <g class="people-buttons hidden">
               <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
-                <circle r="10" cx="10" cy="10"/>
-                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
               </g>
               <g class="person-button hidden cursor-pointer" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
-                <circle r="10" cx="10" cy="10"/>
-                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
               </g>
             </g>
           </g>
@@ -260,3 +251,5 @@ export default class extends Controller {
       })
   }
 }
+
+Object.assign(OrgChartController.prototype, buttonActions);
