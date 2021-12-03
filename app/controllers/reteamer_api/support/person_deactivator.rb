@@ -19,14 +19,14 @@ module ReteamerApi
         end
 
         def deactivate_person(effective_date, key)
-          person_entry = Entry.find_for(effective_date).where(key: key).first
+          person_entry = Entry.find_for(effective_date, key: key).first
           clone_entry = person_entry.deep_clone(include: :versionable)
           clone_entry.effective_at = effective_date
           clone_entry.mark_inactive.save
         end
 
         def update_subordinates_to_report_to_grand_boss(effective_date, key)
-          person_entry = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: key).first
+          person_entry = Entry.find_for(effective_date, versionable_type: People::Person.name, key: key).first
           subordinates = People::Person.where(supervisor_key: key)
             .includes(:entry)
             .where(entry: {effective_at: person_entry.effective_at..})

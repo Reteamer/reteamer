@@ -6,8 +6,8 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
     today = Date.today
     person_entry = FactoryBot.create(:person_entry, active: true, effective_at: yesterday)
     ReteamerApi::Support::PersonDeactivator.deactivate(person_entry.key, today)
-    new_entry = Entry.find_for(today).where(key: person_entry.key).first
-    assert_equal(new_entry.active, false)
+    new_entry = Entry.find_for(today, key: person_entry.key, include_inactive: true).first
+    refute(new_entry.active)
     assert_equal(new_entry.effective_at.to_date, today)
   end
 
@@ -31,8 +31,8 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
     ReteamerApi::Support::PersonDeactivator.deactivate(key, today)
     people_count_after = People::Person.count
 
-    assert_equal(Entry.find_for(today).where(key: key).first.active, false)
-    new_future_entry = Entry.find_for(the_future).where(key: key).first
+    refute(Entry.find_for(today, key: key, include_inactive: true).first.active)
+    new_future_entry = Entry.find_for(the_future, key: key, include_inactive: true).first
     assert_equal(new_future_entry.active, false)
     assert_equal(new_future_entry.effective_at.to_date, the_future)
     assert_equal(2, people_count_after - people_count_before)
@@ -53,10 +53,10 @@ class PersonDeactivatorTest < ActiveSupport::TestCase
     entry_count_after = Entry.count
     people_count_after = People::Person.count
 
-    new_orphan_entry = Entry.find_for(today).where(key: orphaned_subordinate.key).first
+    new_orphan_entry = Entry.find_for(today, key: orphaned_subordinate.key).first
     assert_equal(grand_boss.key, new_orphan_entry.versionable.supervisor_key)
     assert_equal(today, new_orphan_entry.effective_at.to_date)
-    new_future_orphan_entry = Entry.find_for(the_future).where(key: orphaned_subordinate.key).first
+    new_future_orphan_entry = Entry.find_for(the_future, key: orphaned_subordinate.key).first
     assert_equal(grand_boss.key, new_future_orphan_entry.versionable.supervisor_key)
     assert_equal(the_future, new_future_orphan_entry.effective_at.to_date)
 

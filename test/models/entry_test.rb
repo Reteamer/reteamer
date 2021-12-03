@@ -45,4 +45,22 @@ class EntryTest < ActiveSupport::TestCase
     entries = Entry.merge_conflicts(2.days.from_now.to_date, first.key)
     assert(entries.count == 2)
   end
+
+  test "#find_for does not return deactivated entries" do
+    today = Date.today
+    active = FactoryBot.create(:person_entry, active: true, effective_at: today)
+    inactive = FactoryBot.create(:person_entry, active: false, effective_at: today)
+    results = Entry.find_for(today)
+    assert_includes(results, active)
+    refute_includes(results, inactive)
+  end
+
+  test "#find_for lets you further scope the relation" do
+    today = Date.today
+    expected = FactoryBot.create(:person_entry, key: "expected")
+    not_expected = FactoryBot.create(:person_entry, key: "unexpected")
+    results = Entry.find_for(today, key: "expected")
+    assert_includes(results, expected)
+    refute_includes(results, not_expected)
+  end
 end
