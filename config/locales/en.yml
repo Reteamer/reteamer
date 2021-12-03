@@ -232,6 +232,7 @@ en:
       org_chart: "Org Chart"
       team_chart: "Team Chart"
       reset_data: "Reset Data"
+      csv_import: "CSV Import"
     oauth:
       apple: "Apple"
       developer: "Developer"

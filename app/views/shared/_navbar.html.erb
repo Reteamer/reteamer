@@ -68,6 +68,7 @@
                 <%= link_to t(".password"), account_password_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <%= link_to t(".org_chart"), org_chart_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <%= link_to t(".team_chart"), team_chart_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
+                <%= link_to t(".csv_import"), csv_import_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <% if Rails.configuration.can_reset_data %>
                   <%= link_to t(".reset_data"), reset_data_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <% end %>

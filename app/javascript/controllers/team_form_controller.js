@@ -25,7 +25,6 @@ export default class extends Controller {
   }
 
   handleSubmit(event) {
-    console.error("=============>", event);
   }
 
   connect() {
