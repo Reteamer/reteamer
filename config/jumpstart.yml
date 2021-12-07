@@ -11,3 +11,5 @@ personal_accounts: false
 livereload: false
 solargraph: false
 register_with_account: true
+payment_processors:
+- stripe
