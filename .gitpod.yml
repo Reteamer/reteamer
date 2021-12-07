@@ -40,6 +40,6 @@ tasks:
   - name: Sidekiq
     init: gp sync-await install
     command: sidekiq
-#  - name: Stripe
-#    init: gp sync-await install
-#    command: stripe listen --forward-to localhost:5000/webhooks/stripe
+  - name: Stripe
+    init: gp sync-await install
+    command: stripe listen --forward-to localhost:5000/webhooks/stripe

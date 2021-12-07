@@ -3,3 +3,4 @@ css: yarn build:css --watch
 js: yarn build --watch
 
 # docker: docker-compose up
+stripe: stripe listen --forward-to localhost:5000/webhooks/stripe
