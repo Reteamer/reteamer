@@ -1,3 +1,5 @@
+require_relative "component_under_test"
+
 class FloatingActionMenuComponent < ComponentUnderTest
   class << self
     def make_new_proposal(proposal_name)
@@ -18,7 +20,7 @@ class FloatingActionMenuComponent < ComponentUnderTest
         find("li", text: "Add New Team").click
       end
 
-      within("#team-form") do
+      within("#team-form", visible: :all) do
         click_on("Next")
         fill_in("name", with: team_name)
         click_on("Submit")

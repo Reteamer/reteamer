@@ -29,7 +29,9 @@ class StripeTest < ApplicationSystemTestCase
     fill_stripe_elements card: "4242 4242 4242 4242"
     fill_in "Name on card", with: @user.name
     click_on "Subscribe"
-    assert_selector "p", text: "Thanks for subscribing!"
+    using_wait_time 10 do
+      assert_selector "p", text: "Thanks for subscribing!"
+    end
     assert @account.payment_processor.subscribed?
   end
 
@@ -38,7 +40,9 @@ class StripeTest < ApplicationSystemTestCase
     fill_stripe_elements(card: "4000 0027 6000 3184")
     fill_in "Name on card", with: @user.name
     click_on "Subscribe"
-    assert_selector "h1", text: "Confirm your $19.00 payment"
+    using_wait_time 10 do
+      assert_selector "h1", text: "Confirm your $19.00 payment"
+    end
     complete_stripe_sca
     assert_selector "p", text: "The payment was successful."
     # Webhook will update the subscription to active, so we can't easily test that here
@@ -60,7 +64,9 @@ class StripeTest < ApplicationSystemTestCase
     fill_stripe_elements(card: "4000 0027 6000 3184")
     fill_in "Name on card", with: @user.name
     click_on "Subscribe"
-    assert_selector "h1", text: "Confirm your $19.00 payment"
+    using_wait_time 10 do
+      assert_selector "h1", text: "Confirm your $19.00 payment"
+    end
     fail_stripe_sca
     assert_selector "p", text: "We are unable to authenticate your payment method. Please choose a different payment method and try again."
   end
@@ -70,7 +76,9 @@ class StripeTest < ApplicationSystemTestCase
     fill_stripe_elements(card: "4242 4242 4242 4242")
     fill_in "Name on card", with: @user.name
     click_on "Update Card"
-    assert_selector "p", text: I18n.t("payment_methods.create.updated")
+    using_wait_time 10 do
+      assert_selector "p", text: I18n.t("payment_methods.create.updated")
+    end
     assert_equal "Visa", @account.payment_processor.default_payment_method.brand
     assert_equal "4242", @account.payment_processor.default_payment_method.last4
   end
@@ -118,7 +126,9 @@ class StripeTest < ApplicationSystemTestCase
     fill_stripe_elements(card: "4000 0027 6000 3184")
     fill_in "Name on card", with: @user.name
     click_on "Subscribe"
-    assert_selector "h1", text: "Confirm your $19.00 payment"
+    using_wait_time 10 do
+      assert_selector "h1", text: "Confirm your $19.00 payment"
+    end
     complete_stripe_sca
     assert_selector "p", text: "The payment was successful."
 

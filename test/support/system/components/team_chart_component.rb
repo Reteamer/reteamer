@@ -1,3 +1,5 @@
+require_relative "component_under_test"
+
 class TeamChartComponent < ComponentUnderTest
   class << self
     def visit_team_chart
@@ -24,7 +26,23 @@ class TeamChartComponent < ComponentUnderTest
     end
 
     def has_team?(team_name)
-      has_selector?(".team-node", text: team_name)
+      has_selector?(".team-node .team-name", text: team_name)
+    end
+
+    def has_no_team?(team_name)
+      has_no_selector?(".team-node .team-name", text: team_name)
+    end
+
+    def deactivate_team(team_name)
+      team_node = find(".team-node", text: team_name)
+      team_node.hover
+      within(team_node) do
+        find(".delete-team").click
+      end
+
+      within("#deactivate-team-effective-date-modal") do
+        click_on("Commit")
+      end
     end
   end
 
