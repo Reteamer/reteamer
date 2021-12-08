@@ -5,6 +5,7 @@ import {emitDatePickedEvent} from "../event_emitter";
 import deletePerson from "./support/delete_person";
 import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
+import handleCancelChange from "./support/handle_cancel_change";
 
 export default class TeamChartController extends Controller {
   handleNewTeamData(event) {
@@ -15,13 +16,7 @@ export default class TeamChartController extends Controller {
       .expandAll()
   }
 
-  handleCancelChange(event) {
-    const attrs = this.chart.getChartState()
-    this.chart.restoreNodePosition(d3.select(this.chart.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
-    this.chart.finalizeDrop()
-  }
-
-  async handleCompleteChange(event) {
+  async handleCompleteAssignmentChange(event) {
     const response = await fetch("/reteamer_api/people/update_team", {
       method: 'POST',
       headers: {
@@ -303,4 +298,5 @@ export default class TeamChartController extends Controller {
 }
 
 Object.assign(TeamChartController.prototype, buttonActions);
+Object.assign(TeamChartController.prototype, handleCancelChange);
 

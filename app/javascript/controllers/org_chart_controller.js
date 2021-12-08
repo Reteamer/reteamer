@@ -4,6 +4,7 @@ import * as d3 from "d3"
 import { emitDatePickedEvent } from "../event_emitter";
 import deletePerson from "./support/delete_person";
 import buttonActions from "./team_chart_controller_button_actions"
+import handleCancelChange from "./support/handle_cancel_change";
 
 export default class OrgChartController extends Controller {
   handleNewOrgData(event) {
@@ -21,13 +22,7 @@ export default class OrgChartController extends Controller {
     }
   }
 
-  handleCancelChange(event) {
-    const attrs = this.chart.getChartState()
-    this.chart.restoreNodePosition(d3.select(this.chart.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
-    this.chart.finalizeDrop()
-  }
-
-  async handleCompleteChange(event) {
+  async handleCompleteSupervisorChange(event) {
     await fetch("/reteamer_api/people/update_supervisor", {
       method: "POST",
       headers: {
@@ -253,3 +248,4 @@ export default class OrgChartController extends Controller {
 }
 
 Object.assign(OrgChartController.prototype, buttonActions);
+Object.assign(OrgChartController.prototype, handleCancelChange);
