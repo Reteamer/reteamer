@@ -2,7 +2,6 @@ import {Controller} from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
-import deletePerson from "./support/delete_person";
 import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
 import chartFunctions from "./support/handle_cancel_change";
@@ -67,15 +66,7 @@ export default class TeamChartController extends Controller {
   }
 
   handleTeamMouseOver(domNode, d) {
-    if(this.isDragging()) {
-      this.chart.setDestinationDatum(d);
-      if(this.chart.getDraggingDatum().descendants().includes(d)) {
-        d3.select(domNode)
-          .classed("blur", true)
-      } else {
-        d3.select(domNode).classed("drop-target", true)
-      }
-    } else {
+    if (!this.isDragging()) {
       this.showButtons(".team-buttons", domNode);
     }
   };
@@ -169,8 +160,12 @@ export default class TeamChartController extends Controller {
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>
             </foreignObject>
-            <g class="people-buttons hidden">
-              <g class="person-button delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+            <g class="people-buttons hidden" data-controller="person-buttons">
+              <g class="person-button delete-person" 
+                data-action="click->person-buttons#deletePerson"
+                data-person-buttons-person-key-param="${member.id}"  
+                transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
               </g>
@@ -205,11 +200,11 @@ export default class TeamChartController extends Controller {
           })
 
 
-        d3.selectAll(".person-node").each(function(d) {
-          d3.select(this).selectAll(".delete-person").on("click", function(e) {
-            deletePerson(d)
-          })
-        })
+        // d3.selectAll(".person-node").each(function(d) {
+        //   d3.select(this).selectAll(".delete-person").on("click", function(e) {
+        //     deletePerson(d)
+        //   })
+        // })
 
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
