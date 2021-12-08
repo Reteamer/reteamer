@@ -1,10 +1,10 @@
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3"
-import { emitDatePickedEvent } from "../event_emitter";
+import {emitDatePickedEvent} from "../event_emitter";
 import deletePerson from "./support/delete_person";
 import buttonActions from "./team_chart_controller_button_actions"
-import handleCancelChange from "./support/handle_cancel_change";
+import chartFunctions from "./support/handle_cancel_change";
 
 export default class OrgChartController extends Controller {
   handleNewOrgData(event) {
@@ -44,8 +44,8 @@ export default class OrgChartController extends Controller {
   }
 
   handleMouseOver(domNode, d) {
-    this.chart.setDestinationDatum(d);
     if(this.isDragging()) {
+      this.chart.setDestinationDatum(d);
       if(this.chart.getDraggingDatum().descendants().includes(d)) {
         d3.select(domNode)
           .classed("blur", true)
@@ -53,17 +53,10 @@ export default class OrgChartController extends Controller {
         d3.select(domNode).classed("drop-target", true)
       }
     } else {
-      this.showButtons(domNode);
+      this.showButtons(".people-buttons", domNode);
     }
   };
 
-  showButtons(domNode) {
-    d3.select(domNode).select(".people-buttons").classed("hidden", false)
-  }
-
-  hideButtons(domNode) {
-    d3.select(domNode).select(".people-buttons").classed("hidden", true)
-  }
 
   handleMouseOut(domNode, d) {
     d3.select(domNode)
@@ -72,7 +65,7 @@ export default class OrgChartController extends Controller {
     if(this.isDragging()) {
       this.chart.setDestinationDatum(null);
     } else {
-      this.hideButtons(domNode);
+      this.hideButtons(".people-buttons", domNode);
     }
   };
 
@@ -248,4 +241,4 @@ export default class OrgChartController extends Controller {
 }
 
 Object.assign(OrgChartController.prototype, buttonActions);
-Object.assign(OrgChartController.prototype, handleCancelChange);
+Object.assign(OrgChartController.prototype, chartFunctions);
