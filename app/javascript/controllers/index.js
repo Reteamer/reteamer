@@ -77,6 +77,9 @@ application.register("select", SelectController)
 import StripeController from "./stripe_controller.js"
 application.register("stripe", StripeController)
 
+import TeamButtonsController from "./team_buttons_controller.js"
+application.register("team-buttons", TeamButtonsController)
+
 import TeamChartController from "./team_chart_controller.js"
 application.register("team-chart", TeamChartController)
 

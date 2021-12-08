@@ -2,12 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 import {emitDatePickedEvent} from "../event_emitter";
 
 export default class extends Controller {
-  deletePerson({ params: {personKey} = "" }) {
-    const event = new CustomEvent("personDeactivated",
+  deleteTeam({ params: {teamKey} = "" }) {
+    const event = new CustomEvent("teamDeactivated",
       {
         detail: {
           callback: function(effectiveDate) {
-            fetch(`/reteamer_api/people/${personKey}`, {
+            fetch(`/reteamer_api/teams/${teamKey}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json'
@@ -16,7 +16,7 @@ export default class extends Controller {
               body: JSON.stringify(
                 {
                   "effective_at": effectiveDate,
-                  "key": personKey
+                  "key": teamKey
                 }
               )
             }).then(() => {
@@ -32,4 +32,5 @@ export default class extends Controller {
   connect() {
     this.element.setAttribute("cursor", "pointer")
   }
+
 }

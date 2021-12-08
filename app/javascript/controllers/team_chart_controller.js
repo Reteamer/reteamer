@@ -55,8 +55,8 @@ export default class TeamChartController extends Controller {
   }
 
   handlePersonMouseOver(domNode, d) {
-    this.chart.setDestinationDatum(d);
     if(this.chart.getDraggingDatum()) {
+      this.chart.setDestinationDatum(d);
       d3.select(domNode).classed("drop-target", true)
     }
   };
@@ -120,8 +120,12 @@ export default class TeamChartController extends Controller {
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
             <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
-            <g class="team-buttons hidden">
-              <g class="team-button cursor-pointer delete-team" transform="translate(${d.width - 24},${d.height - 24})">
+            <g class="team-buttons hidden" data-controller="team-buttons">
+              <g class="team-button delete-team" 
+                transform="translate(${d.width - 24},${d.height - 24})"
+                data-action="click->team-buttons#deleteTeam"
+                data-team-buttons-team-key-param="${d.data.id}"
+              >
                 <circle r="10" cx="10" cy="10"></circle>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
               </g>
@@ -199,19 +203,12 @@ export default class TeamChartController extends Controller {
             self.handleTeamMouseOut(this, d);
           })
 
-
-        // d3.selectAll(".person-node").each(function(d) {
-        //   d3.select(this).selectAll(".delete-person").on("click", function(e) {
-        //     deletePerson(d)
-        //   })
-        // })
-
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
             self.handlePersonMouseOver(this, d);
           })
           .on("mouseout", function(event, d) {
-            self.handleMouseOut(this, d);
+            self.handlePersonMouseOut(this, d);
           })
         d3.selectAll("g.nodes-wrapper g.person-node")
           .call(d3.drag()
@@ -249,7 +246,7 @@ export default class TeamChartController extends Controller {
     return Math.max(130, calculatedHeight);
   }
 
-  handleMouseOut(domNode, d) {
+  handlePersonMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
     if(this.chart.getDraggingDatum()) {
       this.chart.setDestinationDatum(null);
