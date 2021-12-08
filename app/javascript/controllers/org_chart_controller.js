@@ -171,7 +171,7 @@ export default class OrgChartController extends Controller {
         d3.select(this).html(d => {
           const member = d.data;
           return `
-          <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
+          <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)" data-controller="person-node">
             <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}"></rect>
             <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}"></rect>
             <clipPath id="clipCircle">
@@ -212,7 +212,6 @@ export default class OrgChartController extends Controller {
         })
 
         d3.selectAll(".person-button")
-          .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
 

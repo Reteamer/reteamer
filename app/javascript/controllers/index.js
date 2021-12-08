@@ -59,6 +59,9 @@ application.register("person-buttons", PersonButtonsController)
 import PersonFormController from "./person_form_controller.js"
 application.register("person-form", PersonFormController)
 
+import PersonNodeController from "./person_node_controller.js"
+application.register("person-node", PersonNodeController)
+
 import ProposalFormController from "./proposal_form_controller.js"
 application.register("proposal-form", ProposalFormController)
 

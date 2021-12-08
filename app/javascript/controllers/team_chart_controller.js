@@ -151,6 +151,7 @@ export default class TeamChartController extends Controller {
           .data(d => d.data.members)
           .join("g")
           .classed("person-node", true)
+          .attr("data-controller", "person-node")
           .attr("transform",(d, i) => {
             const x = i%2 * (self.personNodeWidth() + self.personPadding());
             const y = Math.floor(i/2) * (self.personNodeHeight() + self.personPadding());
@@ -169,11 +170,11 @@ export default class TeamChartController extends Controller {
               <div class="person-title">${member.title}</div>
             </foreignObject>
             <g class="people-buttons hidden">
-              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+              <g class="person-button delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
               </g>
-              <g class="person-button hidden cursor-pointer" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+              <g class="person-button hidden" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
               </g>
@@ -181,7 +182,6 @@ export default class TeamChartController extends Controller {
           </g>
         `)
         d3.selectAll(".person-button")
-          .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
 
