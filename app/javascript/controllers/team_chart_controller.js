@@ -1,11 +1,11 @@
-import { Controller } from "@hotwired/stimulus"
-import { TeamChart } from '../team_chart';
+import {Controller} from "@hotwired/stimulus"
+import {TeamChart} from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
 import deletePerson from "./support/delete_person";
 import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
-import handleCancelChange from "./support/handle_cancel_change";
+import chartFunctions from "./support/handle_cancel_change";
 
 export default class TeamChartController extends Controller {
   handleNewTeamData(event) {
@@ -14,6 +14,12 @@ export default class TeamChartController extends Controller {
       .data(this.teamData.chart)
       .render()
       .expandAll()
+
+    if(this.firstRender) {
+      const {svg, zoomBehavior} = this.chart.getChartState();
+      svg.transition().call(zoomBehavior.translateBy, 0, -100)
+      this.firstRender = false
+    }
   }
 
   async handleCompleteAssignmentChange(event) {
@@ -49,7 +55,33 @@ export default class TeamChartController extends Controller {
     return 15;
   }
 
+  handlePersonMouseOver(domNode, d) {
+    this.chart.setDestinationDatum(d);
+    if(this.chart.getDraggingDatum()) {
+      d3.select(domNode).classed("drop-target", true)
+    }
+  };
+
+  isDragging() {
+    return this.chart.getDraggingDatum();
+  }
+
+  handleTeamMouseOver(domNode, d) {
+    if(this.isDragging()) {
+      this.chart.setDestinationDatum(d);
+      if(this.chart.getDraggingDatum().descendants().includes(d)) {
+        d3.select(domNode)
+          .classed("blur", true)
+      } else {
+        d3.select(domNode).classed("drop-target", true)
+      }
+    } else {
+      this.showButtons(".team-buttons", domNode);
+    }
+  };
+
   connect() {
+    this.firstRender = true;
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
@@ -181,7 +213,7 @@ export default class TeamChartController extends Controller {
 
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
-            self.handleMouseOver(this, d);
+            self.handlePersonMouseOver(this, d);
           })
           .on("mouseout", function(event, d) {
             self.handleMouseOut(this, d);
@@ -200,10 +232,10 @@ export default class TeamChartController extends Controller {
             })
           )
           .on("mouseover", function(event, d) {
-            self.showButtons(this);
+            self.showButtons(".people-buttons", this);
           })
           .on("mouseout", function(event, d) {
-            self.hideButtons(this);
+            self.hideButtons(".people-buttons", this);
           })
       })
   }
@@ -222,29 +254,6 @@ export default class TeamChartController extends Controller {
     return Math.max(130, calculatedHeight);
   }
 
-  handleMouseOver(domNode, d) {
-    this.chart.setDestinationDatum(d);
-    if(this.chart.getDraggingDatum()) {
-      d3.select(domNode).classed("drop-target", true)
-    }
-  };
-
-  showButtons(domNode) {
-    d3.select(domNode).select(".people-buttons").classed("hidden", false)
-  }
-
-  hideButtons(domNode) {
-    d3.select(domNode).select(".people-buttons").classed("hidden", true)
-  }
-
-  showTeamButtons(domNode) {
-    d3.select(domNode).select(".team-buttons").classed("hidden", false)
-  }
-
-  hideTeamButtons(domNode) {
-    d3.select(domNode).select(".team-buttons").classed("hidden", true)
-  }
-
   handleMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
     if(this.chart.getDraggingDatum()) {
@@ -253,11 +262,7 @@ export default class TeamChartController extends Controller {
   };
 
   handleTeamMouseOut(domNode, d) {
-    this.hideTeamButtons(domNode);
-  };
-
-  handleTeamMouseOver(domNode, d) {
-    this.showTeamButtons(domNode);
+    this.hideButtons(".team-buttons", domNode);
   };
 
   initiateDrag(d, domNode) {
@@ -298,5 +303,5 @@ export default class TeamChartController extends Controller {
 }
 
 Object.assign(TeamChartController.prototype, buttonActions);
-Object.assign(TeamChartController.prototype, handleCancelChange);
+Object.assign(TeamChartController.prototype, chartFunctions);
 
