@@ -6,6 +6,7 @@ class AccountLeader
 
     delegate :visit_team_chart,
       :drag_team_member,
+      :deactivate_team,
       to: TeamChartComponent
 
     delegate :deactivate_person,

@@ -1,3 +1,5 @@
+require_relative "component_under_test"
+
 class OrgChartComponent < ComponentUnderTest
   class << self
     def visit_org_chart

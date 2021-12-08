@@ -3,6 +3,7 @@ import { TeamChart } from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
 import deletePerson from "./support/delete_person";
+import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
 
 export default class TeamChartController extends Controller {
@@ -101,6 +102,16 @@ export default class TeamChartController extends Controller {
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
             <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
+            <g class="team-buttons hidden">
+              <g class="team-button cursor-pointer delete-team" transform="translate(${d.width - 24},${d.height - 24})">
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
+              </g>
+              <g class="team-button hidden cursor-pointer" transform="translate(${d.width - 48},${d.height - 24})">
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
+              </g>
+            </g>
           </g>
         `)
 
@@ -146,6 +157,26 @@ export default class TeamChartController extends Controller {
           .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
+
+        d3.selectAll(".team-button")
+          .attr("cursor", "pointer")
+          .call(d3.drag()
+            .on("start", null))
+
+        d3.selectAll("g.node").each(function(d) {
+          d3.select(this).selectAll(".delete-team").on("click", function(e) {
+            deleteTeam(d.data)
+          })
+        })
+
+        d3.selectAll("g.team-node")
+          .on("mouseover", function(event, d) {
+            self.handleTeamMouseOver(this, d);
+          })
+          .on("mouseout", function(event, d) {
+            self.handleTeamMouseOut(this, d);
+          })
+
 
         d3.selectAll(".person-node").each(function(d) {
           d3.select(this).selectAll(".delete-person").on("click", function(e) {
@@ -211,11 +242,27 @@ export default class TeamChartController extends Controller {
     d3.select(domNode).select(".people-buttons").classed("hidden", true)
   }
 
+  showTeamButtons(domNode) {
+    d3.select(domNode).select(".team-buttons").classed("hidden", false)
+  }
+
+  hideTeamButtons(domNode) {
+    d3.select(domNode).select(".team-buttons").classed("hidden", true)
+  }
+
   handleMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
     if(this.chart.getDraggingDatum()) {
       this.chart.setDestinationDatum(null);
     }
+  };
+
+  handleTeamMouseOut(domNode, d) {
+    this.hideTeamButtons(domNode);
+  };
+
+  handleTeamMouseOver(domNode, d) {
+    this.showTeamButtons(domNode);
   };
 
   initiateDrag(d, domNode) {

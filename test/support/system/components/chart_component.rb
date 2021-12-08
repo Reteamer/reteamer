@@ -3,8 +3,9 @@ require_relative "component_under_test"
 class ChartComponent < ComponentUnderTest
   class << self
     def deactivate_person(person_name)
-      find(".person-node", text: person_name).hover
-      within(".person-node", text: person_name) do
+      person_node = find(".person-node", text: person_name)
+      person_node.hover
+      within(person_node) do
         find(".delete-person").click
       end
 

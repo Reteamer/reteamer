@@ -13,3 +13,7 @@ plan_b:
 plan_c:
   name: Plan C
   account: company
+
+plan_two:
+  name: main
+  account: two
