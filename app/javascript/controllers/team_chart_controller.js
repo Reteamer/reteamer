@@ -173,7 +173,11 @@ export default class TeamChartController extends Controller {
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
               </g>
-              <g class="person-button hidden" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+              <g class="person-button edit-person"
+                data-action="click->person-buttons#editPerson"
+                data-person-buttons-person-param="${encodeURIComponent(JSON.stringify(member))}" 
+                transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
               </g>

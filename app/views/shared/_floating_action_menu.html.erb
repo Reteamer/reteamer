@@ -40,7 +40,7 @@
 </div>
 
 <% if enabled_menu_options.include? FloatingActionMenu::PERSON %>
-  <%= render "people/new_person_modal", selected_date: selected_date %>
+  <%= render "people/person_form_modal", selected_date: selected_date %>
 <% end %>
 
 <% if enabled_menu_options.include? FloatingActionMenu::TEAM %>

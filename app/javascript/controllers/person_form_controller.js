@@ -3,6 +3,13 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [ "sectionOne", "sectionTwo", "sectionThree" ]
 
+  handlePersonEdit(event) {
+    console.error("=============>", event.detail);
+    this.person = event.detail.person
+    this.element.querySelector("input[name='first_name']").value = this.person.name
+    this.callback = event.detail.callback
+  }
+
   handleDatePicked(event) {
     event.preventDefault();
     const selected_date = document.querySelector("#person-form input[name='effective_at']").value
@@ -34,7 +41,11 @@ export default class extends Controller {
 
 
     this.sectionOneTarget.classList.add("hidden")
-    this.sectionTwoTarget.classList.remove("hidden")
+    if(this.person) {
+      this.sectionThreeTarget.classList.remove("hidden")
+    } else {
+      this.sectionTwoTarget.classList.remove("hidden")
+    }
   }
 
   handlePersonTypePicked(event) {
