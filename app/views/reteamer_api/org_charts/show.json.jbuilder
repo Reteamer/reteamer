@@ -7,12 +7,17 @@ end
 
 json.people do
   json.array! @people do |person|
-    json.id(person.key)
-    json.parentId(person.supervisor_key)
+    json.id(person.key)  # deprecated
+    json.key(person.key)
+    json.parentId(person.supervisor_key)  # deprecated
+    json.parentKey(person.supervisor_key)
     json.name(person.name)
+    json.firstName(person.first_name)
+    json.lastName(person.last_name)
     json.title(person.title)
     json.image_url(person.image_url || "https://www.gravatar.com/avatar/?s=50")
-    json.employee_id(person.employee_id)
+    json.employee_id(person.employee_id)  # deprecated
+    json.employee_code(person.employee_id)
     json.type(person.type.demodulize.downcase)
   end
 end

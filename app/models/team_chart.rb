@@ -42,11 +42,7 @@ class TeamChart
   end
 
   class Assignee
-    delegate :name, :title, :image_url, :employee_id, :type, to: :@person
-
-    def key
-      @person.key
-    end
+    delegate :key, :name, :first_name, :last_name, :title, :image_url, :employee_id, :type, to: :@person
 
     def assignment_key
       @assignment_entry.key

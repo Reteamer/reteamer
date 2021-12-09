@@ -19,6 +19,14 @@ module ReteamerApi
           ActsAsTenant.current_tenant.name
         end
 
+        def first_name
+          ""
+        end
+
+        def last_name
+          ""
+        end
+
         def supervisor_key
           nil
         end
