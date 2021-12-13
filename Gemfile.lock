@@ -134,7 +134,7 @@ GEM
     coderay (1.1.3)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
-    cssbundling-rails (0.2.7)
+    cssbundling-rails (0.2.8)
       railties (>= 6.0.0)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
@@ -226,7 +226,7 @@ GEM
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     local_time (2.1.0)
-    loofah (2.12.0)
+    loofah (2.13.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
@@ -446,7 +446,7 @@ DEPENDENCIES
   bundler-audit!
   byebug
   capybara (>= 2.15)
-  cssbundling-rails (~> 0.2.7)
+  cssbundling-rails (~> 0.2.8)
   deep_cloneable
   devise (>= 4.7.1)
   devise-i18n (~> 1.10)
