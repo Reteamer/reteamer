@@ -1,6 +1,11 @@
 <div
   data-controller="modal person-form"
-  data-action="newPersonStarted@window->modal#open personEditStarted@window->modal#open personEditStarted@window->person-form#handlePersonEdit"
+  data-action="
+    newPersonStarted@window->modal#open
+    personEditStarted@window->modal#open
+    newPersonStarted@window->person-form#handleNewPerson
+    personEditStarted@window->person-form#handlePersonEdit
+  "
   id="new-person-modal"
 >
   <div data-modal-target="container" data-action="click->modal#closeBackground keyup@window->modal#closeWithKeyboard" class="hidden animated fadeIn fixed inset-0 overflow-y-auto flex items-center justify-center" style="z-index: 9999;">
@@ -53,20 +58,20 @@
                   <label for="last_name">Last Name</label>
                   <input type="text" class="form-control" name="last_name" />
                 </div>
-                <div class="form-group">
+                <supervisor-form-group class="form-group">
                   <label for="supervisor_key">Supervisor</label>
                   <select name="supervisor_key" class="select">
                     <option disabled selected>Pick one...</option>
                     <option>&lt;No Supervisor&gt;</option>
                   </select>
-                </div>
-                <div class="form-group">
+                </supervisor-form-group>
+                <team-form-group class="form-group">
                   <label for="team_key">Initial Team</label>
                   <select name="team_key" class="select">
                     <option disabled selected>Pick one...</option>
                     <option>&lt;Unassigned&gt;</option>
                   </select>
-                </div>
+                </team-form-group>
                 <div class="form-group">
                   <label>Employee ID (used for matching to HR system when importing)</label>
                   <input type="text" class="form-control" name="employee_id" />

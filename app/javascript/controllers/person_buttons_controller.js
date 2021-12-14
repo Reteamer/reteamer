@@ -8,7 +8,7 @@ export default class extends Controller {
       detail: {
         person: person,
         callback: function(effectiveDate, newPersonAttributes) {
-          fetch(`/reteamer_api/people/${person.id}`, {
+          fetch(`/reteamer_api/people/${person.key}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'
