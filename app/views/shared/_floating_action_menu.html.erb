@@ -1,4 +1,4 @@
-<div class="fab-container">
+<div class="fab-container" data-controller="floating-action-menu">
   <div class="fab fab-icon-holder">
     <i class="fas fa-plus"></i>
   </div>
@@ -13,7 +13,7 @@
       </li>
     <% end %>
     <% if enabled_menu_options.include? FloatingActionMenu::PERSON %>
-      <li onclick="(() => { window.dispatchEvent(new CustomEvent('newPersonStarted', {}) )})()">
+      <li data-action="click->floating-action-menu#addPerson">
         <span class="fab-label">Add New Person</span>
         <div class="fab-icon-holder">
           <i class="fas fa-user"></i>

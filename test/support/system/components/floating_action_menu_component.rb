@@ -26,5 +26,21 @@ class FloatingActionMenuComponent < ComponentUnderTest
         click_on("Submit")
       end
     end
+
+    def make_new_person(first_name)
+      within(".fab-container") do
+        find(".fa-plus").click
+        find("li", text: "Add New Person").click
+      end
+
+      within("#person-form", visible: :all) do
+        click_on("Next")
+        select("an Employee", from: "type")
+        fill_in("first_name", with: first_name)
+        select("Jack Donaghy", from: "supervisor_key")
+        select("General Electric", from: "team_key")
+        click_on("Submit")
+      end
+    end
   end
 end

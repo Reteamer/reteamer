@@ -3,6 +3,7 @@
   data-action="
     newPersonStarted@window->modal#open
     personEditStarted@window->modal#open
+    personDone@window->modal#close
     newPersonStarted@window->person-form#handleNewPerson
     personEditStarted@window->person-form#handlePersonEdit
   "
@@ -14,7 +15,7 @@
       <!-- Modal Card -->
       <div class="m-1 bg-white rounded shadow">
         <div class="p-8">
-          <form data-action="submit->person-form#handleSubmit" id="person-form" method="post" action="<%= reteamer_api_people_path %>">
+          <form data-action="submit->person-form#handleSubmit" id="person-form">
             <section-one data-person-form-target="sectionOne">
               <h2 class="text-xl mb-4">Pick a date for the new person to take effect</h2>
               <%= render 'shared/effective_date_fields', selected_date: selected_date %>
@@ -27,7 +28,7 @@
             <section-two data-person-form-target="sectionTwo" class="hidden">
               <h2 class="text-xl mb-4">Select the type of position for this person</h2>
               <label>This is
-                <select name="type" class="select" data-action="change->person-form#handlePersonTypePicked">
+                <select name="type" class="select" name="type" data-action="change->person-form#handlePersonTypePicked">
                   <option selected="true">Pick one...</option>
                   <option value="Employee">an Employee</option>
                   <option value="Contractor">a Contractor</option>

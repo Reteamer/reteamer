@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
   static targets = [ "sectionOne", "sectionTwo", "sectionThree" ]
@@ -7,11 +8,12 @@ export default class extends Controller {
     this.resetWizard();
 
     this.person = event.detail.person
-    this.element.querySelector("input[name='first_name']").value = this.person.firstName
-    this.element.querySelector("input[name='last_name']").value = this.person.lastName
-    this.element.querySelector("input[name='employee_id']").value = this.person.employee_id
-    this.element.querySelector("input[name='title']").value = this.person.title
-    this.element.querySelector("input[name='email']").value = this.person.email || ""
+    const form = this.element.querySelector("#person-form")
+    form.first_name.value = this.person.firstName
+    form.last_name.value = this.person.lastName
+    form.employee_id.value = this.person.employee_code
+    form.title.value = this.person.title
+    form.email.value = this.person.email || ""
     this.element.querySelector("supervisor-form-group").classList.add("hidden");
     this.element.querySelector("team-form-group").classList.add("hidden");
 
@@ -20,6 +22,7 @@ export default class extends Controller {
 
   handleNewPerson(event) {
     this.resetWizard();
+    this.callback = event.detail.callback
   }
 
   resetWizard() {
@@ -82,7 +85,22 @@ export default class extends Controller {
   }
 
   handleSubmit(event) {
-    this.callback(effectiveDate, newPersonAttributes)
+    event.preventDefault();
+    const form = event.target
+    let newPersonAttributes = {}
+    newPersonAttributes.type = form.type.value
+    newPersonAttributes.first_name = form.first_name.value
+    newPersonAttributes.last_name = form.last_name.value
+    newPersonAttributes.email = form.email.value
+    newPersonAttributes.title = form.title.value
+    newPersonAttributes.employee_code = form.employee_id.value
+    newPersonAttributes.supervisor_key = form.supervisor_key.value
+    newPersonAttributes.team_key = form.team_key.value
+
+    const effectiveDate =  form.effective_at.value
+    this.callback(effectiveDate, newPersonAttributes).then(() => {
+      emitEvent("personDone")
+    })
   }
 
   connect() {

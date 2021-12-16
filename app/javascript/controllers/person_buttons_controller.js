@@ -8,8 +8,8 @@ export default class extends Controller {
       detail: {
         person: person,
         callback: function(effectiveDate, newPersonAttributes) {
-          fetch(`/reteamer_api/people/${person.key}`, {
-            method: 'DELETE',
+          const promise = fetch(`/reteamer_api/people/${person.key}`, {
+            method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             },
@@ -23,6 +23,8 @@ export default class extends Controller {
           }).then(() => {
             emitDatePickedEvent(effectiveDate)
           });
+
+          return promise;
         }
       }
     })
@@ -34,7 +36,7 @@ export default class extends Controller {
       {
         detail: {
           callback: function(effectiveDate) {
-            fetch(`/reteamer_api/people/${personKey}`, {
+            const promise = fetch(`/reteamer_api/people/${personKey}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json'
@@ -49,6 +51,8 @@ export default class extends Controller {
             }).then(() => {
               emitDatePickedEvent(effectiveDate)
             });
+
+            return promise;
           }
         }
       }

@@ -24,6 +24,7 @@ class AccountLeader
 
     delegate :make_new_proposal,
       :make_new_team,
+      :make_new_person,
       to: FloatingActionMenuComponent
 
     delegate :switch_to_proposal,

@@ -35,6 +35,9 @@ application.register("effective-date-fields", EffectiveDateFieldsController)
 import EffectiveDateModalController from "./effective_date_modal_controller.js"
 application.register("effective-date-modal", EffectiveDateModalController)
 
+import FloatingActionMenuController from "./floating_action_menu_controller"
+application.register("floating-action-menu", FloatingActionMenuController)
+
 import MentionsController from "./mentions_controller.js"
 application.register("mentions", MentionsController)
 
