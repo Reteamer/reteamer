@@ -145,8 +145,9 @@ class StripeTest < ApplicationSystemTestCase
     click_on "Change Plan", match: :first
 
     # Changes are prorated so we don't have to go through SCA again
-
-    assert_selector "h1", text: I18n.t("subscriptions.index.title")
+    using_wait_time(10) do
+      assert_selector "h1", text: I18n.t("subscriptions.index.title")
+    end
     assert_not_equal old_plan_id, subscription.reload.processor_plan
   end
 
