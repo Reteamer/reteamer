@@ -31,9 +31,9 @@ module ReteamerApi
         title: person_params[:title],
         employee_id: person_params[:employee_id]
       )
-      Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
+      entry = Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
 
-      # TODO: update future people entries?
+      Support::PersonEditor.new(entry).apply_intentions_going_forward
     end
 
     def destroy
