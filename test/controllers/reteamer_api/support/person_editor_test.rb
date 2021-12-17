@@ -45,7 +45,6 @@ module ReteamerApi
         updated_future_entry = Entry.find_for(the_future, key: key).first
         assert_equal("Senior Test Specialist", updated_future_entry.versionable.title)
       end
-
     end
   end
 end
