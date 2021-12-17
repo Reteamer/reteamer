@@ -2,7 +2,6 @@ import {Controller} from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3"
 import {emitDatePickedEvent} from "../event_emitter";
-import deletePerson from "./support/delete_person";
 import buttonActions from "./team_chart_controller_button_actions"
 import chartFunctions from "./support/handle_cancel_change";
 
@@ -171,7 +170,7 @@ export default class OrgChartController extends Controller {
         d3.select(this).html(d => {
           const member = d.data;
           return `
-          <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
+          <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)" data-controller="person-node">
             <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}"></rect>
             <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}"></rect>
             <clipPath id="clipCircle">
@@ -189,8 +188,12 @@ export default class OrgChartController extends Controller {
                   </div>` : ""
               }
             </foreignObject>
-            <g class="people-buttons hidden">
-              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+            <g class="people-buttons hidden" data-controller="person-buttons">
+              <g class="person-button cursor-pointer delete-person" 
+                data-action="click->person-buttons#deletePerson"
+                data-person-buttons-person-key-param="${d.data.id}" 
+                transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"></circle>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
               </g>
@@ -205,14 +208,7 @@ export default class OrgChartController extends Controller {
           .selectAll(".person-node")
           .data(function(d) { return [d]; });
 
-        d3.selectAll(".person-node").each(function(d) {
-          d3.select(this).selectAll(".delete-person").on("click", function(e) {
-            deletePerson(d.data)
-          })
-        })
-
         d3.selectAll(".person-button")
-          .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
 

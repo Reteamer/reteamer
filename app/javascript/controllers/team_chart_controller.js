@@ -2,7 +2,6 @@ import {Controller} from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
-import deletePerson from "./support/delete_person";
 import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
 import chartFunctions from "./support/handle_cancel_change";
@@ -56,8 +55,8 @@ export default class TeamChartController extends Controller {
   }
 
   handlePersonMouseOver(domNode, d) {
-    this.chart.setDestinationDatum(d);
     if(this.chart.getDraggingDatum()) {
+      this.chart.setDestinationDatum(d);
       d3.select(domNode).classed("drop-target", true)
     }
   };
@@ -67,15 +66,7 @@ export default class TeamChartController extends Controller {
   }
 
   handleTeamMouseOver(domNode, d) {
-    if(this.isDragging()) {
-      this.chart.setDestinationDatum(d);
-      if(this.chart.getDraggingDatum().descendants().includes(d)) {
-        d3.select(domNode)
-          .classed("blur", true)
-      } else {
-        d3.select(domNode).classed("drop-target", true)
-      }
-    } else {
+    if (!this.isDragging()) {
       this.showButtons(".team-buttons", domNode);
     }
   };
@@ -129,8 +120,12 @@ export default class TeamChartController extends Controller {
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
             <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
-            <g class="team-buttons hidden">
-              <g class="team-button cursor-pointer delete-team" transform="translate(${d.width - 24},${d.height - 24})">
+            <g class="team-buttons hidden" data-controller="team-buttons">
+              <g class="team-button delete-team" 
+                transform="translate(${d.width - 24},${d.height - 24})"
+                data-action="click->team-buttons#deleteTeam"
+                data-team-buttons-team-key-param="${d.data.id}"
+              >
                 <circle r="10" cx="10" cy="10"></circle>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
               </g>
@@ -151,6 +146,7 @@ export default class TeamChartController extends Controller {
           .data(d => d.data.members)
           .join("g")
           .classed("person-node", true)
+          .attr("data-controller", "person-node")
           .attr("transform",(d, i) => {
             const x = i%2 * (self.personNodeWidth() + self.personPadding());
             const y = Math.floor(i/2) * (self.personNodeHeight() + self.personPadding());
@@ -163,17 +159,25 @@ export default class TeamChartController extends Controller {
               <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
             </clipPath>
             <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
-            <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
+            <text class="employment-id" x="${self.personNodeWidth()-150}" y="70">${member.employee_id}</text>
             <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>
             </foreignObject>
-            <g class="people-buttons hidden">
-              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+            <g class="people-buttons hidden" data-controller="person-buttons">
+              <g class="person-button delete-person" 
+                data-action="click->person-buttons#deletePerson"
+                data-person-buttons-person-key-param="${member.id}"  
+                transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
               </g>
-              <g class="person-button hidden cursor-pointer" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+              <g class="person-button edit-person"
+                data-action="click->person-buttons#editPerson"
+                data-person-buttons-person-param="${encodeURIComponent(JSON.stringify(member))}" 
+                transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
               </g>
@@ -181,7 +185,6 @@ export default class TeamChartController extends Controller {
           </g>
         `)
         d3.selectAll(".person-button")
-          .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
 
@@ -204,19 +207,12 @@ export default class TeamChartController extends Controller {
             self.handleTeamMouseOut(this, d);
           })
 
-
-        d3.selectAll(".person-node").each(function(d) {
-          d3.select(this).selectAll(".delete-person").on("click", function(e) {
-            deletePerson(d)
-          })
-        })
-
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
             self.handlePersonMouseOver(this, d);
           })
           .on("mouseout", function(event, d) {
-            self.handleMouseOut(this, d);
+            self.handlePersonMouseOut(this, d);
           })
         d3.selectAll("g.nodes-wrapper g.person-node")
           .call(d3.drag()
@@ -254,7 +250,7 @@ export default class TeamChartController extends Controller {
     return Math.max(130, calculatedHeight);
   }
 
-  handleMouseOut(domNode, d) {
+  handlePersonMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
     if(this.chart.getDraggingDatum()) {
       this.chart.setDestinationDatum(null);

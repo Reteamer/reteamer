@@ -16,6 +16,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 end
 
 Capybara.default_max_wait_time = 2
+Capybara.disable_animation = true
 
 # Add a route for easily switching accounts in system tests
 Rails.application.routes.append do

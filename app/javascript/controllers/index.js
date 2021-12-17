@@ -35,6 +35,9 @@ application.register("effective-date-fields", EffectiveDateFieldsController)
 import EffectiveDateModalController from "./effective_date_modal_controller.js"
 application.register("effective-date-modal", EffectiveDateModalController)
 
+import FloatingActionMenuController from "./floating_action_menu_controller"
+application.register("floating-action-menu", FloatingActionMenuController)
+
 import MentionsController from "./mentions_controller.js"
 application.register("mentions", MentionsController)
 
@@ -59,6 +62,9 @@ application.register("person-buttons", PersonButtonsController)
 import PersonFormController from "./person_form_controller.js"
 application.register("person-form", PersonFormController)
 
+import PersonNodeController from "./person_node_controller.js"
+application.register("person-node", PersonNodeController)
+
 import ProposalFormController from "./proposal_form_controller.js"
 application.register("proposal-form", ProposalFormController)
 
@@ -73,6 +79,9 @@ application.register("select", SelectController)
 
 import StripeController from "./stripe_controller.js"
 application.register("stripe", StripeController)
+
+import TeamButtonsController from "./team_buttons_controller.js"
+application.register("team-buttons", TeamButtonsController)
 
 import TeamChartController from "./team_chart_controller.js"
 application.register("team-chart", TeamChartController)
