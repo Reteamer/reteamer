@@ -33,7 +33,7 @@ module ReteamerApi
       )
       Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
 
-      #TODO: update future people entries?
+      # TODO: update future people entries?
     end
 
     def destroy
