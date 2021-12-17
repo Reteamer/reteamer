@@ -159,7 +159,7 @@ export default class TeamChartController extends Controller {
               <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
             </clipPath>
             <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
-            <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
+            <text class="employment-id" x="${self.personNodeWidth()-150}" y="70">${member.employee_id}</text>
             <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>

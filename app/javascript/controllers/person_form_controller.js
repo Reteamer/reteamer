@@ -93,7 +93,7 @@ export default class extends Controller {
     newPersonAttributes.last_name = form.last_name.value
     newPersonAttributes.email = form.email.value
     newPersonAttributes.title = form.title.value
-    newPersonAttributes.employee_code = form.employee_id.value
+    newPersonAttributes.employee_id = form.employee_id.value
     newPersonAttributes.supervisor_key = form.supervisor_key.value
     newPersonAttributes.team_key = form.team_key.value
 

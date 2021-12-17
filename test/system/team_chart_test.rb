@@ -28,6 +28,13 @@ class TeamChartTest < ApplicationSystemTestCase
     assert(TeamChartComponent.has_person?("Marky"))
   end
 
+  test "editing an existing person" do
+    AccountLeader.visit_team_chart
+    assert(TeamChartComponent.has_person?("Jonathan"))
+    AccountLeader.edit_person("Jonathan", "Bonathan")
+    assert(TeamChartComponent.has_person?("Bonathan"))
+  end
+
   test "deactivating a team" do
     deactivated_team_name = "General Electric"
     subteam_name = "East Coast Television and Microwave Oven Programming"

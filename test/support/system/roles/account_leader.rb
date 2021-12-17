@@ -10,6 +10,7 @@ class AccountLeader
       to: TeamChartComponent
 
     delegate :deactivate_person,
+      :edit_person,
       to: ChartComponent
 
     delegate :visit_effective_date_fields_style_guide,

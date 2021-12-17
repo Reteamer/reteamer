@@ -4,7 +4,7 @@ class TeamChartComponent < ComponentUnderTest
   class << self
     def visit_team_chart
       visit team_chart_path
-      assert_selector("text", text: "Jack Donaghy")
+      wait_till_page_is_loaded
     end
 
     def future_people_selector
@@ -43,6 +43,13 @@ class TeamChartComponent < ComponentUnderTest
       within("#deactivate-team-effective-date-modal") do
         click_on("Commit")
       end
+    end
+
+    private
+
+    def wait_till_page_is_loaded
+      sleep(1)
+      assert_selector("text", text: "Jack Donaghy", visible: true)
     end
   end
 
