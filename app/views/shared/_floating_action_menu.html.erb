@@ -5,7 +5,7 @@
 
   <ul class="fab-options">
     <% if enabled_menu_options.include? FloatingActionMenu::TEAM %>
-      <li onclick="(() => { window.dispatchEvent(new CustomEvent('newTeamStarted', {}) )})()">
+      <li data-action="click->floating-action-menu#addTeam">
         <span class="fab-label">Add New Team</span>
         <div class="fab-icon-holder">
           <i class="fas fa-users"></i>
@@ -44,7 +44,7 @@
 <% end %>
 
 <% if enabled_menu_options.include? FloatingActionMenu::TEAM %>
-  <%= render "teams/new_team_modal", selected_date: selected_date %>
+  <%= render "teams/team_form_modal", selected_date: selected_date %>
 <% end %>
 
 <% if enabled_menu_options.include? FloatingActionMenu::PROPOSAL %>

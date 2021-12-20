@@ -14,7 +14,8 @@ class TeamChart
       assigned_team.members << Assignee.new(assignee, assignment) if assignee && assigned_team
     end
     fake_root_node = FakeRootNode.new
-    teams.select { |team| team.parent_key.nil? }.map { |team| team.parent_key = fake_root_node.key }
+    team_keys = teams.map(&:key)
+    teams.select { |team| !team_keys.include?(team.parent_key) }.map { |team| team.parent_key = fake_root_node.key }
     teams << fake_root_node
     teams
   end

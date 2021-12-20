@@ -23,6 +23,7 @@ class FloatingActionMenuComponent < ComponentUnderTest
       within("#team-form", visible: :all) do
         click_on("Next")
         fill_in("name", with: team_name)
+        select("No Parent/Top Level", from: "parent_key")
         click_on("Submit")
       end
     end
