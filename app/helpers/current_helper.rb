@@ -3,7 +3,7 @@ module CurrentHelper
     Current.account
   end
 
-  def current_reteamer_plan
+  def current_proposal
     Current.proposal
   end
 

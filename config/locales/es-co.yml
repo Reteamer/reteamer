@@ -4,6 +4,7 @@ es-co:
   something_went_wrong: "Algo salió mal."
   create_an_account_first: "Por favor crea una cuenta primero."
   must_be_an_admin: "Debes ser un administrador para hacer eso."
+  must_be_subscribed: ""
   are_you_sure: "¿Estás seguro?"
   delete: "Borrar"
   back: "Atrás"

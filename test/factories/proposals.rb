@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: reteamer_plans
+# Table name: proposals
 #
 #  id         :bigint           not null, primary key
 #  name       :string           not null

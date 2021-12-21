@@ -15,6 +15,8 @@ class ActiveSupport::TestCase
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
+  set_fixture_class pay_subscriptions: Pay::Subscription
+  set_fixture_class pay_customers: Pay::Customer
 
   # Include the FactoryBot helper methods so you don't have to prefix them all with FactoryBot
   # include FactoryBot::Syntax::Methods

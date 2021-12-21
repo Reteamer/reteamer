@@ -39,6 +39,7 @@ en:
   delete: "Delete"
   edit: "Edit"
   must_be_an_admin: "You must be an admin to do that."
+  must_be_subscribed: "You must have an active subscription."
   processing: "Processing..."
   something_went_wrong: "Something went wrong"
   unauthorized: "You are not authorized to perform this action."

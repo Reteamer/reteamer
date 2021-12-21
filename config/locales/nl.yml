@@ -4,6 +4,7 @@ nl:
   something_went_wrong: Er is iets fout gegaan
   create_an_account_first: Je hebt een account nodig. Maak dit eerst aan.
   must_be_an_admin: U moet daarvoor een beheerder zijn.
+  must_be_subscribed: ""
   are_you_sure: Weet je het zeker?
   delete: Verwijderen
   back: Terug

@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class ProposalTest < ApplicationSystemTestCase
   setup do
-    thirty_rock_user = User.create!(first_name: "30", last_name: "Rock", email: "demo@thirtyrock.com", admin: true, password: "password", password_confirmation: "password", terms_of_service: true)
+    thirty_rock_user = FactoryBot.create(:user, :subscribed, :admin)
     peopleOfThirtyRock(thirty_rock_user.accounts.first)
     login_as(thirty_rock_user)
   end

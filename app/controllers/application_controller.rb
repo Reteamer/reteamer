@@ -47,4 +47,10 @@ class ApplicationController < ActionController::Base
       redirect_to root_path, alert: t("must_be_an_admin")
     end
   end
+
+  def require_subscription
+    unless subscribed?
+      redirect_to pricing_path, alert: t("must_be_subscribed")
+    end
+  end
 end

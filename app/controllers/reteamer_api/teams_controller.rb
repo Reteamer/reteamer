@@ -1,6 +1,6 @@
 module ReteamerApi
   class TeamsController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, :require_subscription
     skip_before_action :verify_authenticity_token
 
     def index

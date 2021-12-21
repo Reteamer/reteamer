@@ -37,6 +37,7 @@ fr:
   something_went_wrong: "Un incident est survenu"
   create_an_account_first: "Merci de créer un compte d’abord."
   must_be_an_admin: "Vous devez être administrateur pour faire ça."
+  must_be_subscribed: ""
   are_you_sure: "Êtes vous sûr ?"
   delete: "Supprimer"
   back: "Retour"

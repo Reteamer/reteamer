@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: proposals
+#
+#  id         :bigint           not null, primary key
+#  name       :string           not null
+#  created_at :datetime
+#  account_id :integer          not null
+#
 require "test_helper"
 
 class ProposalTest < ActiveSupport::TestCase

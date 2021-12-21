@@ -1,0 +1,5 @@
+paid_customer:
+  owner: paid_account (Account)
+  processor: stripe
+  processor_id: cus_KjSEGY4nHTw0F8
+  default: true
