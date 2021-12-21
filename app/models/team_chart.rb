@@ -8,8 +8,10 @@ class TeamChart
 
     people = Entry.find_for(effective_date, versionable_type: People::Person.name)
     assignments = Entry.find_for(effective_date, versionable_type: Assignment.name).map(&:versionable)
+    assignee_keys = []
     assignments.each do |assignment|
       assignee = people.find { |p| p.key == assignment.person_key }
+      assignee_keys << assignee&.key
       assigned_team = teams.find { |t| t.key == assignment.team_key }
       assigned_team.members << Assignee.new(assignee, assignment) if assignee && assigned_team
     end
@@ -17,7 +19,18 @@ class TeamChart
     team_keys = teams.map(&:key)
     teams.select { |team| !team_keys.include?(team.parent_key) }.map { |team| team.parent_key = fake_root_node.key }
     teams << fake_root_node
-    teams
+
+    the_slack = people.select { |p| !assignee_keys.include?(p.key) }
+    TeamChartData.new(teams, the_slack)
+  end
+
+  class TeamChartData
+    attr_reader :teams, :the_slack
+
+    def initialize(teams, the_slack)
+      @teams = teams
+      @the_slack = the_slack
+    end
   end
 
   class AssignedTeam
