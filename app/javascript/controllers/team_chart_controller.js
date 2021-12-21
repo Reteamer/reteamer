@@ -1,9 +1,10 @@
-import { Controller } from "@hotwired/stimulus"
-import { TeamChart } from '../team_chart';
+import {Controller} from "@hotwired/stimulus"
+import {TeamChart} from '../team_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent} from "../event_emitter";
-import deletePerson from "./support/delete_person";
+import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
+import chartFunctions from "./support/handle_cancel_change";
 
 export default class TeamChartController extends Controller {
   handleNewTeamData(event) {
@@ -12,15 +13,15 @@ export default class TeamChartController extends Controller {
       .data(this.teamData.chart)
       .render()
       .expandAll()
+
+    if(this.firstRender) {
+      const {svg, zoomBehavior} = this.chart.getChartState();
+      svg.transition().call(zoomBehavior.translateBy, 0, -100)
+      this.firstRender = false
+    }
   }
 
-  handleCancelChange(event) {
-    const attrs = this.chart.getChartState()
-    this.chart.restoreNodePosition(d3.select(this.chart.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
-    this.chart.finalizeDrop()
-  }
-
-  async handleCompleteChange(event) {
+  async handleCompleteAssignmentChange(event) {
     const response = await fetch("/reteamer_api/people/update_team", {
       method: 'POST',
       headers: {
@@ -53,7 +54,25 @@ export default class TeamChartController extends Controller {
     return 15;
   }
 
+  handlePersonMouseOver(domNode, d) {
+    if(this.chart.getDraggingDatum()) {
+      this.chart.setDestinationDatum(d);
+      d3.select(domNode).classed("drop-target", true)
+    }
+  };
+
+  isDragging() {
+    return this.chart.getDraggingDatum();
+  }
+
+  handleTeamMouseOver(domNode, d) {
+    if (!this.isDragging()) {
+      this.showButtons(".team-buttons", domNode);
+    }
+  };
+
   connect() {
+    this.firstRender = true;
     const container = document.createElement("div");
     container.className = 'chart-container'
     this.element.appendChild(container);
@@ -101,6 +120,20 @@ export default class TeamChartController extends Controller {
               <team-member-count> Members:  ${d.data.members.length} 👤</team-member-count>
             </foreignObject>
             <g class="people-box" transform="translate(${self.personPadding()}, 100)"></g>
+            <g class="team-buttons hidden" data-controller="team-buttons">
+              <g class="team-button delete-team" 
+                transform="translate(${d.width - 24},${d.height - 24})"
+                data-action="click->team-buttons#deleteTeam"
+                data-team-buttons-team-key-param="${d.data.id}"
+              >
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
+              </g>
+              <g class="team-button hidden cursor-pointer" transform="translate(${d.width - 48},${d.height - 24})">
+                <circle r="10" cx="10" cy="10"></circle>
+                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
+              </g>
+            </g>
           </g>
         `)
 
@@ -113,6 +146,7 @@ export default class TeamChartController extends Controller {
           .data(d => d.data.members)
           .join("g")
           .classed("person-node", true)
+          .attr("data-controller", "person-node")
           .attr("transform",(d, i) => {
             const x = i%2 * (self.personNodeWidth() + self.personPadding());
             const y = Math.floor(i/2) * (self.personNodeHeight() + self.personPadding());
@@ -125,17 +159,25 @@ export default class TeamChartController extends Controller {
               <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
             </clipPath>
             <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
-            <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
+            <text class="employment-id" x="${self.personNodeWidth()-150}" y="70">${member.employee_id}</text>
             <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
             <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
               <div class="person-title">${member.title}</div>
             </foreignObject>
-            <g class="people-buttons hidden">
-              <g class="person-button cursor-pointer delete-person" transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})">
+            <g class="people-buttons hidden" data-controller="person-buttons">
+              <g class="person-button delete-person" 
+                data-action="click->person-buttons#deletePerson"
+                data-person-buttons-person-key-param="${member.id}"  
+                transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
               </g>
-              <g class="person-button hidden cursor-pointer" transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})">
+              <g class="person-button edit-person"
+                data-action="click->person-buttons#editPerson"
+                data-person-buttons-person-param="${encodeURIComponent(JSON.stringify(member))}" 
+                transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})"
+              >
                 <circle r="10" cx="10" cy="10"/>
                 <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
               </g>
@@ -143,22 +185,34 @@ export default class TeamChartController extends Controller {
           </g>
         `)
         d3.selectAll(".person-button")
+          .call(d3.drag()
+            .on("start", null))
+
+        d3.selectAll(".team-button")
           .attr("cursor", "pointer")
           .call(d3.drag()
             .on("start", null))
 
-        d3.selectAll(".person-node").each(function(d) {
-          d3.select(this).selectAll(".delete-person").on("click", function(e) {
-            deletePerson(d)
+        d3.selectAll("g.node").each(function(d) {
+          d3.select(this).selectAll(".delete-team").on("click", function(e) {
+            deleteTeam(d.data)
           })
         })
 
-        d3.selectAll("g.nodes-wrapper g.node")
+        d3.selectAll("g.team-node")
           .on("mouseover", function(event, d) {
-            self.handleMouseOver(this, d);
+            self.handleTeamMouseOver(this, d);
           })
           .on("mouseout", function(event, d) {
-            self.handleMouseOut(this, d);
+            self.handleTeamMouseOut(this, d);
+          })
+
+        d3.selectAll("g.nodes-wrapper g.node")
+          .on("mouseover", function(event, d) {
+            self.handlePersonMouseOver(this, d);
+          })
+          .on("mouseout", function(event, d) {
+            self.handlePersonMouseOut(this, d);
           })
         d3.selectAll("g.nodes-wrapper g.person-node")
           .call(d3.drag()
@@ -174,10 +228,10 @@ export default class TeamChartController extends Controller {
             })
           )
           .on("mouseover", function(event, d) {
-            self.showButtons(this);
+            self.showButtons(".people-buttons", this);
           })
           .on("mouseout", function(event, d) {
-            self.hideButtons(this);
+            self.hideButtons(".people-buttons", this);
           })
       })
   }
@@ -196,26 +250,15 @@ export default class TeamChartController extends Controller {
     return Math.max(130, calculatedHeight);
   }
 
-  handleMouseOver(domNode, d) {
-    this.chart.setDestinationDatum(d);
-    if(this.chart.getDraggingDatum()) {
-      d3.select(domNode).classed("drop-target", true)
-    }
-  };
-
-  showButtons(domNode) {
-    d3.select(domNode).select(".people-buttons").classed("hidden", false)
-  }
-
-  hideButtons(domNode) {
-    d3.select(domNode).select(".people-buttons").classed("hidden", true)
-  }
-
-  handleMouseOut(domNode, d) {
+  handlePersonMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
     if(this.chart.getDraggingDatum()) {
       this.chart.setDestinationDatum(null);
     }
+  };
+
+  handleTeamMouseOut(domNode, d) {
+    this.hideButtons(".team-buttons", domNode);
   };
 
   initiateDrag(d, domNode) {
@@ -256,4 +299,5 @@ export default class TeamChartController extends Controller {
 }
 
 Object.assign(TeamChartController.prototype, buttonActions);
+Object.assign(TeamChartController.prototype, chartFunctions);
 

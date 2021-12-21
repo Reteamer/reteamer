@@ -19,8 +19,21 @@ module ReteamerApi
       if params[:team_key]
         Entry.create!(effective_at: effective_date, versionable: Assignment.new(person_key: person_entry.key, team_key: params[:team_key]))
       end
+    end
 
-      redirect_to team_chart_path(effective_date: effective_date)
+    def update
+      effective_date = Date.parse(params[:effective_at])
+      new_person = Entry.find_for(effective_date, key: params[:key]).first.versionable.deep_clone
+      new_person.assign_attributes(
+        first_name: person_params[:first_name],
+        last_name: person_params[:last_name],
+        email: person_params[:email],
+        title: person_params[:title],
+        employee_id: person_params[:employee_id]
+      )
+      entry = Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
+
+      Support::PersonEditor.new(entry).apply_intentions_going_forward
     end
 
     def destroy
@@ -32,14 +45,14 @@ module ReteamerApi
 
     def update_supervisor
       effective_date = Date.parse(person_params[:effective_date])
-      person = Entry.find_for(effective_date).where(versionable_type: People::Person.name, key: person_params[:key]).first.versionable.dup
+      person = Entry.find_for(effective_date, key: person_params[:key]).first.versionable.dup
       person.supervisor_key = person_params[:supervisor_key]
       Entry.create(effective_at: effective_date, key: person_params[:key], versionable: person)
     end
 
     def update_team
       effective_date = Date.parse(person_params[:effective_date])
-      assignment = Entry.find_for(effective_date).where(versionable_type: Assignment.name, key: person_params[:key]).first.versionable.dup
+      assignment = Entry.find_for(effective_date, key: person_params[:key]).first.versionable.dup
       assignment.team_key = person_params[:team_key]
       Entry.create(effective_at: effective_date, key: person_params[:key], versionable: assignment)
     end
@@ -47,7 +60,7 @@ module ReteamerApi
     private
 
     def person_params
-      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key)
+      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key, :first_name, :last_name, :email, :title, :employee_id)
     end
   end
 end

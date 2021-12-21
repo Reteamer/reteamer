@@ -1,3 +1,5 @@
+require_relative "component_under_test"
+
 class ProposalNavigatorComponent < ComponentUnderTest
   class << self
     def has_selected_proposal?(proposal_name)

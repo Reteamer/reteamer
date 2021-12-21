@@ -1,5 +1,6 @@
 .form-group {
   @apply mb-6 relative;
+  display: block;
 }
 
 .form-input {

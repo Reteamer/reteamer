@@ -1,3 +1,5 @@
+require_relative "component_under_test"
+
 class EffectiveDateFields < ComponentUnderTest
   class << self
     def visit_effective_date_fields_style_guide

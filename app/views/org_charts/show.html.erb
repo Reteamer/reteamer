@@ -7,7 +7,7 @@
   <div class="org-chart" data-controller="org-chart"
        data-action="
        newData@window->org-chart#handleNewOrgData
-       completeSupervisorChange@window->org-chart#handleCompleteChange
+       completeSupervisorChange@window->org-chart#handleCompleteSupervisorChange
        cancelSupervisorChange@window->org-chart#handleCancelChange
       "
        style="padding-left:0; padding-right:0">
@@ -44,5 +44,5 @@
   data-effective-date-modal-selected-date-value="<%= @selected_date %>"
   data-effective-date-modal-completed-event-value="completeDeactivatePersonChange"
   data-effective-date-modal-canceled-event-value="cancelDeactivatePersonChange"
-  data-effective-date-modal-open-event-value="personDeactivated"
+  data-effective-date-modal-open-event-value="personDeactivationStarted"
 ></effective-date-modal>

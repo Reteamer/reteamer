@@ -19,6 +19,7 @@
 FactoryBot.define do
   factory :entry, class: Entry do
     effective_at { Date.today }
+    active { true }
 
     factory :person_entry do
       transient do

@@ -6,9 +6,11 @@ class AccountLeader
 
     delegate :visit_team_chart,
       :drag_team_member,
+      :deactivate_team,
       to: TeamChartComponent
 
     delegate :deactivate_person,
+      :edit_person,
       to: ChartComponent
 
     delegate :visit_effective_date_fields_style_guide,
@@ -23,6 +25,7 @@ class AccountLeader
 
     delegate :make_new_proposal,
       :make_new_team,
+      :make_new_person,
       to: FloatingActionMenuComponent
 
     delegate :switch_to_proposal,

@@ -1,3 +1,5 @@
+require_relative "component_under_test"
+
 class DateNavigatorComponent < ComponentUnderTest
   class << self
     def visit_date_navigator_style_guide

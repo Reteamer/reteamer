@@ -1,12 +1,12 @@
 import {emitDatePickedEvent} from "../../event_emitter";
 
-export default function deletePerson(personData) {
-  const event = new CustomEvent("personDeactivated",
+export default function deleteTeam(teamData) {
+  const event = new CustomEvent("teamDeactivated",
     {
       detail: {
-        data: personData,
+        data: teamData,
         callback: function(effectiveDate) {
-          fetch("/reteamer_api/people/"+personData.id, {
+          fetch("/reteamer_api/teams/"+teamData.id, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json'
@@ -15,7 +15,7 @@ export default function deletePerson(personData) {
             body: JSON.stringify(
               {
                 "effective_at": effectiveDate,
-                "key": personData.id
+                "key": teamData.id
               }
             )
           }).then(() => {

@@ -2,12 +2,12 @@
 
 class TeamChart
   def self.find_for(effective_date)
-    teams = Entry.find_for(effective_date).where(versionable_type: Team.name).select(&:active).map do |team_entry|
+    teams = Entry.find_for(effective_date, versionable_type: Team.name).map do |team_entry|
       AssignedTeam.new(team_entry)
     end
 
-    people = Entry.find_for(effective_date).where(versionable_type: People::Person.name).select(&:active)
-    assignments = Entry.find_for(effective_date).where(versionable_type: Assignment.name).select(&:active).map(&:versionable)
+    people = Entry.find_for(effective_date, versionable_type: People::Person.name)
+    assignments = Entry.find_for(effective_date, versionable_type: Assignment.name).map(&:versionable)
     assignments.each do |assignment|
       assignee = people.find { |p| p.key == assignment.person_key }
       assigned_team = teams.find { |t| t.key == assignment.team_key }
@@ -42,11 +42,7 @@ class TeamChart
   end
 
   class Assignee
-    delegate :name, :title, :image_url, :employee_id, :type, to: :@person
-
-    def key
-      @person.key
-    end
+    delegate :key, :name, :first_name, :last_name, :title, :image_url, :employee_id, :type, to: :@person
 
     def assignment_key
       @assignment_entry.key
