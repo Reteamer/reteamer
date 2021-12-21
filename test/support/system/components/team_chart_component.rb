@@ -45,6 +45,20 @@ class TeamChartComponent < ComponentUnderTest
       end
     end
 
+    def edit_team(team_name, new_team_name)
+      team_node = find(".team-node", text: team_name)
+      team_node.hover
+      within(team_node) do
+        find(".edit-team").click
+      end
+
+      within("#team-form") do
+        click_on("Next")
+        fill_in("name", with: new_team_name)
+        click_on("Submit")
+      end
+    end
+
     private
 
     def wait_till_page_is_loaded

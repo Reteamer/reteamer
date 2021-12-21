@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
   static targets = [ "sectionOne", "sectionTwo" ]
@@ -24,8 +25,43 @@ export default class extends Controller {
     this.sectionTwoTarget.classList.remove("hidden")
   }
 
+  resetWizard() {
+    this.element.querySelector("#team-form").reset()
+    this.element.querySelector("team-form-group").classList.remove("hidden");
+    this.sectionOneTarget.classList.remove("hidden")
+    this.sectionTwoTarget.classList.add("hidden")
+    this.team = null;
+    this.callback = () => {}
+  }
+
+  handleTeamEdit(event) {
+    this.resetWizard();
+
+    this.team = event.detail.team
+    const form = this.element.querySelector("#team-form")
+    form.name.value = this.team.name
+    this.element.querySelector("team-form-group").classList.add("hidden");
+
+    this.callback = event.detail.callback
+  }
+
+  handleNewTeam(event) {
+    this.resetWizard();
+    this.callback = event.detail.callback
+  }
+
   handleSubmit(event) {
-    console.error("=============>", event);
+    event.preventDefault();
+    const form = event.target
+    let newTeamAttributes = {}
+
+    newTeamAttributes.name = form.name.value
+    newTeamAttributes.parent_key = form.parent_key.value
+
+    const effectiveDate =  form.effective_at.value
+    this.callback(effectiveDate, newTeamAttributes).then(() => {
+      emitEvent("teamDone")
+    })
   }
 
   connect() {

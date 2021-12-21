@@ -129,7 +129,11 @@ export default class TeamChartController extends Controller {
                 <circle r="10" cx="10" cy="10"></circle>
                 <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
               </g>
-              <g class="team-button hidden cursor-pointer" transform="translate(${d.width - 48},${d.height - 24})">
+              <g class="team-button edit-team" 
+                transform="translate(${d.width - 48},${d.height - 24})"
+                data-action="click->team-buttons#editTeam"
+                data-team-buttons-team-param="${encodeURIComponent(JSON.stringify(d.data))}" 
+              >
                 <circle r="10" cx="10" cy="10"></circle>
                 <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
               </g>

@@ -7,8 +7,11 @@ class OrgChartTest < ApplicationSystemTestCase
     login_as(thirty_rock_user)
   end
 
-  teardown do
-    logout
+  test "editing an existing person" do
+    AccountLeader.visit_team_chart
+    assert(TeamChartComponent.has_person?("Jonathan"))
+    AccountLeader.edit_person("Jonathan", "Bonathan")
+    assert(TeamChartComponent.has_person?("Bonathan"))
   end
 
   test "Changing a person's supervisor" do

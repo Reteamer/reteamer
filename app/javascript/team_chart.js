@@ -443,6 +443,10 @@ export class TeamChart {
         fill: #2b7bb9;
       }
       
+      .svg-chart-container .team-button {
+        fill: #2b7bb9;
+      }
+      
       .svg-chart-container .person-box {
         fill: white;
         stroke: lightgray;
