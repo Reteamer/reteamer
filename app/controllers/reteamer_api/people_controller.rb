@@ -50,13 +50,6 @@ module ReteamerApi
       Entry.create(effective_at: effective_date, key: person_params[:key], versionable: person)
     end
 
-    def update_team
-      effective_date = Date.parse(person_params[:effective_date])
-      assignment = Entry.find_for(effective_date, key: person_params[:key]).first.versionable.dup
-      assignment.team_key = person_params[:team_key]
-      Entry.create(effective_at: effective_date, key: person_params[:key], versionable: assignment)
-    end
-
     private
 
     def person_params

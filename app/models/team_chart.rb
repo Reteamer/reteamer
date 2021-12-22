@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TeamChart
+  FAKE_ROOT_NODE_KEY = "fake_root_node_key"
+
   def self.find_for(effective_date)
     teams = Entry.find_for(effective_date, versionable_type: Team.name).map do |team_entry|
       AssignedTeam.new(team_entry)
@@ -13,24 +15,19 @@ class TeamChart
       assignee = people.find { |p| p.key == assignment.person_key }
       assignee_keys << assignee&.key
       assigned_team = teams.find { |t| t.key == assignment.team_key }
-      assigned_team.members << Assignee.new(assignee, assignment) if assignee && assigned_team
+      assigned_team.members << Assignee.new(assignee, assignment.key) if assignee && assigned_team
     end
     fake_root_node = FakeRootNode.new
     team_keys = teams.map(&:key)
     teams.select { |team| !team_keys.include?(team.parent_key) }.map { |team| team.parent_key = fake_root_node.key }
     teams << fake_root_node
 
-    unassigned = people.select { |p| !assignee_keys.include?(p.key) }
-    TeamChartData.new(teams, unassigned)
-  end
+    unassigned_entries = people.select { |p| !assignee_keys.include?(p.key) }
+    unassignees = unassigned_entries.map { |entry| Assignee.new(entry, "unassigned") }
+    unassigned_team = UnassignedTeam.new(unassignees)
+    teams << unassigned_team
 
-  class TeamChartData
-    attr_reader :teams, :unassigned
-
-    def initialize(teams, unassigned)
-      @teams = teams
-      @unassigned = unassigned
-    end
+    teams
   end
 
   class AssignedTeam
@@ -57,14 +54,11 @@ class TeamChart
 
   class Assignee
     delegate :key, :name, :first_name, :last_name, :title, :image_url, :employee_id, :type, to: :@person
+    attr_reader :assignment_key
 
-    def assignment_key
-      @assignment_entry.key
-    end
-
-    def initialize(person_entry, assignment_entry)
+    def initialize(person_entry, assignment_key)
       @person = person_entry.versionable
-      @assignment_entry = assignment_entry
+      @assignment_key = assignment_key
     end
   end
 
@@ -74,7 +68,7 @@ class TeamChart
     end
 
     def key
-      "fake_root_node_key"
+      FAKE_ROOT_NODE_KEY
     end
 
     def name
@@ -83,6 +77,26 @@ class TeamChart
 
     def parent_key
       nil
+    end
+  end
+
+  class UnassignedTeam
+    attr_reader :members
+
+    def initialize(members = [])
+      @members = members
+    end
+
+    def key
+      "unassigned_team_key"
+    end
+
+    def name
+      "Unassigned"
+    end
+
+    def parent_key
+      FAKE_ROOT_NODE_KEY
     end
   end
 end

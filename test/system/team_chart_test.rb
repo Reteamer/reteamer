@@ -10,7 +10,7 @@ class TeamChartTest < ApplicationSystemTestCase
   test "Changing a person's team" do
     AccountLeader.visit_team_chart
     AccountLeader.drag_team_member("Cerie Xerox").to("Actors")
-    new_date = AccountLeader.select_custom_date
+    new_date = AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
     assert_equal(DateNavigatorComponent.selected_date, new_date)
 
     # TODO: assert Cerie is now on the Actors team. Maybe through snapshot comparisons?

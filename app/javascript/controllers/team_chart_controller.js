@@ -1,7 +1,7 @@
 import {Controller} from "@hotwired/stimulus"
 import {TeamChart} from '../team_chart';
 import * as d3 from "d3";
-import {emitDatePickedEvent} from "../event_emitter";
+import {emitDatePickedEvent, emitEvent} from "../event_emitter";
 import deleteTeam from "./support/delete_team";
 import buttonActions from "./team_chart_controller_button_actions";
 import chartFunctions from "./support/handle_cancel_change";
@@ -19,27 +19,6 @@ export default class TeamChartController extends Controller {
       svg.transition().call(zoomBehavior.translateBy, 0, -100)
       this.firstRender = false
     }
-  }
-
-  async handleCompleteAssignmentChange(event) {
-    const response = await fetch("/reteamer_api/people/update_team", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      body: JSON.stringify(
-        {
-          "person": {
-            "effective_date": event.detail.selectedDate,
-            "team_key": this.dropped.team_key,
-            "key": this.dropped.assignment_key
-          }
-        }
-      )
-    });
-    this.chart.finalizeDrop()
-    emitDatePickedEvent(event.detail.selectedDate)
   }
 
   personNodeWidth() {
@@ -253,11 +232,41 @@ export default class TeamChartController extends Controller {
 
     const attrs = this.chart.getChartState()
     if (this.chart.getDestinationDatum() !== null) {
-      const assignment_key = this.chart.getDraggingDatum().assignment_key;
-      const team_key = this.chart.getDestinationDatum().data.id
-      this.dropped = {assignment_key: assignment_key, team_key: team_key}
-      const personDroppedEvent = new CustomEvent("personDropped", {})
-      window.dispatchEvent(personDroppedEvent)
+      const assignmentKey = this.chart.getDraggingDatum().assignment_key;
+      const teamKey = this.chart.getDestinationDatum().data.key
+      const personKey = this.chart.getDraggingDatum().key
+
+      let method = "PUT"
+      let path = `/reteamer_api/assignments/${assignmentKey}`
+      let assignmentParams = {
+        "destination_team_key": teamKey,
+      }
+
+      if(assignmentKey === "unassigned") {
+        method = "POST"
+        assignmentParams.person_key = personKey
+        path = `/reteamer_api/assignments/`
+      } else {
+        assignmentParams.key = assignmentKey
+      }
+
+      emitEvent("personDropped", {
+        callback: (effectiveDate) => {
+          assignmentParams.effective_date = effectiveDate
+
+          fetch(path, {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify(assignmentParams)
+          }).then(() => {
+            this.chart.finalizeDrop()
+            emitDatePickedEvent(effectiveDate)
+          });
+        }
+      })
     } else {
       this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
       this.chart.finalizeDrop()

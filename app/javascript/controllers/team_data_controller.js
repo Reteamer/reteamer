@@ -22,7 +22,6 @@ export default class extends Controller {
       response.json().then(teamData => {
         emitEvent("newData", {
           teamData: teamData,
-          unassigned: teamData.unassigned,
           histogram: teamData.histogram
         })
       })
