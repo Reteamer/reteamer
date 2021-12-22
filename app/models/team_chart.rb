@@ -20,16 +20,16 @@ class TeamChart
     teams.select { |team| !team_keys.include?(team.parent_key) }.map { |team| team.parent_key = fake_root_node.key }
     teams << fake_root_node
 
-    the_slack = people.select { |p| !assignee_keys.include?(p.key) }
-    TeamChartData.new(teams, the_slack)
+    unassigned = people.select { |p| !assignee_keys.include?(p.key) }
+    TeamChartData.new(teams, unassigned)
   end
 
   class TeamChartData
-    attr_reader :teams, :the_slack
+    attr_reader :teams, :unassigned
 
-    def initialize(teams, the_slack)
+    def initialize(teams, unassigned)
       @teams = teams
-      @the_slack = the_slack
+      @unassigned = unassigned
     end
   end
 

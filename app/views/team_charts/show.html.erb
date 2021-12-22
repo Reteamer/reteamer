@@ -1,4 +1,4 @@
-<div class="row org-chart">
+<div class="row chart team-chart">
   <div class="px-4">
     <h1><%= t(".title") %></h1>
   </div>
@@ -13,6 +13,9 @@
        style="padding-left:0; padding-right:0">
     <%= render "shared/chart_remote_controls", chart_controller: "team-chart" %>
   </div>
+  <unassigned data-controller="unassigned" data-action="newData@window->unassigned#handleNewData">
+
+  </unassigned>
   <div data-controller="team-data"
        data-action="
           datePicked@window->team-data#handleDatePicked

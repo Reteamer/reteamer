@@ -1,0 +1,68 @@
+.person-node {
+  fill: none;
+  background-color: transparent;
+  border-radius: 2px;
+  overflow: visible;
+  display: block;
+
+  .active-drag .person-bar {
+    background: repeating-linear-gradient(
+        45deg,
+        #c7ae0c,
+        #c7ae0c 10px,
+        #b75a0e 10px,
+        #b75a0e 20px)
+  }
+
+  .person-button {
+    fill: #2b7bb9;
+  }
+
+  .person-box {
+    fill: white;
+    stroke: lightgray;
+    stroke-width: 1px;
+  }
+
+  .person-node img {
+    overflow: hidden;
+  }
+
+  .person-bar {
+    height: 10px;
+  }
+
+  .person-bar.contractor {
+    fill: #465298;
+  }
+
+  .person-bar.employee {
+    fill: #3AB6E3;
+  }
+
+  .person-bar.openreq {
+    fill: #74e776l;
+  }
+
+  person-info {
+    padding: 20px;
+    padding-top: 35px;
+    text-align: center;
+    display: block;
+  }
+
+  .person-name {
+    fill: #111672;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+  }
+
+  .person-title {
+    color: #404040;
+    font-size: 16px;
+    margin-top: 4px;
+    display: block;
+    text-align: center;
+  }
+}

@@ -7,8 +7,8 @@ json.histogram do
   end
 end
 
-json.the_slack do
-  json.array! @team_chart.the_slack do |person_entry|
+json.unassigned do
+  json.array! @team_chart.unassigned do |person_entry|
     json.key(person_entry.key)
     json.name(person_entry.versionable.name)
     json.firstName(person_entry.versionable.first_name)
@@ -16,6 +16,7 @@ json.the_slack do
     json.title(person_entry.versionable.title)
     json.type(person_entry.versionable.type.demodulize.downcase)
     json.employee_id(person_entry.versionable.employee_id)
+    json.image_url(person_entry.versionable.image_url || "https://www.gravatar.com/avatar/?s=50")
   end
 end
 

@@ -1,0 +1,38 @@
+.team-node {
+  .team-box {
+    fill: white;
+    stroke: lightgray;
+    stroke-width: 1px;
+  }
+
+  .team-bar {
+    fill: #6d9bb4;
+    height: 10px;
+  }
+
+  .team-name {
+    color: #111672;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  team-details {
+    width: 100%;
+  }
+
+  team-member-count {
+
+  }
+
+  people-box {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .team-button {
+    fill: #2b7bb9;
+  }
+}

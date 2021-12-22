@@ -32,3 +32,6 @@
 @import "flatpickr/dist/flatpickr.css";
 
 @import "fab.scss";
+@import "chart.scss";
+@import "person_node.scss";
+@import "team_node.scss";

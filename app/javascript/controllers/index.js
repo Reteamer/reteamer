@@ -101,5 +101,8 @@ application.register("turbo-native--push-notifications", TurboNative__PushNotifi
 import TurboNative__SignOutController from "./turbo_native/sign_out_controller.js"
 application.register("turbo-native--sign-out", TurboNative__SignOutController)
 
+import UnassignedController from "./unassigned_controller.js"
+application.register("unassigned", UnassignedController)
+
 import UrlDateManagerController from "./url_date_manager_controller.js"
 application.register("url-date-manager", UrlDateManagerController)
