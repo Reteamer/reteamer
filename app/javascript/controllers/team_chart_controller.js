@@ -151,46 +151,13 @@ export default class TeamChartController extends Controller {
           .join("g")
           .classed("person-node", true)
           .attr("data-controller", "person-node")
+          .attr("data-person-node-person-string-value", (member) => encodeURIComponent(JSON.stringify(member)))
           .attr("transform",(d, i) => {
             const x = i%2 * (self.personNodeWidth() + self.personPadding());
             const y = Math.floor(i/2) * (self.personNodeHeight() + self.personPadding());
             return `translate(${x},${y})`
           })
-          .html(member => `
-            <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}" />
-            <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}" />
-            <clipPath id="clipCircle">
-              <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"/>
-            </clipPath>
-            <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" />
-            <text class="employment-id" x="${self.personNodeWidth()-150}" y="70">${member.employee_id}</text>
-            <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
-            <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
-              <div class="person-title">${member.title}</div>
-            </foreignObject>
-            <g class="people-buttons hidden" data-controller="person-buttons">
-              <g class="person-button delete-person" 
-                data-action="click->person-buttons#deletePerson"
-                data-person-buttons-person-key-param="${member.id}"  
-                transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})"
-              >
-                <circle r="10" cx="10" cy="10"/>
-                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"/>
-              </g>
-              <g class="person-button edit-person"
-                data-action="click->person-buttons#editPerson"
-                data-person-buttons-person-param="${encodeURIComponent(JSON.stringify(member))}" 
-                transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})"
-              >
-                <circle r="10" cx="10" cy="10"/>
-                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"/>
-              </g>
-            </g>
-          </g>
-        `)
-        d3.selectAll(".person-button")
-          .call(d3.drag()
-            .on("start", null))
+
 
         d3.selectAll(".team-button")
           .attr("cursor", "pointer")
@@ -239,10 +206,6 @@ export default class TeamChartController extends Controller {
           })
       })
   }
-
-  avatarDiameter() { return 60; }
-
-  avatarRadius() { return this.avatarDiameter()/2; }
 
   getNodeWidth(d) {
     return d.data.members.length > 1 ? (2 * this.personNodeWidth()) + this.personPadding() * 3 : this.personNodeWidth() + this.personPadding() * 2;

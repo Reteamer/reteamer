@@ -116,14 +116,6 @@ export default class OrgChartController extends Controller {
     }
   }
 
-  avatarDiameter() { return 60; }
-
-  avatarRadius() { return this.avatarDiameter()/2; }
-
-  personNodeWidth() { return 250; }
-
-  personNodeHeight() {return 190;}
-
   async connect() {
     this.firstRender = true;
     const container = document.createElement("div");
@@ -170,51 +162,17 @@ export default class OrgChartController extends Controller {
         d3.select(this).html(d => {
           const member = d.data;
           return `
-          <g class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)" data-controller="person-node">
-            <rect class="person-box" width="${self.personNodeWidth()}" height="${self.personNodeHeight()-self.avatarRadius()}" y="${self.avatarRadius()}"></rect>
-            <rect class="person-bar ${member.type}" width="${self.personNodeWidth()}" y="${self.avatarRadius()}"></rect>
-            <clipPath id="clipCircle">
-              <circle r="${self.avatarRadius()}" cx="${self.personNodeWidth()/2}" cy="${self.avatarRadius()}"></circle>
-            </clipPath>
-            <image href="${member.image_url || ''}" x="${self.personNodeWidth()/2 - self.avatarRadius()}" width="${self.avatarDiameter()}" height="${self.avatarDiameter()}" clip-path="url(#clipCircle)" ></image>
-            <text class="employment-id" x="${self.personNodeWidth()-15}" y="70">${member.employee_id}</text>
-            <text class="person-name" x="${self.personNodeWidth()/2}" text-anchor="middle" y="90">${member.name}</text>
-            <foreignObject  y="110" width="${self.personNodeWidth()}" height="40">
-              <div class="person-title">${member.title}</div>
-              ${d.data._directSubordinates > 0 ? `
-                  <div style="display:flex;justify-content:space-between;padding-left:15px;padding-right:15px;">
-                    <div> Manages:  ${d.data._directSubordinates} 👤</div>
-                    <div> Oversees: ${d.data._totalSubordinates} 👤</div>
-                  </div>` : ""
-              }
-            </foreignObject>
-            <g class="people-buttons hidden" data-controller="person-buttons">
-              <g class="person-button cursor-pointer delete-person" 
-                data-action="click->person-buttons#deletePerson"
-                data-person-buttons-person-key-param="${d.data.id}" 
-                transform="translate(${self.personNodeWidth() - 24},${self.personNodeHeight() - 24})"
-              >
-                <circle r="10" cx="10" cy="10"></circle>
-                <image xlink:href="trash.svg" x="4" y="4" height="12" width="12"></image>
-              </g>
-              <g class="person-button hidden cursor-pointer" 
-                data-action="click->person-buttons#editPerson"
-                data-person-buttons-person-param="${encodeURIComponent(JSON.stringify(d.data))}" 
-                transform="translate(${self.personNodeWidth() - 48},${self.personNodeHeight() - 24})"
-              >
-                <circle r="10" cx="10" cy="10"></circle>
-                <image xlink:href="pencil-solid.svg" x="4" y="4" height="12" width="12"></image>
-              </g>
-            </g>
+          <g 
+            class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" 
+            transform="translate(0,0)" 
+            data-controller="person-node"
+            data-person-node-person-string-value="${encodeURIComponent(JSON.stringify(d.data))}"
+          >
           </g>
         `});
         d3.selectAll("g.nodes-wrapper g.node")
           .selectAll(".person-node")
           .data(function(d) { return [d]; });
-
-        d3.selectAll(".person-button")
-          .call(d3.drag()
-            .on("start", null))
 
         d3.selectAll("g.nodes-wrapper .person-node")
           .on("mouseover", function(event, d) {
