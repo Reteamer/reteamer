@@ -38,6 +38,10 @@ class TeamChart
       @team_entry.versionable.name
     end
 
+    def type
+      "normal"
+    end
+
     def key
       @team_entry.key
     end
@@ -71,6 +75,10 @@ class TeamChart
       FAKE_ROOT_NODE_KEY
     end
 
+    def type
+      "fake-root-node"
+    end
+
     def name
       ActsAsTenant.current_tenant.name
     end
@@ -89,6 +97,10 @@ class TeamChart
 
     def key
       "unassigned_team_key"
+    end
+
+    def type
+      "unassigned"
     end
 
     def name

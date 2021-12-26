@@ -11,6 +11,7 @@ json.chart do
   json.array! @team_chart do |team|
     json.id(team.key) # deprecated
     json.key(team.key)
+    json.type(team.type)
     json.parentId(team.parent_key) # deprecated
     json.parentKey(team.parent_key)
     json.name(team.name)

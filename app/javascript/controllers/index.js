@@ -92,6 +92,9 @@ application.register("team-data", TeamDataController)
 import TeamFormController from "./team_form_controller.js"
 application.register("team-form", TeamFormController)
 
+import TeamNodeController from "./team_node_controller.js"
+application.register("team-node", TeamNodeController)
+
 import TooltipController from "./tooltip_controller.js"
 application.register("tooltip", TooltipController)
 

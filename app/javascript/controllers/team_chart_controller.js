@@ -40,15 +40,9 @@ export default class TeamChartController extends Controller {
     }
   };
 
-  isDragging() {
-    return this.chart.getDraggingDatum();
-  }
-
-  handleTeamMouseOver(domNode, d) {
-    if (!this.isDragging()) {
-      this.showButtons(".team-buttons", domNode);
-    }
-  };
+  // isDragging() {
+  //   return this.chart.getDraggingDatum();
+  // }
 
   connect() {
     this.firstRender = true;
@@ -89,7 +83,12 @@ export default class TeamChartController extends Controller {
       .compactMarginPair(d => 80)
       .nodeContent(function(d, i, nodes, attrs) { //this is the dom node
         d3.select(this).html(`
-          <g class="team-node ${d.depth == 0 ? "fake-root-node" : ""}" transform="translate(0,0)">
+          <g 
+            class="team-node ${d.data.type}" 
+            data-controller="team-node"
+            data-team-node-type-value="${d.data.type}"
+            transform="translate(0,0)"
+          >
             <rect class="team-box" width="${d.width}" height="${d.height}" ></rect>
             <rect class="team-bar" width="${d.width}" ></rect>
             <foreignObject y="30" height="75" width="${d.width}">
@@ -137,25 +136,11 @@ export default class TeamChartController extends Controller {
             return `translate(${x},${y})`
           })
 
-
-        d3.selectAll(".team-button")
-          .attr("cursor", "pointer")
-          .call(d3.drag()
-            .on("start", null))
-
         d3.selectAll("g.node").each(function(d) {
           d3.select(this).selectAll(".delete-team").on("click", function(e) {
             deleteTeam(d.data)
           })
         })
-
-        d3.selectAll("g.team-node")
-          .on("mouseover", function(event, d) {
-            self.handleTeamMouseOver(this, d);
-          })
-          .on("mouseout", function(event, d) {
-            self.handleTeamMouseOut(this, d);
-          })
 
         d3.selectAll("g.nodes-wrapper g.node")
           .on("mouseover", function(event, d) {
@@ -201,10 +186,6 @@ export default class TeamChartController extends Controller {
     if(this.chart.getDraggingDatum()) {
       this.chart.setDestinationDatum(null);
     }
-  };
-
-  handleTeamMouseOut(domNode, d) {
-    this.hideButtons(".team-buttons", domNode);
   };
 
   initiateDrag(d, domNode) {
