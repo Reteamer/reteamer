@@ -23,14 +23,6 @@ export default class OrgChartController extends Controller {
     this.clearDraggingNode();
   }
 
-  showButtons(selector, domNode) {
-    d3.select(domNode).select(selector).classed("hidden", false)
-  }
-
-  hideButtons(selector, domNode) {
-    d3.select(domNode).select(selector).classed("hidden", true)
-  }
-
   setDraggingDatum(d) {
     this.draggingDatum = d
     d3.selectAll(".person-node").attr("data-person-node-drag-in-progress-value", true)
@@ -165,7 +157,7 @@ export default class OrgChartController extends Controller {
             class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" 
             transform="translate(0,0)" 
             data-controller="person-node"
-            data-person-node-person-string-value="${encodeURIComponent(JSON.stringify(d.data))}"
+            data-person-node-person-string-value="${encodeURIComponent(JSON.stringify(member))}"
           >
           </g>
         `});
@@ -174,7 +166,7 @@ export default class OrgChartController extends Controller {
           .data(function(d) { return [d]; });
 
         d3.selectAll("g.nodes-wrapper .person-node")
-          .on("mouseover", function(event, d) {
+          .on("mouseover.chart", function(event, d) {
             if(self.dragInProgress()) {
               if (self.targetIsDescendant(d)) {
                 d3.select(this).classed("blur", true)
@@ -182,18 +174,14 @@ export default class OrgChartController extends Controller {
                 self.setDestinationDatum(d);
                 d3.select(this).classed("drop-target", true)
               }
-            } else {
-              self.showButtons(".people-buttons", this);
             }
           })
-          .on("mouseout", function(event, d) {
+          .on("mouseout.chart", function(event, d) {
             d3.select(this)
               .classed("drop-target", false)
               .classed("blur", false)
             if (self.dragInProgress()) {
-              self.setDestinationDatum(null);
-            } else {
-              self.hideButtons(".people-buttons", this);
+              self.clearDestinationDatum();
             }
           })
           .call(d3.drag()

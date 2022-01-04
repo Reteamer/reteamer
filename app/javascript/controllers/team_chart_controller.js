@@ -162,12 +162,6 @@ export default class TeamChartController extends Controller {
               self.endDrag(this);
             })
           )
-          .on("mouseover", function(event, d) {
-            self.showButtons(".people-buttons", this);
-          })
-          .on("mouseout", function(event, d) {
-            self.hideButtons(".people-buttons", this);
-          })
       })
   }
 
