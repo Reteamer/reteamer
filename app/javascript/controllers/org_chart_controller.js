@@ -3,70 +3,10 @@ import {TreeChart} from '../tree_chart/tree_chart';
 import * as d3 from "d3"
 import {emitDatePickedEvent} from "../event_emitter";
 import buttonActions from "./tree_chart_controller_button_actions"
+import handleCancelChange from "./support/handle_cancel_change"
+import personDragAndDrop from "./support/person_drag_and_drop"
 
 export default class OrgChartController extends Controller {
-  handleCancelChange(event) {
-    const attrs = this.chart.getChartState()
-    this.restoreNodePosition(d3.select(this.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
-    this.finalizeDrop()
-  }
-
-  restoreNodePosition(node, duration, x, y) {
-    node.transition()
-      .duration(duration)
-      .attr("transform", "translate(" + x + "," + y + ")")
-  }
-
-  finalizeDrop() {
-    this.clearDraggingDatum();
-    this.clearDestinationDatum();
-    this.clearDraggingNode();
-  }
-
-  setDraggingDatum(d) {
-    this.draggingDatum = d
-    d3.selectAll(".person-node").attr("data-person-node-drag-in-progress-value", true)
-  }
-
-  clearDraggingDatum(d) {
-    this.draggingDatum = null
-    d3.selectAll(".person-node").attr("data-person-node-drag-in-progress-value", false)
-  }
-
-  getDraggingDatum() {
-    return this.draggingDatum
-  }
-
-  setDestinationDatum(d) {
-    if(!this.targetIsDescendant(d)) {
-      this.destinationDatum = d
-    }
-  }
-
-  clearDestinationDatum() {
-      this.destinationDatum = null
-  }
-
-  getDestinationDatum() {
-    return this.destinationDatum
-  }
-
-  setDraggingNode(node) {
-    this.draggingNode = node
-  }
-
-  getDraggingNode() {
-    return this.draggingNode;
-  }
-
-  clearDraggingNode() {
-    this.draggingNode = null
-  }
-
-  targetIsDescendant(d) {
-    return this.getDraggingDatum().descendants().includes(d)
-  }
-
   handleNewOrgData(event) {
     this.orgData = event.detail.orgData;
     this.chart
@@ -161,11 +101,11 @@ export default class OrgChartController extends Controller {
           >
           </g>
         `});
-        d3.selectAll("g.nodes-wrapper g.node")
+        d3.selectAll("g.node")
           .selectAll(".person-node")
           .data(function(d) { return [d]; });
 
-        d3.selectAll("g.nodes-wrapper .person-node")
+        d3.selectAll(".person-node")
           .on("mouseover.chart", function(event, d) {
             if(self.dragInProgress()) {
               if (self.targetIsDescendant(d)) {
@@ -237,3 +177,5 @@ export default class OrgChartController extends Controller {
 }
 
 Object.assign(OrgChartController.prototype, buttonActions);
+Object.assign(OrgChartController.prototype, handleCancelChange);
+Object.assign(OrgChartController.prototype, personDragAndDrop);

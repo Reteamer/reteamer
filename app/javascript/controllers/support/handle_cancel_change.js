@@ -6,12 +6,4 @@ export default {
     this.chart.restoreNodePosition(d3.select(this.chart.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
     this.chart.finalizeDrop()
   },
-
-  showButtons(selector, domNode) {
-    d3.select(domNode).select(selector).classed("hidden", false)
-  },
-
-  hideButtons(selector, domNode) {
-    d3.select(domNode).select(selector).classed("hidden", true)
-  }
 }

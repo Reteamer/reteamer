@@ -36,5 +36,9 @@ export default {
 
   getDraggingNode() {
     return this.draggingNode;
+  },
+
+  targetIsDescendant(d) {
+    return this.getDraggingDatum().descendants().includes(d)
   }
 }

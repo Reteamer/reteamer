@@ -5,6 +5,7 @@ import {emitDatePickedEvent, emitEvent} from "../event_emitter";
 import deleteTeam from "./support/delete_team";
 import buttonActions from "./tree_chart_controller_button_actions";
 import chartFunctions from "./support/handle_cancel_change";
+import person_drag_and_drop from "./support/person_drag_and_drop";
 
 export default class TeamChartController extends Controller {
   handleNewTeamData(event) {
@@ -34,15 +35,11 @@ export default class TeamChartController extends Controller {
   }
 
   handlePersonMouseOver(domNode, d) {
-    if(this.chart.getDraggingDatum()) {
-      this.chart.setDestinationDatum(d);
+    if(this.getDraggingDatum()) {
+      this.setDestinationDatum(d);
       d3.select(domNode).classed("drop-target", true)
     }
   };
-
-  // isDragging() {
-  //   return this.chart.getDraggingDatum();
-  // }
 
   connect() {
     this.firstRender = true;
@@ -177,14 +174,14 @@ export default class TeamChartController extends Controller {
 
   handlePersonMouseOut(domNode, d) {
     d3.select(domNode).classed("drop-target", false)
-    if(this.chart.getDraggingDatum()) {
-      this.chart.setDestinationDatum(null);
+    if(this.getDraggingDatum()) {
+      this.setDestinationDatum(null);
     }
   };
 
   initiateDrag(d, domNode) {
-    this.chart.setDraggingDatum(d);
-    this.chart.setDraggingNode(domNode);
+    this.setDraggingDatum(d);
+    this.setDraggingNode(domNode);
 
     let startCoords = this.chart.getCoords(domNode)
     this.dragStartX = startCoords[0]
@@ -206,10 +203,10 @@ export default class TeamChartController extends Controller {
       .classed("active-drag", false)
 
     const attrs = this.chart.getChartState()
-    if (this.chart.getDestinationDatum() !== null) {
-      const assignmentKey = this.chart.getDraggingDatum().assignment_key;
-      const teamKey = this.chart.getDestinationDatum().data.key
-      const personKey = this.chart.getDraggingDatum().key
+    if (this.getDestinationDatum() !== null) {
+      const assignmentKey = this.getDraggingDatum().assignment_key;
+      const teamKey = this.getDestinationDatum().data.key
+      const personKey = this.getDraggingDatum().key
 
       let method = "PUT"
       let path = `/reteamer_api/assignments/${assignmentKey}`
@@ -237,18 +234,19 @@ export default class TeamChartController extends Controller {
             redirect: 'follow',
             body: JSON.stringify(assignmentParams)
           }).then(() => {
-            this.chart.finalizeDrop()
+            this.finalizeDrop()
             emitDatePickedEvent(effectiveDate)
           });
         }
       })
     } else {
-      this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
-      this.chart.finalizeDrop()
+      this.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
+      this.finalizeDrop()
     }
   }
 }
 
 Object.assign(TeamChartController.prototype, buttonActions);
 Object.assign(TeamChartController.prototype, chartFunctions);
+Object.assign(TeamChartController.prototype, person_drag_and_drop);
 
