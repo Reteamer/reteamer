@@ -7,8 +7,20 @@ import buttonActions from "./tree_chart_controller_button_actions"
 export default class OrgChartController extends Controller {
   handleCancelChange(event) {
     const attrs = this.chart.getChartState()
-    this.chart.restoreNodePosition(d3.select(this.chart.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
-    this.chart.finalizeDrop()
+    this.restoreNodePosition(d3.select(this.getDraggingNode()), attrs.duration, this.dragStartX, this.dragStartY);
+    this.finalizeDrop()
+  }
+
+  restoreNodePosition(node, duration, x, y) {
+    node.transition()
+      .duration(duration)
+      .attr("transform", "translate(" + x + "," + y + ")")
+  }
+
+  finalizeDrop() {
+    this.clearDraggingDatum();
+    this.clearDestinationDatum();
+    this.clearDraggingNode();
   }
 
   showButtons(selector, domNode) {
@@ -21,6 +33,12 @@ export default class OrgChartController extends Controller {
 
   setDraggingDatum(d) {
     this.draggingDatum = d
+    d3.selectAll(".person-node").attr("data-person-node-drag-in-progress-value", true)
+  }
+
+  clearDraggingDatum(d) {
+    this.draggingDatum = null
+    d3.selectAll(".person-node").attr("data-person-node-drag-in-progress-value", false)
   }
 
   getDraggingDatum() {
@@ -33,6 +51,10 @@ export default class OrgChartController extends Controller {
     }
   }
 
+  clearDestinationDatum() {
+      this.destinationDatum = null
+  }
+
   getDestinationDatum() {
     return this.destinationDatum
   }
@@ -43,6 +65,10 @@ export default class OrgChartController extends Controller {
 
   getDraggingNode() {
     return this.draggingNode;
+  }
+
+  clearDraggingNode() {
+    this.draggingNode = null
   }
 
   targetIsDescendant(d) {
@@ -81,7 +107,7 @@ export default class OrgChartController extends Controller {
         }
       )
     });
-    this.chart.finalizeDrop()
+    this.finalizeDrop()
     emitDatePickedEvent(event.detail.selectedDate)
   }
 
@@ -213,8 +239,8 @@ export default class OrgChartController extends Controller {
                 )
                 window.dispatchEvent(personDroppedEvent)
               } else {
-                self.chart.restoreNodePosition(d3.select(this), attrs1.duration, self.dragStartX, self.dragStartY);
-                self.chart.finalizeDrop()
+                self.restoreNodePosition(d3.select(this), attrs1.duration, self.dragStartX, self.dragStartY);
+                self.finalizeDrop()
               }
             })
           )
