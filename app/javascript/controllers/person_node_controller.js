@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import * as d3 from "d3";
 
 export default class extends Controller {
-  static values = { personString: String }
+  static values = { personString: String, dragInProgress: Boolean }
 
   connect() {
     const person = JSON.parse(decodeURIComponent(this.personStringValue));
