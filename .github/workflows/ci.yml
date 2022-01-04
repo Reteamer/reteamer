@@ -102,4 +102,4 @@ jobs:
           bin/rails test:prepare
           bin/rails db:test:prepare
           bin/rails test
-          bin/rails test:system
+          RUN_STRIPE_TEST=true bin/rails test:system

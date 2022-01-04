@@ -31,6 +31,4 @@ class DateNavigatorTest < ApplicationSystemTestCase
     assert_equal(DateNavigatorComponent.date_cursor.date, future_date)
     assert_external_components_are_updated(future_date)
   end
-
-  # TODO: test "can navigate with url"
 end

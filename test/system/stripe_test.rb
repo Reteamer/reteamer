@@ -5,6 +5,8 @@ rescue LoadError
   return
 end
 
+return unless ENV["RUN_STRIPE_TEST"] == "true"
+
 require "application_system_test_case"
 
 class StripeTest < ApplicationSystemTestCase

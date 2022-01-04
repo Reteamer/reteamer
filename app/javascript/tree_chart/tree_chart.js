@@ -5,14 +5,14 @@ import {zoom, zoomIdentity} from "d3-zoom";
 import {drag} from "d3-drag";
 import {flextree} from "d3-flextree";
 import {linkHorizontal} from "d3-shape";
-import initializeEnterExitUpdatePattern from "./team_chart/patternify";
-import api from "./team_chart/api";
-import Diagonals from "./team_chart/diagonals";
-import updateLinks from "./team_chart/update_links";
-import updateConnections from "./team_chart/update_connections";
-import updateNodes from "./team_chart/update_nodes";
-import Utils from "./team_chart/utils";
-import drag_and_drop from "./team_chart/drag_and_drop";
+import initializeEnterExitUpdatePattern from "./patternify";
+import api from "./api";
+import Diagonals from "./diagonals";
+import updateLinks from "./update_links";
+import updateConnections from "./update_connections";
+import updateNodes from "./update_nodes";
+import Utils from "./utils";
+import drag_and_drop from "./drag_and_drop";
 
 const d3 = {
   selection,
@@ -29,7 +29,7 @@ const d3 = {
   linkHorizontal,
 }
 
-export class TeamChart {
+export class TreeChart {
   constructor() {
     // Exposed variables
     const attrs = {
@@ -811,5 +811,5 @@ export class TeamChart {
   }
 }
 
-Object.assign(TeamChart.prototype, api);
-Object.assign(TeamChart.prototype, drag_and_drop);
+Object.assign(TreeChart.prototype, api);
+Object.assign(TreeChart.prototype, drag_and_drop);

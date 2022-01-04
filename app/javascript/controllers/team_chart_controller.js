@@ -1,9 +1,9 @@
 import {Controller} from "@hotwired/stimulus"
-import {TeamChart} from '../team_chart';
+import {TreeChart} from '../tree_chart/tree_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent, emitEvent} from "../event_emitter";
 import deleteTeam from "./support/delete_team";
-import buttonActions from "./team_chart_controller_button_actions";
+import buttonActions from "./tree_chart_controller_button_actions";
 import chartFunctions from "./support/handle_cancel_change";
 
 export default class TeamChartController extends Controller {
@@ -51,7 +51,7 @@ export default class TeamChartController extends Controller {
     this.element.appendChild(container);
 
     const self = this;
-    this.chart = new TeamChart()
+    this.chart = new TreeChart()
       .container('.chart-container')
       .nodeWidth(d => this.getNodeWidth(d))
       .initialZoom(0.7)
