@@ -17,8 +17,6 @@ class DateNavigatorTest < ApplicationSystemTestCase
 
   test "Using the slider" do
     AccountLeader.visit_date_navigator_style_guide
-    assert_no_selector(*OrgChartComponent.future_people_selector)
-
     future_date = AccountLeader.clicks_on_future_date
 
     assert_equal(DateNavigatorComponent.input_value, future_date)
@@ -27,13 +25,10 @@ class DateNavigatorTest < ApplicationSystemTestCase
 
   test "Using the input" do
     AccountLeader.visit_date_navigator_style_guide
-    assert_no_selector(*OrgChartComponent.future_people_selector)
-
     future_date = AccountLeader.enters_future_date
-
     AccountLeader.hover_on(".selected-date-marker")
-    assert_equal(DateNavigatorComponent.date_cursor.date, future_date)
 
+    assert_equal(DateNavigatorComponent.date_cursor.date, future_date)
     assert_external_components_are_updated(future_date)
   end
 
