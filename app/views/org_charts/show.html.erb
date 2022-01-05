@@ -3,7 +3,6 @@
     <h1><%= t(".title") %></h1>
   </div>
   <%= render "shared/date_navigator", selected_date: @selected_date %>
-  <%= render "shared/proposal_navigator", selected_proposal: @selected_proposal, proposal_names: @proposal_names %>
   <div class="org-chart" data-controller="org-chart"
        data-action="
        newData@window->org-chart#handleNewOrgData
