@@ -26,9 +26,17 @@
   id="change-assignment-effective-date-modal"
   data-controller="effective-date-modal"
   data-effective-date-modal-selected-date-value="<%= @selected_date %>"
-  data-effective-date-modal-completed-event-value="completeTeamChange"
-  data-effective-date-modal-canceled-event-value="cancelTeamChange"
+  data-effective-date-modal-completed-event-value="completeAssignmentChange"
+  data-effective-date-modal-canceled-event-value="cancelAssignmentChange"
   data-effective-date-modal-open-event-value="personDropped"
+></effective-date-modal>
+<effective-date-modal
+  id="change-team-parent-effective-date-modal"
+  data-controller="effective-date-modal"
+  data-effective-date-modal-selected-date-value="<%= @selected_date %>"
+  data-effective-date-modal-completed-event-value="completeTeamParentChange"
+  data-effective-date-modal-canceled-event-value="cancelTeamParentChange"
+  data-effective-date-modal-open-event-value="teamDropped"
 ></effective-date-modal>
 <effective-date-modal
   id="deactivate-person-effective-date-modal"

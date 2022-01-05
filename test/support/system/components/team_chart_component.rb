@@ -17,6 +17,12 @@ class TeamChartComponent < ComponentUnderTest
       Draggable.new(dragging_element)
     end
 
+    def drag_team(team_name)
+      dragging_element = find(".team-node", text: team_name)
+      dragging_element.hover
+      Draggable.new(dragging_element)
+    end
+
     def has_no_person?(person_name)
       has_no_selector?(".person-node", text: person_name)
     end

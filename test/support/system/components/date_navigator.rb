@@ -6,10 +6,10 @@ class DateNavigatorComponent < ComponentUnderTest
       visit date_navigator_path
     end
 
-    def clicks_on_future_date
+    def clicks_weeks_in_future(weeks = 2)
       hovered_date = nil
       within("date-navigator") do
-        some_place_in_the_future = all(".change-counts", visible: :all)[2]
+        some_place_in_the_future = all(".change-counts", visible: :all)[weeks]
         x = some_place_in_the_future.rect.x.to_i
         y = 20
         find(".mouse-catcher").click(x: x, y: y)

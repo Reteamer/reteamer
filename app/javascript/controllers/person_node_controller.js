@@ -2,9 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 import * as d3 from "d3";
 
 export default class extends Controller {
-  static values = { personString: String }
+  static values = { personString: String, dragInProgress: Boolean }
 
   connect() {
+    const self = this;
     const person = JSON.parse(decodeURIComponent(this.personStringValue));
     const avatarRadius = 30;
     const avatarDiameter = avatarRadius*2;
@@ -45,5 +46,17 @@ export default class extends Controller {
     d3.selectAll(".person-button")
       .call(d3.drag()
         .on("start", null))
+
+    d3.select(this.element)
+      .on("mouseover.person-node", function(event, d) {
+        if(!self.dragInProgressValue) {
+          d3.select(this).select(".people-buttons").classed("hidden", false)
+        }
+      })
+      .on("mouseout.person-node", function(event, d) {
+        if (!self.dragInProgressValue) {
+          d3.select(this).select(".people-buttons").classed("hidden", true)
+        }
+      })
   }
 }

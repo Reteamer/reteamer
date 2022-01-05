@@ -12,7 +12,6 @@ import updateLinks from "./update_links";
 import updateConnections from "./update_connections";
 import updateNodes from "./update_nodes";
 import Utils from "./utils";
-import drag_and_drop from "./drag_and_drop";
 
 const d3 = {
   selection,
@@ -36,7 +35,7 @@ export class TreeChart {
       id: `ID${Math.floor(Math.random() * 1000000)}`, // Id for event handlings
       firstDraw: true,
       svgWidth: 800,
-      svgHeight: window.innerHeight - 100,
+      svgHeight: window.innerHeight - 320,
       container: "body",
       defaultTextFill: "#2C3E50",
       defaultFont: "Helvetica",
@@ -812,4 +811,3 @@ export class TreeChart {
 }
 
 Object.assign(TreeChart.prototype, api);
-Object.assign(TreeChart.prototype, drag_and_drop);

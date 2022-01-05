@@ -3,7 +3,8 @@ import {TreeChart} from '../tree_chart/tree_chart';
 import * as d3 from "d3"
 import {emitDatePickedEvent} from "../event_emitter";
 import buttonActions from "./tree_chart_controller_button_actions"
-import chartFunctions from "./support/handle_cancel_change";
+import handleCancelChange from "./support/handle_cancel_change"
+import personDragAndDrop from "./support/person_drag_and_drop"
 
 export default class OrgChartController extends Controller {
   handleNewOrgData(event) {
@@ -38,82 +39,8 @@ export default class OrgChartController extends Controller {
         }
       )
     });
-    this.chart.finalizeDrop()
+    this.finalizeDrop()
     emitDatePickedEvent(event.detail.selectedDate)
-  }
-
-  handleMouseOver(domNode, d) {
-    if(this.isDragging()) {
-      this.chart.setDestinationDatum(d);
-      if(this.chart.getDraggingDatum().descendants().includes(d)) {
-        d3.select(domNode)
-          .classed("blur", true)
-      } else {
-        d3.select(domNode).classed("drop-target", true)
-      }
-    } else {
-      this.showButtons(".people-buttons", domNode);
-    }
-  };
-
-
-  handleMouseOut(domNode, d) {
-    d3.select(domNode)
-      .classed("drop-target", false)
-      .classed("blur", false)
-    if(this.isDragging()) {
-      this.chart.setDestinationDatum(null);
-    } else {
-      this.hideButtons(".people-buttons", domNode);
-    }
-  };
-
-  isDragging() {
-    return this.chart.getDraggingDatum();
-  }
-
-  initiateDrag(d, domNode) {
-    this.chart.setDraggingDatum(d);
-    this.chart.setDraggingNode(domNode);
-
-    let startCoords = this.chart.getCoords(domNode)
-    this.dragStartX = startCoords[0]
-    this.dragStartY = startCoords[1]
-    const node = d3.select(domNode);
-    node
-      .attr('pointer-events', 'none')
-      .classed('active-drag', true)
-    d3.selectAll('g.node')
-      .filter((group) => group.id === d.id)
-      .raise()
-  }
-
-  endDrag(domNode) {
-    d3.select(domNode)
-      .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
-      .classed("active-drag", false)
-
-    const attrs = this.chart.getChartState()
-    const destinationDatum = this.chart.getDestinationDatum();
-    const draggingDatum = this.chart.getDraggingDatum();
-
-    if (destinationDatum !== null && !draggingDatum.descendants().includes(destinationDatum)) {
-      const person_key = draggingDatum.data.id;
-      const supervisor_key = destinationDatum.data.id
-      this.dropped = {person_key: person_key, supervisor_key: supervisor_key}
-      const personDroppedEvent = new CustomEvent("personDropped",
-        {
-          detail: {
-            person_key: person_key,
-            supervisor_key: supervisor_key
-          }
-        }
-      )
-      window.dispatchEvent(personDroppedEvent)
-    } else {
-      this.chart.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
-      this.chart.finalizeDrop()
-    }
   }
 
   async connect() {
@@ -166,37 +93,85 @@ export default class OrgChartController extends Controller {
             class="person-node ${d.depth == 0 ? "fake-root-node" : ""}" 
             transform="translate(0,0)" 
             data-controller="person-node"
-            data-person-node-person-string-value="${encodeURIComponent(JSON.stringify(d.data))}"
+            data-person-node-person-string-value="${encodeURIComponent(JSON.stringify(member))}"
           >
           </g>
         `});
-        d3.selectAll("g.nodes-wrapper g.node")
+        d3.selectAll("g.node")
           .selectAll(".person-node")
           .data(function(d) { return [d]; });
 
-        d3.selectAll("g.nodes-wrapper .person-node")
-          .on("mouseover", function(event, d) {
-            self.handleMouseOver(this, d);
+        d3.selectAll(".person-node")
+          .attr("cursor", "grab")
+          .on("mouseover.chart", function(event, d) {
+            if(self.dragInProgress()) {
+              if (self.targetIsDescendant(d)) {
+                d3.select(this).classed("blur", true)
+              } else {
+                self.setDestinationDatum(d);
+                d3.select(this).classed("drop-target", true)
+              }
+            }
           })
-          .on("mouseout", function(event, d) {
-            self.handleMouseOut(this, d);
+          .on("mouseout.chart", function(event, d) {
+            d3.select(this)
+              .classed("drop-target", false)
+              .classed("blur", false)
+            if (self.dragInProgress()) {
+              self.clearDestinationDatum();
+            }
           })
           .call(d3.drag()
             .on("start", function(event, d) {
-              self.initiateDrag(d, this)
+              self.setDraggingDatum(d);
+              self.setDraggingNode(this);
+
+              let startCoords = self.chart.getCoords(this)
+              self.dragStartX = startCoords[0]
+              self.dragStartY = startCoords[1]
+              const node = d3.select(this);
+              node
+                .attr('pointer-events', 'none')
+                .classed('active-drag', true)
+              d3.selectAll('g.node')
+                .filter((group) => group.id === d.id)
+                .raise()
             })
             .on("drag", function(event, d) {
               let [newX, newY] = self.chart.getCoords(this)
               d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
             })
             .on("end", function(event, d) {
-              self.endDrag(this);
+              d3.select(this)
+                .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
+                .classed("active-drag", false)
+
+              const destinationDatum = self.getDestinationDatum();
+              const draggingDatum = self.getDraggingDatum();
+
+              if (destinationDatum && !draggingDatum.descendants().includes(destinationDatum)) {
+                const person_key = draggingDatum.data.id;
+                const supervisor_key = destinationDatum.data.id
+                self.dropped = {person_key: person_key, supervisor_key: supervisor_key}
+                const personDroppedEvent = new CustomEvent("personDropped",
+                  {
+                    detail: {
+                      person_key: person_key,
+                      supervisor_key: supervisor_key
+                    }
+                  }
+                )
+                window.dispatchEvent(personDroppedEvent)
+              } else {
+                self.restoreNodePosition(d3.select(this), attrs.duration, self.dragStartX, self.dragStartY);
+                self.finalizeDrop()
+              }
             })
           )
-
       })
   }
 }
 
 Object.assign(OrgChartController.prototype, buttonActions);
-Object.assign(OrgChartController.prototype, chartFunctions);
+Object.assign(OrgChartController.prototype, handleCancelChange);
+Object.assign(OrgChartController.prototype, personDragAndDrop);

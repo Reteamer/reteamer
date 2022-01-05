@@ -9,11 +9,45 @@ class TeamChartTest < ApplicationSystemTestCase
 
   test "Changing a person's team" do
     AccountLeader.visit_team_chart
-    AccountLeader.drag_team_member("Cerie Xerox").to("Actors")
+    AccountLeader.drag_team_member("Jonathan").to("TGS")
     new_date = AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
     assert_equal(DateNavigatorComponent.selected_date, new_date)
 
-    # TODO: assert Cerie is now on the Actors team. Maybe through snapshot comparisons?
+    within(".team-node", text: "TGS") do
+      assert_selector(".person-node", text: "Jonathan")
+    end
+  end
+
+  test "Moving someone from the beach to a team and back" do
+    AccountLeader.visit_team_chart
+    AccountLeader.clicks_weeks_in_future(5)
+
+    within(".team-node", text: "Unassigned") do
+      assert_selector(".person-node", text: "Lenny Wosniak")
+    end
+
+    AccountLeader.drag_team_member("Lenny Wosniak").to("TGS")
+    AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
+
+    within(".team-node", text: "TGS") do
+      assert_selector(".person-node", text: "Lenny Wosniak")
+    end
+
+    AccountLeader.drag_team_member("Lenny Wosniak").to("Unassigned")
+    AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
+
+    within(".team-node", text: "Unassigned") do
+      assert_selector(".person-node", text: "Lenny Wosniak")
+    end
+  end
+
+  test "Changing a team's parent team" do
+    AccountLeader.visit_team_chart
+    AccountLeader.drag_team("Actors").to("General Electric")
+    new_date = AccountLeader.select_custom_date("#change-team-parent-effective-date-modal")
+    assert_equal(DateNavigatorComponent.selected_date, new_date)
+
+    # TODO: assert Actors is now a direct subteam of GE. Maybe through snapshot comparisons?
   end
 
   test "creating a new team" do

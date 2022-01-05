@@ -96,7 +96,7 @@ class TeamChart
     end
 
     def key
-      "unassigned_team_key"
+      nil
     end
 
     def type

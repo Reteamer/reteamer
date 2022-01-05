@@ -1,3 +1,5 @@
+import * as d3 from "d3";
+
 export default {
   restoreNodePosition(node, duration, x, y) {
     node.transition()
@@ -13,6 +15,7 @@ export default {
 
   setDraggingDatum(d) {
     this.draggingDatum = d
+    d3.selectAll(".person-node").attr("data-person-node-drag-in-progress-value", d != null)
   },
 
   getDraggingDatum() {
@@ -27,11 +30,23 @@ export default {
     return this.destinationDatum
   },
 
+  clearDestinationDatum() {
+    this.destinationDatum = null
+  },
+
   setDraggingNode(node) {
     this.draggingNode = node
   },
 
   getDraggingNode() {
     return this.draggingNode;
+  },
+
+  targetIsDescendant(d) {
+    return this.getDraggingDatum().descendants().includes(d)
+  },
+
+  dragInProgress() {
+    return !!this.getDraggingDatum();
   }
 }

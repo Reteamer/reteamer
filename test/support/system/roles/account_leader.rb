@@ -5,6 +5,7 @@ class AccountLeader
       to: OrgChartComponent
 
     delegate :visit_team_chart,
+      :drag_team,
       :drag_team_member,
       :edit_team,
       :deactivate_team,
@@ -19,7 +20,7 @@ class AccountLeader
       to: EffectiveDateFields
 
     delegate :visit_date_navigator_style_guide,
-      :clicks_on_future_date,
+      :clicks_weeks_in_future,
       :hover_on,
       :enters_future_date,
       to: DateNavigatorComponent
