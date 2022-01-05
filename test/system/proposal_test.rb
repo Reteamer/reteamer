@@ -8,6 +8,7 @@ class ProposalTest < ApplicationSystemTestCase
   end
 
   test "Making team changes on a proposal" do
+    skip("Feature has been removed while we finish it")
     AccountLeader.visit_team_chart
     assert(ProposalNavigatorComponent.has_selected_proposal?("main"))
     AccountLeader.make_new_proposal("plan b")
@@ -19,6 +20,7 @@ class ProposalTest < ApplicationSystemTestCase
   end
 
   test "Making org chart changes on a proposal" do
+    skip("Feature has been removed while we finish it")
     AccountLeader.visit_org_chart
     assert(ProposalNavigatorComponent.has_selected_proposal?("main"))
     AccountLeader.make_new_proposal("plan b")
