@@ -30,6 +30,10 @@ export default {
     return this.destinationDatum
   },
 
+  clearDestinationDatum() {
+    this.destinationDatum = null
+  },
+
   setDraggingNode(node) {
     this.draggingNode = node
   },
@@ -40,5 +44,9 @@ export default {
 
   targetIsDescendant(d) {
     return this.getDraggingDatum().descendants().includes(d)
+  },
+
+  dragInProgress() {
+    return !!this.getDraggingDatum();
   }
 }

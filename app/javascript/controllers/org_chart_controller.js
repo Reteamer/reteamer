@@ -43,10 +43,6 @@ export default class OrgChartController extends Controller {
     emitDatePickedEvent(event.detail.selectedDate)
   }
 
-  dragInProgress() {
-    return !!this.getDraggingDatum();
-  }
-
   async connect() {
     this.firstRender = true;
     const container = document.createElement("div");
@@ -106,6 +102,7 @@ export default class OrgChartController extends Controller {
           .data(function(d) { return [d]; });
 
         d3.selectAll(".person-node")
+          .attr("cursor", "grab")
           .on("mouseover.chart", function(event, d) {
             if(self.dragInProgress()) {
               if (self.targetIsDescendant(d)) {
@@ -149,11 +146,10 @@ export default class OrgChartController extends Controller {
                 .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
                 .classed("active-drag", false)
 
-              const attrs1 = self.chart.getChartState()
               const destinationDatum = self.getDestinationDatum();
               const draggingDatum = self.getDraggingDatum();
 
-              if (destinationDatum !== null && !draggingDatum.descendants().includes(destinationDatum)) {
+              if (destinationDatum && !draggingDatum.descendants().includes(destinationDatum)) {
                 const person_key = draggingDatum.data.id;
                 const supervisor_key = destinationDatum.data.id
                 self.dropped = {person_key: person_key, supervisor_key: supervisor_key}
@@ -167,7 +163,7 @@ export default class OrgChartController extends Controller {
                 )
                 window.dispatchEvent(personDroppedEvent)
               } else {
-                self.restoreNodePosition(d3.select(this), attrs1.duration, self.dragStartX, self.dragStartY);
+                self.restoreNodePosition(d3.select(this), attrs.duration, self.dragStartX, self.dragStartY);
                 self.finalizeDrop()
               }
             })

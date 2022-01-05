@@ -2,7 +2,6 @@ import {Controller} from "@hotwired/stimulus"
 import {TreeChart} from '../tree_chart/tree_chart';
 import * as d3 from "d3";
 import {emitDatePickedEvent, emitEvent} from "../event_emitter";
-import deleteTeam from "./support/delete_team";
 import buttonActions from "./tree_chart_controller_button_actions";
 import chartFunctions from "./support/handle_cancel_change";
 import person_drag_and_drop from "./support/person_drag_and_drop";
@@ -34,10 +33,28 @@ export default class TeamChartController extends Controller {
     return 15;
   }
 
-  handlePersonMouseOver(domNode, d) {
-    if(this.getDraggingDatum()) {
-      this.setDestinationDatum(d);
-      d3.select(domNode).classed("drop-target", true)
+  isDraggingTeam() {
+    return 'data' in this.getDraggingDatum()
+  }
+
+  handleTeamMouseOver(domNode, d) {
+    if(this.dragInProgress()) {
+      if (this.isDraggingTeam() && this.targetIsDescendant(d)) {
+        d3.select(domNode).classed("blur", true)
+      } else {
+        this.setDestinationDatum(d);
+        d3.select(domNode).classed("drop-target", true)
+      }
+    }
+  };
+
+  handleTeamMouseOut(domNode, d) {
+    d3.select(domNode)
+      .classed("drop-target", false)
+      .classed("blur", false)
+
+    if(this.dragInProgress()) {
+      this.setDestinationDatum(null);
     }
   };
 
@@ -133,20 +150,21 @@ export default class TeamChartController extends Controller {
             return `translate(${x},${y})`
           })
 
-        d3.selectAll("g.node").each(function(d) {
-          d3.select(this).selectAll(".delete-team").on("click", function(e) {
-            deleteTeam(d.data)
-          })
-        })
+        d3.selectAll("g.node")
+          .selectAll(".team-node")
+          .data(function(d) { return [d]; });
 
-        d3.selectAll("g.nodes-wrapper g.node")
-          .on("mouseover", function(event, d) {
-            self.handlePersonMouseOver(this, d);
+        d3.selectAll(".team-node")
+          .on("mouseover.chart", function(event, d) {
+            self.handleTeamMouseOver(this, d);
           })
-          .on("mouseout", function(event, d) {
-            self.handlePersonMouseOut(this, d);
+          .on("mouseout.chart", function(event, d) {
+            self.handleTeamMouseOut(this, d);
           })
-        d3.selectAll("g.nodes-wrapper g.person-node")
+          .filter((node) => {
+            return node.data.type !== "unassigned"
+          })
+          .attr("cursor", "grab")
           .call(d3.drag()
             .on("start", function(event, d) {
               self.initiateDrag(d, this)
@@ -156,7 +174,21 @@ export default class TeamChartController extends Controller {
               d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
             })
             .on("end", function(event, d) {
-              self.endDrag(this);
+              self.endTeamDrag(this);
+            })
+          )
+        d3.selectAll("g.nodes-wrapper g.person-node")
+          .attr("cursor", "grab")
+          .call(d3.drag()
+            .on("start", function(event, d) {
+              self.initiateDrag(d, this)
+            })
+            .on("drag", function(event, d) {
+              let [newX, newY] = self.chart.getCoords(this)
+              d3.select(this).attr("transform", "translate(" + (newX+event.dx) + "," + (newY+event.dy) + ")");
+            })
+            .on("end", function(event, d) {
+              self.endPersonDrag(this);
             })
           )
       })
@@ -171,13 +203,6 @@ export default class TeamChartController extends Controller {
     const calculatedHeight = 150 + numberOfColumns * this.personNodeHeight();
     return Math.max(130, calculatedHeight);
   }
-
-  handlePersonMouseOut(domNode, d) {
-    d3.select(domNode).classed("drop-target", false)
-    if(this.getDraggingDatum()) {
-      this.setDestinationDatum(null);
-    }
-  };
 
   initiateDrag(d, domNode) {
     this.setDraggingDatum(d);
@@ -197,7 +222,7 @@ export default class TeamChartController extends Controller {
       .raise()
   }
 
-  endDrag(domNode) {
+  endPersonDrag(domNode) {
     d3.select(domNode)
       .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
       .classed("active-drag", false)
@@ -218,8 +243,9 @@ export default class TeamChartController extends Controller {
         method = "POST"
         assignmentParams.person_key = personKey
         path = `/reteamer_api/assignments/`
-      } else {
-        assignmentParams.key = assignmentKey
+      } else if(teamKey === null) {
+        method = "DELETE"
+        delete assignmentParams.destination_team_key
       }
 
       emitEvent("personDropped", {
@@ -233,6 +259,44 @@ export default class TeamChartController extends Controller {
             },
             redirect: 'follow',
             body: JSON.stringify(assignmentParams)
+          }).then(() => {
+            this.finalizeDrop()
+            emitDatePickedEvent(effectiveDate)
+          });
+        }
+      })
+    } else {
+      this.restoreNodePosition(d3.select(domNode), attrs.duration, this.dragStartX, this.dragStartY);
+      this.finalizeDrop()
+    }
+  }
+
+  endTeamDrag(domNode) {
+    d3.select(domNode)
+      .attr('pointer-events', '') // restore the mouseover event or we won't be able to drag a 2nd time
+      .classed("active-drag", false)
+
+    const attrs = this.chart.getChartState()
+    if (this.getDestinationDatum() !== null) {
+      const destinationTeamKey = this.getDestinationDatum().data.key
+      const subjectTeamKey = this.getDraggingDatum().data.key
+      let method = "PUT"
+      let path = `/reteamer_api/team_parents/${subjectTeamKey}`
+      let body = {
+        "parent_key": destinationTeamKey,
+      }
+
+      emitEvent("teamDropped", {
+        callback: (effectiveDate) => {
+          body.effective_date = effectiveDate
+
+          fetch(path, {
+            method: method,
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify(body)
           }).then(() => {
             this.finalizeDrop()
             emitDatePickedEvent(effectiveDate)
