@@ -17,7 +17,7 @@ class DateNavigatorTest < ApplicationSystemTestCase
 
   test "Using the slider" do
     AccountLeader.visit_date_navigator_style_guide
-    future_date = AccountLeader.clicks_on_future_date
+    future_date = AccountLeader.clicks_weeks_in_future(2)
 
     assert_equal(DateNavigatorComponent.input_value, future_date)
     assert_external_components_are_updated(future_date)
