@@ -1,6 +1,6 @@
 <% default_payment_method = current_account.payment_processor&.default_payment_method %>
 
-<nav class="p-4 border-b border-gray-200">
+<nav class="p-4 border-b border-gray-200 bg-gray-900">
   <%= link_to root_path do %>
     <%= render_svg "logo", styles: "inline-block fill-current text-gray-700 hover:text-gray-800" %>
     <span class="sr-only"><%= Jumpstart.config.application_name %></span>
