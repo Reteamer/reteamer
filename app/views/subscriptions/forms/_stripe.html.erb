@@ -22,6 +22,15 @@
     <%= f.text_field :name_on_card, name: nil, class: "form-control", placeholder: true, required: true, data: { stripe_target: "name" } %>
   </div>
 
+  <div x-data="{ open: false }" class="">
+    <p class="hover:underline text-xs text-neutral-7 pb-4" @click="open = !open">Have a coupon code?</p>
+
+    <div x-show="open" id="coupon-field" class="form-group">
+      <%= f.label :coupon %>
+      <%= f.text_field :coupon, class: "form-control", placeholder: "Coupon Code", required: false %>
+    </div>
+  </div>
+
   <div class="text-center">
     <%= f.button local_assigns.fetch(:button, t("subscriptions.new.subscribe")), id: 'submit-button', class: "btn btn-primary btn-large btn-block", data: { action: "click->stripe#submit", disable_with: disable_with(t("subscriptions.new.processing")) } %>
   </div>

@@ -26,9 +26,12 @@ class SubscriptionsController < ApplicationController
   def create
     payment_processor = params[:processor] ? current_account.set_payment_processor(params[:processor]) : current_account.payment_processor
     payment_processor.payment_method_token = params[:payment_method_token]
+    coupon = params[:coupon]
+
     payment_processor.subscribe(
       plan: @plan.id_for_processor(payment_processor.processor),
-      trial_period_days: @plan.trial_period_days
+      trial_period_days: @plan.trial_period_days,
+      coupon: coupon
     )
     redirect_to root_path, notice: t(".created")
   rescue Pay::ActionRequired => e
