@@ -28,6 +28,7 @@ group :development, :test do
   gem "brakeman", ">= 5.1.2"
   gem "bundler-audit", github: "rubysec/bundler-audit"
   gem "letter_opener_web", "~> 2.0"
+  gem "percy-capybara"
   gem "standard"
   gem "factory_bot_rails"
   gem "zonebie"

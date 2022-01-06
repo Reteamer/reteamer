@@ -98,8 +98,10 @@ jobs:
           DATABASE_URL: postgres://postgres:password@localhost:5432/test
           RAILS_ENV: test
           PG_USER: postgres
+          RUN_STRIPE_TEST: true
+          PERCY_TOKEN: "fff45dd7455b8331c11f5fc5d959b715ac679d396f885bcfd3c6c9fb74dc1a4b"
         run: |
           bin/rails test:prepare
           bin/rails db:test:prepare
           bin/rails test
-          RUN_STRIPE_TEST=true bin/rails test:system
+          npx percy exec -- bin/rails test:system

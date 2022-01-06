@@ -20,6 +20,6 @@ class OrgChartTest < ApplicationSystemTestCase
     new_date = AccountLeader.select_custom_date
     assert_equal(DateNavigatorComponent.selected_date, new_date)
 
-    # TODO: assert Jonathan now reports to Pete. Maybe through snapshot comparisons?
+    page.percy_snapshot("Jonathan should report to Pete")
   end
 end
