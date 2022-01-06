@@ -1,18 +1,15 @@
 module ApplicationHelper
   include Pagy::Frontend
 
-  def avatar_url_for(user, opts = {})
-    size = opts[:size] || 48
+  # Generates button tags for Turbo disable with
+  # Preserve opacity-25 opacity-75 during purge
+  def button_text(text = nil, disable_with: t("processing"), &block)
+    text = capture(&block) if block
 
-    if user.respond_to?(:avatar) && user.avatar.attached? && user.avatar.variable?
-      user.avatar.variant(
-        thumbnail: "#{size}x#{size}^",
-        gravity: "center",
-        extent: "#{size}x#{size}"
-      )
-    else
-      gravatar_url_for(user.email, size: size)
-    end
+    tag.span(text, class: "when-enabled") +
+      tag.span(class: "when-disabled") do
+        render_svg("icons/spinner", styles: "animate-spin inline-block h-4 w-4 mr-2") + disable_with
+      end
   end
 
   def disable_with(text)
@@ -49,5 +46,9 @@ module ApplicationHelper
   def viewport_meta_tag(content: "width=device-width, initial-scale=1", turbo_native: "maximum-scale=1.0, user-scalable=0")
     full_content = [content, (turbo_native if turbo_native_app?)].compact.join(", ")
     tag.meta name: "viewport", content: full_content
+  end
+
+  def first_page?
+    @pagy.page == 1
   end
 end

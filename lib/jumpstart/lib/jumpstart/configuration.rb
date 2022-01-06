@@ -117,8 +117,8 @@ module Jumpstart
       gems[:main] << {name: "braintree"} if braintree? || paypal?
       gems[:main] << {name: "paddle_pay"} if paddle?
       gems[:main] << {name: job_processor.to_s} unless job_processor.to_s == "async"
-      gems[:development] += [{name: "guard"}, {name: "guard-livereload", version: "~> 2.5", require: false}, {name: "rack-livereload"}] if livereload?
-      gems[:development] += [{name: "solargraph-rails", version: "0.2.0.pre"}] if solargraph?
+      gems[:development] += [{name: "guard"}, {name: "guard-livereload", github: "guard/guard-livereload", require: false}, {name: "rack-livereload", github: "jaredmdobson/rack-livereload"}, {name: "eventmachine", github: "eventmachine/eventmachine"}] if livereload?
+      gems[:development] += [{name: "solargraph-rails", version: "~> 0.2.0.pre"}] if solargraph?
       gems
     end
 
@@ -291,7 +291,7 @@ module Jumpstart
       end
 
       # Add the Stripe CLI
-      content[:stripe] = "stripe listen --forward-to localhost:5000/webhooks/stripe" if dev && stripe?
+      content[:stripe] = "stripe listen --forward-to localhost:3000/webhooks/stripe" if dev && stripe?
 
       # Guard LiveReload
       content[:guard] = "bundle exec guard" if dev && livereload?

@@ -1,4 +1,4 @@
-class Turbo::PathConfigurationsController < ApplicationController
+class Turbo::Ios::PathConfigurationsController < ApplicationController
   # Defines the tabs and rules for the mobile app views
   # To customize this, you can edit the JSON here
   def show
@@ -16,6 +16,12 @@ class Turbo::PathConfigurationsController < ApplicationController
             title: "What's New",
             path: announcements_path,
             ios_system_image_name: "megaphone"
+          },
+          {
+            title: "Notifications",
+            path: notifications_path,
+            ios_system_image_name: "bell",
+            show_notification_badge: true
           }
         ]
       },

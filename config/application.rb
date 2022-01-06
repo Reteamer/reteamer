@@ -11,7 +11,7 @@ require "jumpstart"
 module ReteamerPro
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.1
+    config.load_defaults 7.0
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -32,5 +32,9 @@ module ReteamerPro
 
     # Use default language as fallback if translation is missing
     config.i18n.fallbacks = true
+
+    # Prevent sassc-rails from setting sass as the compressor
+    # Libsass is deprecated and doesn't support modern CSS syntax used by TailwindCSS
+    config.assets.css_compressor = nil
   end
 end

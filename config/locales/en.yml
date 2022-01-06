@@ -38,6 +38,7 @@ en:
   create_an_account_first: "Please create an account first."
   delete: "Delete"
   edit: "Edit"
+  view: "View"
   must_be_an_admin: "You must be an admin to do that."
   must_be_subscribed: "You must have an active subscription."
   processing: "Processing..."
@@ -161,6 +162,8 @@ en:
     forms:
       braintree:
         button: "Update Card"
+      fake_processor:
+        message: "You have free access and don't need to add a payment method."
       stripe:
         credit_or_debit_card: "Credit or Debit Card"
         button: "Update Card"
