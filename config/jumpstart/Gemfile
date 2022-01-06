@@ -1,2 +1,2 @@
-gem 'omniauth-github'
-gem 'stripe'
+gem "omniauth-github"
+gem "stripe"
