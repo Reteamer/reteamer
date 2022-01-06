@@ -104,4 +104,4 @@ jobs:
           bin/rails test:prepare
           bin/rails db:test:prepare
           bin/rails test
-          percy exec -- bin/rails test:system
+          npx percy exec -- bin/rails test:system
