@@ -13,3 +13,5 @@ solargraph: false
 register_with_account: true
 payment_processors:
 - stripe
+omniauth_providers:
+- github
