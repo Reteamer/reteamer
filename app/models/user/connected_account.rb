@@ -71,7 +71,7 @@ class User::ConnectedAccount < ApplicationRecord
   # Safely handles empty strings before attempting encryption
   def safe_access_token_secret=(value)
     return if value.blank?
-    __send__("attr_encrypted_access_token_secret=", value)
+    __send__(:attr_encrypted_access_token_secret=, value)
   end
 
   # Replace the dynamically defined attr_encrypted method with our own
