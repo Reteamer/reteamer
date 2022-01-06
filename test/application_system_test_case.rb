@@ -1,4 +1,5 @@
 require "test_helper"
+require "percy/capybara"
 require_relative "../db/seeds/30rock"
 
 Dir["#{File.dirname(__FILE__)}/support/system/**/*.rb"].sort.each { |f| require f }
