@@ -20,7 +20,8 @@ class LoginTest < ApplicationSystemTestCase
     Capybara.app_host = "http://lvh.me"
     Capybara.always_include_port = true
 
-    visit new_user_session_path
+    visit root_path
+    click_on("Log In")
 
     fill_in "user[email]", with: users(:twofactor).email
     fill_in "user[password]", with: "password"
@@ -34,7 +35,8 @@ class LoginTest < ApplicationSystemTestCase
     Capybara.app_host = "http://lvh.me"
     Capybara.always_include_port = true
 
-    visit new_user_session_path
+    visit root_path
+    click_on("Log In")
 
     fill_in "user[email]", with: users(:twofactor).email
     fill_in "user[password]", with: "password"
@@ -52,7 +54,8 @@ class LoginTest < ApplicationSystemTestCase
     Capybara.app_host = "http://lvh.me"
     Capybara.always_include_port = true
 
-    visit new_user_session_path
+    visit root_path
+    click_on("Log In")
 
     fill_in "user[email]", with: users(:twofactor).email
     fill_in "user[password]", with: "password"
@@ -70,7 +73,8 @@ class LoginTest < ApplicationSystemTestCase
     Capybara.app_host = "http://lvh.me"
     Capybara.always_include_port = true
 
-    visit new_user_session_path
+    visit root_path
+    click_on("Log In")
 
     fill_in "user[email]", with: users(:twofactor).email
     fill_in "user[password]", with: "password"
@@ -87,7 +91,8 @@ class LoginTest < ApplicationSystemTestCase
     Capybara.app_host = "http://lvh.me"
     Capybara.always_include_port = true
 
-    visit new_user_session_path
+    visit root_path
+    click_on("Log In")
 
     fill_in "user[email]", with: users(:twofactor).email
     fill_in "user[password]", with: "password"
