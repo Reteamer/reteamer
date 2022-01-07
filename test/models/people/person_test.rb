@@ -31,4 +31,15 @@ class PersonTest < ActiveSupport::TestCase
     assert(People::Person.has_subordinates?(effective_date, supervisor_entry.key) == true)
     assert(People::Person.has_subordinates?(effective_date, subordinate_entry.key) == false)
   end
+
+  test "image_url" do
+    person = People::Person.new()
+    assert_equal(person.image_url, "https://secure.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e.png?default=mp&rating=pg&size=60")
+
+    person = People::Person.new(image_url: "expected_url")
+    assert_equal(person.image_url, "expected_url")
+
+    person = People::Person.new(email: "will.read@gmail.com")
+    assert_equal(person.image_url, "https://secure.gravatar.com/avatar/c4441c6faae71a7b1c035b85ed2c2701.png?default=mp&rating=pg&size=60")
+  end
 end

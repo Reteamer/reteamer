@@ -53,6 +53,7 @@ group :development, :test do
   gem "annotate", github: "excid3/annotate_models", branch: "rails7"
   gem "brakeman"
   gem "bundler-audit", github: "rubysec/bundler-audit"
+  gem "foreman"
   gem "letter_opener_web", "~> 2.0"
   gem "percy-capybara"
   gem "standard"

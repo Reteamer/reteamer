@@ -27,5 +27,13 @@ module People
         .where(entry: {effective_at: effective_date.beginning_of_day..})
         .exists?
     end
+
+    def image_url(size=60)
+      if self[:image_url]
+        return self[:image_url]
+      else
+        return GravatarHelper.gravatar_url_for(email, size: size)
+      end
+    end
   end
 end
