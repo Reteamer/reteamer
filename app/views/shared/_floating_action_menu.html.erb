@@ -28,7 +28,7 @@
         </div>
       </li>
     <% end %>
-    <% if enabled_menu_options.include? FloatingActionMenu::PROPOSAL %>
+    <% if(false) %>
       <li onclick="(() => { window.dispatchEvent(new CustomEvent('newProposalStarted', {}) )})()">
         <span class="fab-label">Add New Proposal</span>
         <div class="fab-icon-holder">
