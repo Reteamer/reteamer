@@ -28,12 +28,8 @@ module People
         .exists?
     end
 
-    def image_url(size=60)
-      if self[:image_url]
-        return self[:image_url]
-      else
-        return GravatarHelper.gravatar_url_for(email, size: size)
-      end
+    def image_url(size = 60)
+      self[:image_url] || GravatarHelper.gravatar_url_for(email, size: size)
     end
   end
 end

@@ -33,7 +33,7 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "image_url" do
-    person = People::Person.new()
+    person = People::Person.new
     assert_equal(person.image_url, "https://secure.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e.png?default=mp&rating=pg&size=60")
 
     person = People::Person.new(image_url: "expected_url")
