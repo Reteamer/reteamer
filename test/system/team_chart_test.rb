@@ -47,7 +47,7 @@ class TeamChartTest < ApplicationSystemTestCase
     new_date = AccountLeader.select_custom_date("#change-team-parent-effective-date-modal")
     assert_equal(DateNavigatorComponent.selected_date, new_date)
 
-    # TODO: assert Actors is now a direct subteam of GE. Maybe through snapshot comparisons?
+    page.percy_snapshot("Actors should be a direct subteam of GE")
   end
 
   test "creating a new team" do
