@@ -9,11 +9,12 @@ class TeamChartTest < ApplicationSystemTestCase
 
   test "Changing a person's team" do
     AccountLeader.visit_team_chart
-    AccountLeader.drag_team_member("Jonathan").to("TGS")
+
+    AccountLeader.drag_team_member("Jonathan").to("GE")
     new_date = AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
     assert_equal(DateNavigatorComponent.selected_date, new_date)
 
-    within(".team-node", text: "TGS") do
+    within(".team-node", text: "GE") do
       assert_selector(".person-node", text: "Jonathan")
     end
   end
