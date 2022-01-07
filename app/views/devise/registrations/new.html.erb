@@ -20,7 +20,7 @@
     <%= f.fields_for :owned_accounts do |a| %>
       <div class="form-group">
         <%= a.label :name %>
-        <%= a.text_field :name, autofocus: true, placeholder: true, class: "form-control" %>
+        <%= a.text_field :name, autofocus: true, placeholder: "eg. Big Co. or Engineering Department", class: "form-control" %>
       </div>
     <% end %>
 

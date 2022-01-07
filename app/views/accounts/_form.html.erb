@@ -3,7 +3,7 @@
 
   <div class="form-group">
     <%= form.label :name %>
-    <%= form.text_field :name, placeholder: true, autofocus: true, class: "form-control" %>
+    <%= form.text_field :name, placeholder: "eg. Big Co. or Engineering Department", autofocus: true, class: "form-control" %>
   </div>
 
   <% if Jumpstart::Multitenancy.domain? %>
