@@ -27,6 +27,8 @@ class TeamChartComponent < ComponentUnderTest
       has_no_selector?(".person-node", text: person_name)
     end
 
+    alias_method :has_no_open_req?, :has_no_person?
+
     def has_person?(person_name)
       has_selector?(".person-node", text: person_name)
     end

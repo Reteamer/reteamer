@@ -12,6 +12,7 @@ class AccountLeader
       to: TeamChartComponent
 
     delegate :deactivate_person,
+      :deactivate_open_req,
       :edit_person,
       to: ChartComponent
 
@@ -29,6 +30,7 @@ class AccountLeader
     delegate :make_new_proposal,
       :make_new_team,
       :make_new_person,
+      :make_new_open_req,
       to: FloatingActionMenuComponent
 
     delegate :switch_to_proposal,
