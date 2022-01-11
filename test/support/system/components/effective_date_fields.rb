@@ -6,7 +6,13 @@ class EffectiveDateFields < ComponentUnderTest
       visit effective_date_fields_path
     end
 
-    def select_custom_date(open_modal_selector = "#change-supervisor-effective-date-modal")
+    def select_selected_date(open_modal_selector)
+      within(open_modal_selector) do
+        find("button", text: "Commit").click
+      end
+    end
+
+    def select_custom_date(open_modal_selector)
       within(open_modal_selector) do
         find("input[type='radio'][value='other']").click
         find("input#other_effective_date").click

@@ -28,7 +28,7 @@ class TeamChartTest < ApplicationSystemTestCase
     end
 
     AccountLeader.drag_team_member("Lenny Wosniak").to("General Electric")
-    AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
+    AccountLeader.select_selected_date("#change-assignment-effective-date-modal")
 
     within(".team-node", text: "General Electric") do
       assert_selector(".person-node", text: "Lenny Wosniak")

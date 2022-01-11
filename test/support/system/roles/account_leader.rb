@@ -17,6 +17,7 @@ class AccountLeader
 
     delegate :visit_effective_date_fields_style_guide,
       :select_custom_date,
+      :select_selected_date,
       to: EffectiveDateFields
 
     delegate :visit_date_navigator_style_guide,
