@@ -47,7 +47,7 @@ export default class extends Controller {
              checked
       />
       The selected date:
-      <span class="selectedDate">${dayjs(this.selectedDateValue).format(peopleDate)}</span>
+      <span class="selectedDateSpan">${dayjs(this.selectedDateValue).format(peopleDate)}</span>
     </label>
     <label>
       <input type="radio"
@@ -90,7 +90,7 @@ export default class extends Controller {
     `
 
     this.hiddenInput = this.element.querySelector("input.hiddenInput")
-    this.selectedDate = this.element.querySelector("span.selectedDateTarget")
+    this.selectedDate = this.element.querySelector("span.selectedDateSpan")
     this.selectedDateInput = this.element.querySelector("input.selectedDateInput")
     this.otherDateRadio = this.element.querySelector("input.otherDateRadio")
     this.otherDateInput = this.element.querySelector("input.otherDateInput")

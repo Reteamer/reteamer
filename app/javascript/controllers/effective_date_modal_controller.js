@@ -45,7 +45,9 @@ export default class extends Controller {
                 <h2 class="text-xl mb-4">Pick a date for the change to take effect</h2>
                 <form data-effective-date-modal-target="effectiveDateForm">
                   <effective-date-fields
+                    id="${this.element.id  + '-fields'}"
                     data-controller="effective-date-fields"
+                    data-action="datePicked@window->effective-date-fields#handleDatePicked"
                     data-effective-date-fields-selected-date-value="${this.selectedDateValue}"
                   ></effective-date-fields>
                   <div class="flex justify-end items-center flex-wrap mt-6">

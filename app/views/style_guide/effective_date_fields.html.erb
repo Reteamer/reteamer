@@ -4,7 +4,12 @@
   });
 </script>
 
-<%= render "shared/effective_date_fields", selected_date: Date.today %>
+<effective-date-fields
+  id="style-guide-fields"
+  data-controller="effective-date-fields"
+  data-action="datePicked@window->effective-date-fields#handleDatePicked"
+  data-effective-date-fields-selected-date-value="<%= Date.today %>"
+></effective-date-fields>
 <br />
 <hr/>
 <br />

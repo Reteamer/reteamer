@@ -119,6 +119,7 @@ export default class extends Controller {
                 <h2 class="text-xl mb-4">Pick a date for the new person to take effect</h2>
                 
                 <effective-date-fields
+                id="person-form-controller-fields"
                   data-controller="effective-date-fields"
                   data-action="datePicked@window->effective-date-fields#handleDatePicked"
                   data-effective-date-fields-selected-date-value="${this.selectedDateValue}"
