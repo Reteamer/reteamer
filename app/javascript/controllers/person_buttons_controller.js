@@ -31,6 +31,35 @@ export default class extends Controller {
     window.dispatchEvent(event)
   }
 
+  editOpenReq({params: {person: personString} = "{}"}) {
+    const openReq = JSON.parse(decodeURIComponent(personString));
+    const event = new CustomEvent("openReqEditStarted", {
+      detail: {
+        openReq: openReq,
+        callback: function(effectiveDate, newOpenReqAttributes) {
+          const promise = fetch(`/reteamer_api/open_reqs/${openReq.key}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify(
+              {
+                "effective_at": effectiveDate,
+                "open_req": newOpenReqAttributes
+              }
+            )
+          }).then(() => {
+            emitDatePickedEvent(effectiveDate)
+          });
+
+          return promise;
+        }
+      }
+    })
+    window.dispatchEvent(event)
+  }
+
   deletePerson({ params: {personKey} = "" }) {
     const event = new CustomEvent("personDeactivationStarted",
       {

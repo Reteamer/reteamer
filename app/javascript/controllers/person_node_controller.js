@@ -33,7 +33,7 @@ export default class extends Controller {
           <image xlink:href="/trash.svg" x="4" y="4" height="12" width="12"></image>
         </g>
         <g class="person-button edit-person"
-          data-action="click->person-buttons#editPerson"
+          data-action="click->person-buttons#${person.type == "openreq" ? "editOpenReq" : "editPerson"}"
           data-person-buttons-person-param="${encodeURIComponent(JSON.stringify(person))}" 
           transform="translate(${nodeWidth - 48},${nodeHeight - 24})"
         >

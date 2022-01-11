@@ -11,7 +11,7 @@ export default class extends Controller {
     this.resetWizard();
 
     this.openReq = event.detail.openReq
-    const form = this.element.querySelector("#ope-req-form")
+    const form = this.element.querySelector("#open-req-form")
     form.title.value = this.openReq.title
     this.element.querySelector("supervisor-form-group").classList.add("hidden");
     this.element.querySelector("team-form-group").classList.add("hidden");

@@ -17,6 +17,7 @@ json.chart do
     json.name(h(team.name))
     json.members team.members do |member|
       json.id(member.key) # deprecated
+      json.type(member.type.parameterize)
       json.key(member.key)
       json.assignment_key(member.assignment_key)
       json.name(h(member.name))

@@ -9,6 +9,7 @@ json.people do
   json.array! @people do |person|
     json.id(person.key) # deprecated
     json.key(person.key)
+    json.type(person.type.parameterize)
     json.parentId(person.supervisor_key) # deprecated
     json.parentKey(person.supervisor_key)
     json.name(h(person.name))
