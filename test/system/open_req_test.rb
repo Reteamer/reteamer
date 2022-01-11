@@ -14,6 +14,11 @@ class OpenReqTest < ApplicationSystemTestCase
     within(".team-node", text: "General Electric") do
       assert_selector(".person-node", text: "Cunning Engineer")
     end
+
+    AccountLeader.visit_org_chart
+    assert_selector(".person-node", text: "Cunning Engineer")
+
+    page.percy_snapshot("Jack has an open req")
   end
 
   test "deactivating an open req" do
