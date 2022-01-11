@@ -1,0 +1,13 @@
+@media only percy {
+  * {
+    visibility: hidden;
+  }
+
+  .show-in-percy * {
+    visibility: visible;
+  }
+
+  .hide-in-percy * {
+    visibility: hidden;
+  }
+}
