@@ -1,0 +1,10 @@
+version: 2
+snapshot:
+  widths:
+    - 1280
+  percy-css: |
+    .hide-in-percy * {
+      visibility: hidden;
+    }
+discovery:
+  disable-cache: true
