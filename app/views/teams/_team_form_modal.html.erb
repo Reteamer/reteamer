@@ -16,7 +16,12 @@
           <form data-action="submit->team-form#handleSubmit" id="team-form">
             <section-one data-team-form-target="sectionOne">
               <h2 class="text-xl mb-4">Pick a date for the new team to take effect</h2>
-              <%= render 'shared/effective_date_fields', selected_date: selected_date %>
+              <effective-date-fields
+                id="team-form-modal-fields"
+                data-controller="effective-date-fields"
+                data-action="datePicked@window->effective-date-fields#handleDatePicked"
+                data-effective-date-fields-selected-date-value="<%= selected_date %>"
+              ></effective-date-fields>
 
               <div class="flex justify-end items-center flex-wrap mt-6">
                 <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>

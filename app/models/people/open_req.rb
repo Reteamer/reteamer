@@ -15,7 +15,7 @@ module People
     self.ignored_columns = ["first_name", "last_name", "employee_id", "email"]
 
     def name
-      "TBH"
+      "<Unfilled>"
     end
 
     def employee_id

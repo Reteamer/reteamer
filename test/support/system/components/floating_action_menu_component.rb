@@ -43,5 +43,20 @@ class FloatingActionMenuComponent < ComponentUnderTest
         click_on("Submit")
       end
     end
+
+    def make_new_open_req(title)
+      within(".fab-container") do
+        find(".fa-plus").click
+        find("li", text: "Add New Open Req").click
+      end
+
+      within("#open-req-form", visible: :all) do
+        click_on("Next")
+        fill_in("title", with: title)
+        select("Jack Donaghy", from: "supervisor_key")
+        select("General Electric", from: "team_key")
+        click_on("Submit")
+      end
+    end
   end
 end

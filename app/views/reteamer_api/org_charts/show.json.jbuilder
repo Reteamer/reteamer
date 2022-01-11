@@ -11,10 +11,10 @@ json.people do
     json.key(person.key)
     json.parentId(person.supervisor_key) # deprecated
     json.parentKey(person.supervisor_key)
-    json.name(person.name)
-    json.firstName(person.first_name)
-    json.lastName(person.last_name)
-    json.title(person.title)
+    json.name(h(person.name))
+    json.firstName(h(person.first_name))
+    json.lastName(h(person.last_name))
+    json.title(h(person.title))
     json.image_url(person.image_url || "https://www.gravatar.com/avatar/?s=50")
     json.employee_id(person.employee_id) # deprecated
     json.employee_code(person.employee_id)

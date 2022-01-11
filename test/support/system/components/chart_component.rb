@@ -14,6 +14,8 @@ class ChartComponent < ComponentUnderTest
       end
     end
 
+    alias_method :deactivate_open_req, :deactivate_person
+
     def edit_person(person_name, new_name)
       person_node = find(".person-node", text: person_name)
       person_node.hover

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :assignments, only: [:create, :update, :destroy], param: :key
     resources :teams, only: [:index, :create, :update, :destroy], param: :key
     resources :team_parents, only: [:update], param: :key
+    resources :open_reqs, only: [:create], param: :key
     resources :people, only: [:create, :update, :destroy], param: :key do
       collection do
         post :update_supervisor

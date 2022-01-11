@@ -44,7 +44,12 @@ export default class extends Controller {
               <div class="p-8">
                 <h2 class="text-xl mb-4">Pick a date for the change to take effect</h2>
                 <form data-effective-date-modal-target="effectiveDateForm">
-                  ${this.renderEffectiveDateFields(this.selectedDateValue)}
+                  <effective-date-fields
+                    id="${this.element.id  + '-fields'}"
+                    data-controller="effective-date-fields"
+                    data-action="datePicked@window->effective-date-fields#handleDatePicked"
+                    data-effective-date-fields-selected-date-value="${this.selectedDateValue}"
+                  ></effective-date-fields>
                   <div class="flex justify-end items-center flex-wrap mt-6">
                     <button class="btn btn-cancel" data-action="click->modal#close click->effective-date-modal#cancelChange">Cancel</button>
                     <button class="btn btn-primary" data-action="click->modal#close click->effective-date-modal#completeChange">Commit</button>
@@ -55,68 +60,6 @@ export default class extends Controller {
           </div>
         </div>
       </div>
-    `
-  }
-
-  renderEffectiveDateFields(selectedDate) {
-    return `
-      <effective-date-fields
-        data-controller="effective-date-fields"
-        data-action="datePicked@window->effective-date-fields#handleDatePicked"
-        data-effective-date-fields-selected-date-value="${selectedDate}"
-      >
-        <label>
-          <input type="radio"
-                 name="effective_date_radio"
-                 value="${selectedDate}"
-                 data-action="change->effective-date-fields#handleRadioChange"
-                 data-effective-date-fields-target="selectedDateInput"
-                 checked
-          />
-          The selected date:
-          <span data-effective-date-fields-target="selectedDate">${dayjs(selectedDate).format(peopleDate)}</span>
-        </label>
-        <label>
-          <input type="radio"
-                 name="effective_date_radio"
-                 value="${dayjs().format(isoDate)}"
-                 data-action="change->effective-date-fields#handleRadioChange"
-          />
-          Today: ${dayjs().format(peopleDate)}
-        </label>
-        <label>
-          <input type="radio"
-                 name="effective_date_radio"
-                 value="${getNextMonday().format(isoDate)}"
-                 data-action="change->effective-date-fields#handleRadioChange"
-          />
-          Beginning of next week: ${getNextMonday().format(peopleDate)}
-        </label>
-        <label>
-          <input type="radio"
-                 name="effective_date_radio"
-                 value="other"
-                 data-effective-date-fields-target="otherDateRadio"
-                 data-action="change->effective-date-fields#handleRadioChange"
-          />
-          A different date:
-          <input type="text"
-                 name="other_effective_date"
-                 id="other_effective_date"
-                 class="form-control-inline flatpickr-input active"
-                 data-controller="flatpickr"
-                 readonly="readonly"
-                 value="${selectedDate}"
-                 data-effective-date-fields-target="otherDateInput"
-                 data-action="change->effective-date-fields#handleOtherChange"
-            />
-        </label>
-        <input type="hidden"
-               name="effective_at"
-               value="${selectedDate}"
-               data-effective-date-fields-target="hiddenInput"
-          />
-      </effective-date-fields>
     `
   }
 }

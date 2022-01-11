@@ -12,12 +12,13 @@ export const peopleDate = "ddd, MMM D, YYYY";
 export const isoDate = "YYYY-MM-DD";
 
 export function getNextMonday() {
-  let today = dayjs().day();
-
-  if(today === 0) {
-    return dayjs().day(8);
+  let today = dayjs()
+  let nextMonday = null
+  if(today.day() == 0) {
+    nextMonday = today.add(1, "days")
   } else {
-    return dayjs().day(9-today);
+    nextMonday = today.add(8 - today.day(), "days")
   }
+  return nextMonday;
 }
 

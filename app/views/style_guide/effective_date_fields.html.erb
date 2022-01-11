@@ -1,4 +1,15 @@
-<%= render "shared/effective_date_fields", selected_date: Date.today %>
+<script>
+  window.addEventListener("effective-date-picker-value-changed", (event) => {
+    document.getElementById("selected_date_preview").innerText = event.detail.value;
+  });
+</script>
+
+<effective-date-fields
+  id="style-guide-fields"
+  data-controller="effective-date-fields"
+  data-action="datePicked@window->effective-date-fields#handleDatePicked"
+  data-effective-date-fields-selected-date-value="<%= Date.today %>"
+></effective-date-fields>
 <br />
 <hr/>
 <br />
@@ -12,14 +23,7 @@ Pick a new selected date:
        data-effective-date-picker-target="otherDateInput"
        id="selected-date-input"
   />
-
 <script>
-  const hiddenInput = document.querySelector("input[name='effective_at']");
-  hiddenInput.addEventListener('change', (event) => {
-    document.getElementById("selected_date_preview").innerText = event.target.value;
-  });
-
-
   const selectedDateInput = document.querySelector("#selected-date-input");
 
   selectedDateInput.addEventListener('change', (event) => {
