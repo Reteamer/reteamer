@@ -20,6 +20,14 @@
         </div>
       </li>
     <% end %>
+    <% if enabled_menu_options.include? FloatingActionMenu::OPEN_REQ %>
+      <li data-action="click->floating-action-menu#addOpenReq">
+        <span class="fab-label">Add New Open Req</span>
+        <div class="fab-icon-holder">
+          <i class="fas fa-street-view"></i>
+        </div>
+      </li>
+    <% end %>
     <% if enabled_menu_options.include? FloatingActionMenu::ASSIGNMENT %>
       <li>
         <span class="fab-label">Add New Assignment</span>
@@ -41,6 +49,10 @@
 
 <% if enabled_menu_options.include? FloatingActionMenu::PERSON %>
   <%= render "people/person_form_modal", selected_date: selected_date %>
+<% end %>
+
+<% if enabled_menu_options.include? FloatingActionMenu::OPEN_REQ %>
+  <%= render "people/open_req_form_modal", selected_date: selected_date %>
 <% end %>
 
 <% if enabled_menu_options.include? FloatingActionMenu::TEAM %>

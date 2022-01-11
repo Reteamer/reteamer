@@ -19,7 +19,7 @@
        data-team-data-starting-date-value="<%= @selected_date %>">
   </div>
 
-  <%= render "shared/floating_action_menu", selected_date: @selected_date, enabled_menu_options: [FloatingActionMenu::TEAM, FloatingActionMenu::PERSON, FloatingActionMenu::PROPOSAL] %>
+  <%= render "shared/floating_action_menu", selected_date: @selected_date, enabled_menu_options: [FloatingActionMenu::TEAM, FloatingActionMenu::PERSON, FloatingActionMenu::PROPOSAL, FloatingActionMenu::OPEN_REQ] %>
 </div>
 <effective-date-modal
   id="change-assignment-effective-date-modal"

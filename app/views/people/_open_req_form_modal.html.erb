@@ -1,0 +1,14 @@
+<div
+  data-controller="modal open-req-form"
+  data-action="
+    newOpenReqStarted@window->modal#open
+    openReqEditStarted@window->modal#open
+    openReqDone@window->modal#close
+    newOpenReqStarted@window->open-req-form#handleNewOpenReq
+    openReqEditStarted@window->open-req-form#handleOpenReqEdit
+  "
+  data-open-req-form-selected-date-value="<%= selected_date %>"
+  id="open-req-form-modal"
+>
+
+</div>

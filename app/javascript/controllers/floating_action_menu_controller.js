@@ -56,6 +56,33 @@ export default class extends Controller {
     window.dispatchEvent(event)
   }
 
+  addOpenReq() {
+    const event = new CustomEvent("newOpenReqStarted", {
+      detail: {
+        callback: function(effectiveDate, newOpenReqAttributes) {
+          const promise = fetch(`/reteamer_api/open_reqs/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify(
+              {
+                "effective_at": effectiveDate,
+                ...newOpenReqAttributes
+              }
+            )
+          }).then(() => {
+            emitDatePickedEvent(effectiveDate)
+          });
+
+          return promise;
+        }
+      }
+    })
+    window.dispatchEvent(event)
+  }
+
   connect() {
   }
 }
