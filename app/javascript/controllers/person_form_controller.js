@@ -162,7 +162,7 @@ export default class extends Controller {
                     <label for="supervisor_key">Supervisor</label>
                     <select name="supervisor_key" class="select">
                       <option disabled selected>Pick one...</option>
-                      <option>&lt;No Supervisor&gt;</option>
+                      <option value="">&lt;No Supervisor&gt;</option>
                     </select>
                   </supervisor-form-group>
                   <team-form-group class="form-group">

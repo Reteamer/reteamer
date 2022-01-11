@@ -14,15 +14,15 @@ json.chart do
     json.type(team.type)
     json.parentId(team.parent_key) # deprecated
     json.parentKey(team.parent_key)
-    json.name(team.name)
+    json.name(h(team.name))
     json.members team.members do |member|
       json.id(member.key) # deprecated
       json.key(member.key)
       json.assignment_key(member.assignment_key)
-      json.name(member.name)
-      json.firstName(member.first_name)
-      json.lastName(member.last_name)
-      json.title(member.title)
+      json.name(h(member.name))
+      json.firstName(h(member.first_name))
+      json.lastName(h(member.last_name))
+      json.title(h(member.title))
       json.image_url(member.image_url || "https://www.gravatar.com/avatar/?s=50")
       json.employee_id(member.employee_id) # deprecated
       json.employee_code(member.employee_id)

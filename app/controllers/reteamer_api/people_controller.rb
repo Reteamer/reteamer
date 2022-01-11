@@ -10,7 +10,7 @@ module ReteamerApi
         last_name: params[:last_name],
         email: params[:email],
         title: params[:title],
-        supervisor_key: params[:supervisor_key],
+        supervisor_key: params[:supervisor_key].presence || nil,
         employee_id: params[:employee_id]
       )
       effective_date = Date.parse(params[:effective_at])
