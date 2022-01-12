@@ -8,7 +8,7 @@ export function newISODate() {
   return toISODate(new Date())
 }
 
-export const peopleDate = "ddd, MMM D, YYYY";
+export const peopleDate = "ddd MMM D, YYYY";
 export const isoDate = "YYYY-MM-DD";
 
 export function getNextMonday(startDay = dayjs()) {
