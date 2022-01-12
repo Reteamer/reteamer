@@ -10,7 +10,7 @@ class DateNavigatorComponent < ComponentUnderTest
       within("simple-date-navigator") do
         weeks.times do
           find("#next-week").click
-          sleep(0.1)
+          sleep(0.2)
         end
         find("input#effective-date", visible: :all).value
       end
