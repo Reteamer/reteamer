@@ -48,7 +48,7 @@ class TeamChartTest < ApplicationSystemTestCase
     AccountLeader.drag_team("Actors").to("General Electric")
     new_date = AccountLeader.select_custom_date("#change-team-parent-effective-date-modal")
     DateNavigatorComponent.assert_expected_date(new_date)
-
+    sleep(1)
     page.percy_snapshot("Actors should be a direct subteam of GE")
   end
 
