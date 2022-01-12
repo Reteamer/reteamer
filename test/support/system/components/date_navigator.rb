@@ -3,75 +3,43 @@ require_relative "component_under_test"
 class DateNavigatorComponent < ComponentUnderTest
   class << self
     def visit_date_navigator_style_guide
-      visit date_navigator_path
+      visit simple_date_navigator_path
     end
 
-    def clicks_weeks_in_future(weeks = 2)
-      hovered_date = nil
-      within("date-navigator") do
-        some_place_in_the_future = all(".change-counts", visible: :all)[weeks]
-        x = some_place_in_the_future.rect.x.to_i
-        y = 20
-        find(".mouse-catcher").click(x: x, y: y)
-
-        hovered_date = find(".cursor-date", visible: :all).text
-        raise unless hovered_date.present?
-      end
-      hovered_date
-    end
-
-    def hover_on(selector)
-      within("date-navigator") do
-        sleep(1)
-        find(selector, visible: :all).hover
+    def clicks_weeks_in_future(weeks)
+      within("simple-date-navigator") do
+        weeks.times do
+          find("#next-week").click
+          sleep(0.1)
+        end
+        find("input#effective-date", visible: :all).value
       end
     end
 
-    def input_value
-      within("date-navigator") do
-        find("input").value
-      end
-    end
-
-    def enters_future_date
-      within("date-navigator") do
-        find("input").click
+    def enters_future_date_using_input
+      within("simple-date-navigator") do
+        find("input").click # here we want the "visible" input that's used to present a human readable date
       end
 
       find(".open .flatpickr-next-month", visible: :all).click
       find(".open .flatpickr-next-month", visible: :all).click
       find(".open .flatpickr-day", text: "17").click
 
-      within("date-navigator") do
-        find("input").value
+      within("simple-date-navigator") do
+        find("input#effective-date", visible: :all).value
       end
-    end
-
-    def date_cursor
-      element = nil
-      sleep(1)
-      within("date-navigator") do
-        element = find(".cursor-date", visible: :all)
-      end
-      DateCursor.new(element)
     end
 
     def selected_date
-      hover_on(".selected-date-marker")
-      slider_date = date_cursor.date
-      input_date = input_value
-      raise "date navigator component is inconsistent! slider is: #{slider_date} while input is: #{input_date}" unless slider_date == input_date
-      input_date
-    end
-  end
-
-  class DateCursor
-    def initialize(element)
-      @element = element
+      within("simple-date-navigator") do
+        find("input#effective-date", visible: :all).value
+      end
     end
 
-    def date
-      @element.text
+    def assert_expected_date(expected_date)
+      within("simple-date-navigator") do
+        assert_selector("input#effective-date[value='#{expected_date}']", visible: :all)
+      end
     end
   end
 end

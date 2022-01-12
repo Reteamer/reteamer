@@ -1,6 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import dayjs from "dayjs";
-import {getNextMonday, peopleDate, isoDate} from "../date_helpers";
 import {emitCompleteChangeEvent} from "../event_emitter";
 
 export default class extends Controller {

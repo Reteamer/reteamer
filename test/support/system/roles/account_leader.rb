@@ -23,8 +23,7 @@ class AccountLeader
 
     delegate :visit_date_navigator_style_guide,
       :clicks_weeks_in_future,
-      :hover_on,
-      :enters_future_date,
+      :enters_future_date_using_input,
       to: DateNavigatorComponent
 
     delegate :make_new_proposal,

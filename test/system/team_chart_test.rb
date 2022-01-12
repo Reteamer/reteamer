@@ -12,7 +12,8 @@ class TeamChartTest < ApplicationSystemTestCase
 
     AccountLeader.drag_team_member("Jonathan").to("GE")
     new_date = AccountLeader.select_custom_date("#change-assignment-effective-date-modal")
-    assert_equal(DateNavigatorComponent.selected_date, new_date)
+
+    DateNavigatorComponent.assert_expected_date(new_date)
 
     within(".team-node", text: "GE") do
       assert_selector(".person-node", text: "Jonathan")
@@ -46,8 +47,8 @@ class TeamChartTest < ApplicationSystemTestCase
     AccountLeader.visit_team_chart
     AccountLeader.drag_team("Actors").to("General Electric")
     new_date = AccountLeader.select_custom_date("#change-team-parent-effective-date-modal")
-    assert_equal(DateNavigatorComponent.selected_date, new_date)
-
+    DateNavigatorComponent.assert_expected_date(new_date)
+    sleep(1)
     page.percy_snapshot("Actors should be a direct subteam of GE")
   end
 

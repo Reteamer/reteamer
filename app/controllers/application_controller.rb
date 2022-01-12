@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   include Authorization
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_selected_date
 
   impersonates :user
 
@@ -28,6 +29,10 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: signup_keys)
     devise_parameter_sanitizer.permit(:account_update, keys: extra_keys)
     devise_parameter_sanitizer.permit(:accept_invitation, keys: extra_keys)
+  end
+
+  def set_selected_date
+    session[:effective_date] = params[:effective_date] if params[:effective_date]
   end
 
   def after_sign_in_path_for(resource_or_scope)

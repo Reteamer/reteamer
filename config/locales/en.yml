@@ -47,7 +47,7 @@ en:
 
   date:
     formats:
-      people_date: "%a, %b %-d, %Y"
+      people_date: "%a %b %-d, %Y"
 
   account_invitations_mailer:
     invite:

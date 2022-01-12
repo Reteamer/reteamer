@@ -1,0 +1,25 @@
+<simple-date-navigator
+  class="px-4 h-full"
+  data-controller="simple-date-navigator"
+  data-action="datePicked@window->simple-date-navigator#handleExternalDateChange"
+  data-simple-date-navigator-selected-date-value="<%= selected_date %>"
+>
+  <i id="previous-week" class="fas fa-angle-double-left cursor-pointer text-slate-50" style="text-shadow: 0 0 5px #bbb;" data-action="click->simple-date-navigator#advanceToPreviousWeek" title="beginning of week"></i>
+  <i id="previous-day" class="fas fa-angle-left cursor-pointer text-slate-50" style="text-shadow: 0 0 5px #bbb;" data-action="click->simple-date-navigator#advanceToPreviousDay" title="previous day"></i>
+  <input type="text"
+         name="effective_date"
+         id="effective-date"
+         class="form-control-inline flatpickr-input active w-[165px]"
+         data-simple-date-navigator-target="dateInput"
+         data-action="change->simple-date-navigator#handleInputChange"
+         data-controller="flatpickr"
+         data-flatpickr-alt-format="D M j, Y"
+         data-flatpickr-alt-input="true"
+         data-flatpickr-alt-input-class="form-control-inline flatpickr-input active w-[165px]"
+         readonly="readonly"
+         value="<%= selected_date %>"
+    />
+  <i id="next-day" class="fas fa-angle-right cursor-pointer text-slate-50" style="text-shadow: 0 0 5px #bbb;"  data-action="click->simple-date-navigator#advanceToNextDay" title="next day"></i>
+  <i id="next-week" class="fas fa-angle-double-right cursor-pointer text-slate-50" style="text-shadow: 0 0 5px #bbb;"  data-action="click->simple-date-navigator#advanceToNextWeek" title="beginnning of next week"></i>
+
+</simple-date-navigator>

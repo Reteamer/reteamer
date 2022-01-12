@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resource :reset_data, only: :show
 
   namespace :reteamer_api do
+    resources :selected_date, only: :index, controller: :selected_date
     resources :supervisors, only: :index
     resources :assignments, only: [:create, :update, :destroy], param: :key
     resources :teams, only: [:index, :create, :update, :destroy], param: :key
@@ -152,6 +153,7 @@ Rails.application.routes.draw do
 
   scope :style_guide, controller: :style_guide do
     get :date_navigator
+    get :simple_date_navigator
     get :effective_date_fields
     get :person_node
     get :team_node
