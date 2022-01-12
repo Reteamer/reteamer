@@ -1,8 +1,11 @@
-<div class="row chart team-chart">
+<% content_for :chart_navigation  do %>
+  <%= render "shared/simple_date_navigator", selected_date: @selected_date %>
+<% end %>
+
+  <div class="row chart team-chart">
   <div class="px-4">
     <h1><%= t(".title") %></h1>
   </div>
-  <%= render "shared/date_navigator", selected_date: @selected_date %>
   <div class="team-chart" data-controller="team-chart"
        data-action="
        newData@window->team-chart#handleNewTeamData

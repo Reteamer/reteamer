@@ -18,7 +18,7 @@ class OrgChartTest < ApplicationSystemTestCase
     AccountLeader.visit_org_chart
     AccountLeader.drag_person("Jonathan").to("Pete Hornberger")
     new_date = AccountLeader.select_custom_date("#change-supervisor-effective-date-modal")
-    assert_equal(DateNavigatorComponent.selected_date, new_date)
+    DateNavigatorComponent.assert_expected_date(new_date)
 
     page.percy_snapshot("Jonathan should report to Pete")
   end

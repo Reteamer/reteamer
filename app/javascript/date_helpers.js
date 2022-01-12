@@ -43,4 +43,3 @@ export function getPreviousMonday(startDay = dayjs()) {
   }
   return previousMonday;
 }
-

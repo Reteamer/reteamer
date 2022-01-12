@@ -2,11 +2,24 @@
   <%= render "shared/simple_date_navigator", selected_date: Date.today %>
 </div>
 <hr/>
-
+<button class="btn btn-primary" onclick="emitNewDateEvent()">Simulate external date picked event</button>
 <p>Selected Date Is: <span id="selected_date">???</span></p>
 <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
 <script>
   window.addEventListener("datePicked", function(event) {
-    document.getElementById("selected_date").innerText = event.detail.newDate;
+    if(event.detail.source == "simple-date-navigator") {
+      document.getElementById("selected_date").innerText = event.detail.newDate;
+    }
   });
+
+  function emitNewDateEvent() {
+    const event = new CustomEvent("datePicked",
+      {
+        detail: {
+          newDate: dayjs().add(2, "months").format("YYYY-MM-DD")
+        }
+      }
+    )
+    window.dispatchEvent(event)
+  }
 </script>
