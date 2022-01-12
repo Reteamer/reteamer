@@ -21,7 +21,6 @@ class FloatingActionMenuComponent < ComponentUnderTest
       end
 
       within("#team-form", visible: :all) do
-        click_on("Next")
         fill_in("name", with: team_name)
         select("No Parent/Top Level", from: "parent_key")
         click_on("Submit")
@@ -35,7 +34,6 @@ class FloatingActionMenuComponent < ComponentUnderTest
       end
 
       within("#person-form", visible: :all) do
-        click_on("Next")
         select("an Employee", from: "type")
         fill_in("first_name", with: first_name)
         select("Jack Donaghy", from: "supervisor_key")
@@ -51,7 +49,6 @@ class FloatingActionMenuComponent < ComponentUnderTest
       end
 
       within("#open-req-form", visible: :all) do
-        click_on("Next")
         fill_in("title", with: title)
         select("Jack Donaghy", from: "supervisor_key")
         select("General Electric", from: "team_key")
