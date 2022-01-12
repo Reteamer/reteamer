@@ -120,15 +120,15 @@ export default class extends Controller {
                   <supervisor-form-group class="form-group">
                     <label for="supervisor_key">Supervisor</label>
                     <select name="supervisor_key" class="select">
-                      <option disabled selected>Pick one...</option>
-                      <option>&lt;No Supervisor&gt;</option>
+                      <option disabled selected value="">Pick one...</option>
+                      <option value="">&lt;No Supervisor&gt;</option>
                     </select>
                   </supervisor-form-group>
                   <team-form-group class="form-group">
                     <label for="team_key">Initial Team</label>
                     <select name="team_key" class="select">
-                      <option disabled selected>Pick one...</option>
-                      <option>&lt;Unassigned&gt;</option>
+                      <option disabled selected value="">Pick one...</option>
+                      <option value="">&lt;Unassigned&gt;</option>
                     </select>
                   </team-form-group>
                   <div class="form-group">
