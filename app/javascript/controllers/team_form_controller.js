@@ -28,6 +28,12 @@ export default class extends Controller {
   resetWizard() {
     this.element.querySelector("#team-form").reset()
     this.element.querySelector("team-form-group").classList.remove("hidden");
+
+    let select = this.element.querySelector("select[name='parent_key']")
+    for(let i = 2; i < select.options.length;) {
+      select.remove(i)
+    }
+
     this.sectionOneTarget.classList.remove("hidden")
     this.sectionTwoTarget.classList.add("hidden")
     this.team = null;

@@ -31,6 +31,17 @@ export default class extends Controller {
   resetWizard() {
     this.element.querySelector("#person-form").reset()
     this.element.querySelector("supervisor-form-group").classList.remove("hidden");
+
+    let select = this.element.querySelector("select[name='supervisor_key']")
+    for(let i = 2; i < select.options.length;) {
+      select.remove(i)
+    }
+
+    select = this.element.querySelector("select[name='team_key']")
+    for(let i = 2; i < select.options.length;) {
+      select.remove(i)
+    }
+
     this.element.querySelector("team-form-group").classList.remove("hidden");
     this.sectionOneTarget.classList.remove("hidden")
     this.sectionTwoTarget.classList.add("hidden")
@@ -134,7 +145,7 @@ export default class extends Controller {
                 <h2 class="text-xl mb-4">Select the type of position for this person</h2>
                 <label>This is
                   <select name="type" class="select" name="type" data-action="change->person-form#handlePersonTypePicked">
-                    <option disabled selected="true">Pick one...</option>
+                    <option disabled selected="true" value="">Pick one...</option>
                     <option value="Employee">an Employee</option>
                     <option value="Contractor">a Contractor</option>
                   </select>
@@ -168,8 +179,8 @@ export default class extends Controller {
                   <team-form-group class="form-group">
                     <label for="team_key">Initial Team</label>
                     <select name="team_key" class="select">
-                      <option disabled selected>Pick one...</option>
-                      <option>&lt;Unassigned&gt;</option>
+                      <option disabled selected value="">Pick one...</option>
+                      <option value="">&lt;Unassigned&gt;</option>
                     </select>
                   </team-form-group>
                   <div class="form-group">
