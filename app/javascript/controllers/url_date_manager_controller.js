@@ -2,8 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   handleDatePicked(event) {
-    var pageUrl = updateUrlParameter(window.location.href, "effective_date", event.detail.newDate)
+    let newDate = event.detail.newDate;
+    var pageUrl = updateUrlParameter(window.location.href, "effective_date", newDate)
     window.history.pushState('', '', pageUrl);
+    fetch(`/reteamer_api/selected_date.json?effective_date=${newDate}`)
   }
 
   handleProposalPicked(event) {
