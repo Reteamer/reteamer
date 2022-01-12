@@ -6,6 +6,17 @@ export default class extends Controller {
 
   handleDatePicked(event) {
     event.preventDefault();
+    this.populateDropdown();
+    this.sectionOneTarget.classList.add("hidden")
+    this.sectionTwoTarget.classList.remove("hidden")
+  }
+
+  populateDropdown() {
+    let select = this.element.querySelector("select[name='parent_key']")
+    for(let i = 2; i < select.options.length;) {
+      select.remove(i)
+    }
+
     const selected_date = document.querySelector("#team-form input[name='effective_at']").value
 
     fetch(`/reteamer_api/teams.json?effective_date=${selected_date}`).then((response) => {
@@ -20,19 +31,11 @@ export default class extends Controller {
         })
       })
     })
-
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionTwoTarget.classList.remove("hidden")
   }
 
   resetWizard() {
     this.element.querySelector("#team-form").reset()
     this.element.querySelector("team-form-group").classList.remove("hidden");
-
-    let select = this.element.querySelector("select[name='parent_key']")
-    for(let i = 2; i < select.options.length;) {
-      select.remove(i)
-    }
 
     this.sectionOneTarget.classList.remove("hidden")
     this.sectionTwoTarget.classList.add("hidden")
@@ -53,7 +56,10 @@ export default class extends Controller {
 
   handleNewTeam(event) {
     this.resetWizard();
+    this.populateDropdown();
     this.callback = event.detail.callback
+    this.sectionOneTarget.classList.add("hidden")
+    this.sectionTwoTarget.classList.remove("hidden")
   }
 
   handleSubmit(event) {
