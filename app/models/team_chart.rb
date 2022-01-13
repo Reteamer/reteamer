@@ -104,7 +104,7 @@ class TeamChart
     end
 
     def name
-      "Unassigned"
+      "Unassigned People"
     end
 
     def parent_key
