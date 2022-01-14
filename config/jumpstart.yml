@@ -9,7 +9,7 @@ business_address: |-
   San Francisco, CA 94103
 background_job_processor: async
 email_provider: ''
-personal_accounts: true
+personal_accounts: false
 livereload: false
 solargraph: false
 register_with_account: true
