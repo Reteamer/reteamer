@@ -101,7 +101,9 @@ class Account < ApplicationRecord
   #
   after_create do
     ActsAsTenant.with_tenant(self) do
-      Proposal.create(name: Proposal::MAIN_PROPOSAL_NAME)
+      ActsAsProposable.with_proposal(Proposal.create(name: Proposal::MAIN_PROPOSAL_NAME)) do
+        DemoData.create_consultancy(self, owner)
+      end
     end
   end
 end
