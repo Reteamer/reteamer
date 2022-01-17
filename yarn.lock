@@ -1858,10 +1858,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-tailwindcss-stimulus-components@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/tailwindcss-stimulus-components/-/tailwindcss-stimulus-components-3.0.1.tgz#d2238d2c3d3c66dbf207ccb28fd4d741d131f9b1"
-  integrity sha512-SLR6+mL8mdVUb6AEgr4bocETO6WAztUyc07cFYyLxLwB5KS6aZy4GZDNthZQtZK7D7fdCjUypaPwjDkGGwbUaA==
+tailwindcss-stimulus-components@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/tailwindcss-stimulus-components/-/tailwindcss-stimulus-components-3.0.2.tgz#6104c0675fa2560fc3528df803044d30437d429b"
+  integrity sha512-jwTP+keIYN/AMIDBhUAklfUvqqhAnRN18eF8Sqm9qoEpJPssyY3kLZjJPTw13MmtPVcFmYOybdBQ015sI+SmTg==
   dependencies:
     "@hotwired/stimulus" ">=3.0.0"
 
