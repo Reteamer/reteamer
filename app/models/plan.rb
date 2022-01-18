@@ -49,6 +49,21 @@ class Plan < ApplicationRecord
     plan
   end
 
+  def self.getting_started
+    plan = where(name: "Getting Started").first_or_initialize
+    plan.update(
+      hidden: false,
+      amount: 0,
+      currency: :usd,
+      interval: :month,
+      trial_period_days: 0,
+      fake_processor_id: :getting_started,
+      description: "For when you company is under 20 people, or you just want to check out Reteamer",
+      features: ["Limited to allocating a maximum of 20 people, upgrade to allocate more"]
+    )
+    plan
+  end
+
   def features
     Array.wrap(super)
   end

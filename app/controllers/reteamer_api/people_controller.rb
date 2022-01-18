@@ -13,6 +13,9 @@ module ReteamerApi
         supervisor_key: params[:supervisor_key].presence,
         employee_id: params[:employee_id]
       )
+
+      authorize new_person
+
       effective_date = Date.parse(params[:effective_at])
       person_entry = Entry.create!(effective_at: effective_date, versionable: new_person)
 
