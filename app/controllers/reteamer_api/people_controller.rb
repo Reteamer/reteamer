@@ -22,6 +22,16 @@ module ReteamerApi
       if params[:team_key]
         Entry.create!(effective_at: effective_date, versionable: Assignment.new(person_key: person_entry.key, team_key: params[:team_key]))
       end
+      render json: {}
+    rescue Pundit::NotAuthorizedError
+      render json:
+        {
+          error:
+            {
+              message: "Your current plan limit of #{PlanPolicy::MAX_ALLOCATABLE_PEOPLE} people and open reqs has been met. Please #{view_context.link_to("upgrade to continue", subscriptions_path)}."
+            }
+        },
+        status: :unprocessable_entity
     end
 
     def update

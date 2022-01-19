@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
-  static targets = [ "sectionOne", "sectionThree" ]
+  static targets = [ "sectionOne", "sectionThree", "errorMessage", "submitButton" ]
   static values = {
     selectedDate: String
   }
@@ -32,14 +32,14 @@ export default class extends Controller {
     this.element.querySelector("supervisor-form-group").classList.remove("hidden");
     this.element.querySelector("team-form-group").classList.remove("hidden");
 
+    this.errorMessageTarget.innerHTML = null
+    this.errorMessageTarget.classList.add("hidden")
+    this.submitButtonTarget.disabled = false
+
     this.sectionOneTarget.classList.remove("hidden")
     this.sectionThreeTarget.classList.add("hidden")
     this.openReq = null;
     this.callback = () => {}
-  }
-
-  isNewRecord() {
-    return !this.openReq;
   }
 
   handleDatePicked(event) {
@@ -99,6 +99,10 @@ export default class extends Controller {
     const effectiveDate =  form.effective_at.value
     this.callback(effectiveDate, newOpenReqAttributes).then(() => {
       emitEvent("openReqDone")
+    }).catch((json) => {
+      this.errorMessageTarget.innerHTML = json.error.message;
+      this.errorMessageTarget.classList.remove("hidden")
+      this.submitButtonTarget.disabled = true;
     })
   }
 
@@ -150,9 +154,10 @@ export default class extends Controller {
                     <label>Job Title</label>
                     <input type="text" class="form-control" name="title" />
                   </div>
-                  <div class="flex justify-end items-center flex-wrap mt-6">
+                 <error-message data-open-req-form-target="errorMessage" class="form-group bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert"></error-message>
+                 <div class="flex justify-end items-center flex-wrap mt-6">
                     <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
-                    <button class="btn btn-primary">Submit</button>
+                    <button data-open-req-form-target="submitButton" class="btn btn-primary">Submit</button>
                   </div>
                 </div>
               </section-three>

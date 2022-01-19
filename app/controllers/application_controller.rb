@@ -26,9 +26,9 @@ class ApplicationController < ActionController::Base
   def check_plan_policy
     allowed_people = PlanPolicy.allowed_people
     if allowed_people == PlanPolicy::TOO_MANY
-      flash[:error] = "Your plan has the maximum number of allocatable people (#{PlanPolicy::MAX_ALLOCATABLE_PEOPLE}), please #{view_context.link_to("upgrade", subscription_path(current_subscription))}".html_safe
+      flash[:error] = "Your plan has the maximum number of allocatable people (#{PlanPolicy::MAX_ALLOCATABLE_PEOPLE}), please #{view_context.link_to("upgrade", subscriptions_path)}".html_safe
     elsif allowed_people == PlanPolicy::NEARING_LIMIT
-      flash[:alert] = "Your plan is nearing the maximum number of allocatable people (#{PlanPolicy::MAX_ALLOCATABLE_PEOPLE}), please #{view_context.link_to("upgrade", subscription_path(current_subscription))}".html_safe
+      flash[:alert] = "Your plan is nearing the maximum number of allocatable people (#{PlanPolicy::MAX_ALLOCATABLE_PEOPLE}), please #{view_context.link_to("upgrade", subscriptions_path)}".html_safe
     end
   end
 

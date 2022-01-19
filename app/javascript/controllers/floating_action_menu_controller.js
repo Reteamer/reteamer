@@ -6,7 +6,7 @@ export default class extends Controller {
     const event = new CustomEvent("newPersonStarted", {
       detail: {
         callback: function(effectiveDate, newPersonAttributes) {
-          const promise = fetch(`/reteamer_api/people/`, {
+          return fetch(`/reteamer_api/people/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -18,11 +18,16 @@ export default class extends Controller {
                 ...newPersonAttributes
               }
             )
-          }).then(() => {
-            emitDatePickedEvent(effectiveDate)
-          });
-
-          return promise;
+          }).then((response) => {
+            return response.json().then(json => {
+              if(response.ok) {
+                emitDatePickedEvent(effectiveDate)
+                return json
+              } else {
+                return Promise.reject(json)
+              }
+            })
+          })
         }
       }
     })
@@ -60,7 +65,7 @@ export default class extends Controller {
     const event = new CustomEvent("newOpenReqStarted", {
       detail: {
         callback: function(effectiveDate, newOpenReqAttributes) {
-          const promise = fetch(`/reteamer_api/open_reqs/`, {
+          return fetch(`/reteamer_api/open_reqs/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -72,11 +77,16 @@ export default class extends Controller {
                 ...newOpenReqAttributes
               }
             )
-          }).then(() => {
-            emitDatePickedEvent(effectiveDate)
-          });
-
-          return promise;
+          }).then((response) => {
+            return response.json().then(json => {
+              if(response.ok) {
+                emitDatePickedEvent(effectiveDate)
+                return json
+              } else {
+                return Promise.reject(json)
+              }
+            })
+          })
         }
       }
     })
