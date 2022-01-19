@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :pay_customer, class: Pay::Customer do
-    processor { "stripe" }
-    processor_id { "cus_ABC1234" }
+    processor { "fake_processor" }
+    processor_id { "free" }
     default { true }
 
     trait :subscribed do

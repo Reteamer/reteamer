@@ -92,7 +92,7 @@ class Account < ApplicationRecord
   #
   after_create do
     # trial_ends_at = 14.days.from_now
-    set_payment_processor :stripe
+    set_payment_processor Settings.payment_processor.name, allow_fake: true
     payment_processor.subscribe(name: Pay.default_product_name, plan: Plan.getting_started.stripe_id)
   end
 

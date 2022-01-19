@@ -1,2 +1,3 @@
-stripe:
-  getting_started_price_id: "price_1KJOC8HFuumYEPV2KSh2QoVr"
+payment_processor:
+  name: "fake_processor"
+  getting_started_price_id: "price_ABC123"

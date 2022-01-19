@@ -1,2 +1,3 @@
-stripe:
+payment_processor:
+  name: "stripe"
   getting_started_price_id: "price_1KJOMdHFuumYEPV2RyO0RVJb"
