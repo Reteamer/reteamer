@@ -15,3 +15,5 @@ solargraph: false
 register_with_account: true
 payment_processors:
 - stripe
+integrations:
+- mailchimp

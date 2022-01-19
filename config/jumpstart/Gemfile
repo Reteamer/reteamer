@@ -1,2 +1,2 @@
-gem "omniauth-github"
+gem "gibbon"
 gem "stripe"
