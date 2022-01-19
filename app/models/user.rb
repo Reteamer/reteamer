@@ -88,9 +88,9 @@ class User < ApplicationRecord
     caption || name
   end
 
-  after_create do
-    if Rails.env.production?
-      Jumpstart::Clients.mailchimp.members.create(body: {email_address: "foo@bar.com", status: "subscribed", merge_fields: {FNAME: name.first, LNAME: name.last}})
-    end
-  end
+  # after_create do
+  #   if Rails.env.production?
+  #     Jumpstart::Clients.mailchimp.members.create(body: {email_address: "foo@bar.com", status: "subscribed", merge_fields: {FNAME: name.first, LNAME: name.last}})
+  #   end
+  # end
 end
