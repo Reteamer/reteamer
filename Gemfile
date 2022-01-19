@@ -114,7 +114,7 @@ gem "request_store"
 gem "responders", github: "heartcombo/responders"
 gem "rotp", "~> 6.2"
 gem "rqrcode", "~> 2.1"
-gem "ruby-oembed", "~> 0.15.0", require: "oembed"
+gem "ruby-oembed", "~> 0.16.1", require: "oembed"
 gem "whenever", "~> 1.0", require: false
 
 # Jumpstart manages a few gems for us, so install them from the extra Gemfile
