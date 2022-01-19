@@ -3,6 +3,10 @@ module CurrentHelper
     Current.account
   end
 
+  def current_subscription
+    Current.account.payment_processor.subscription
+  end
+
   def current_proposal
     Current.proposal
   end

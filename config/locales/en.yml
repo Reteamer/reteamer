@@ -196,7 +196,7 @@ en:
     no_plans: "There are no pricing plans configured."
     pricing:
       heading: "Pricing Plans"
-      subhead: "Simple, straightforward pricing to get your online business up and running"
+      subhead: "Simple, straightforward pricing to get you up and running"
       monthly: "Monthly"
       yearly: "Yearly"
 
@@ -290,7 +290,7 @@ en:
     edit:
       trial_ends: "Your trial ends in %{days}."
       title: "Change Your Plan"
-      description: "Simple, straightforward pricing to get your online business up and running"
+      description: "Simple, straightforward pricing to get you up and running"
       monthly: "Monthly"
       yearly: "Yearly"
       current_plan: "Current Plan"

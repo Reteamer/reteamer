@@ -19,8 +19,18 @@ class ApplicationController < ActionController::Base
   before_action :set_selected_date
 
   impersonates :user
+  add_flash_types :error
 
   protected
+
+  def check_plan_policy
+    allowed_people = PlanPolicy.allowed_people
+    if allowed_people == PlanPolicy::TOO_MANY
+      flash[:error] = "Your plan has the maximum number of allocatable people (#{PlanPolicy::MAX_ALLOCATABLE_PEOPLE}), please #{view_context.link_to("upgrade", subscription_path(current_subscription))}".html_safe
+    elsif allowed_people == PlanPolicy::NEARING_LIMIT
+      flash[:alert] = "Your plan is nearing the maximum number of allocatable people (#{PlanPolicy::MAX_ALLOCATABLE_PEOPLE}), please #{view_context.link_to("upgrade", subscription_path(current_subscription))}".html_safe
+    end
+  end
 
   # To add extra fields to Devise registration, add the attribute names to `extra_keys`
   def configure_permitted_parameters

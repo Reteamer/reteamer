@@ -92,8 +92,8 @@ class Account < ApplicationRecord
   #
   after_create do
     # trial_ends_at = 14.days.from_now
-    set_payment_processor :fake_processor, allow_fake: true
-    payment_processor.subscribe(plan: Plan.getting_started.fake_processor_id)
+    set_payment_processor :stripe
+    payment_processor.subscribe(name: Pay.default_product_name, plan: Plan.getting_started.stripe_id)
   end
 
   # If you need to create some associated records when an Account is created,

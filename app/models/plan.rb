@@ -57,7 +57,7 @@ class Plan < ApplicationRecord
       currency: :usd,
       interval: :month,
       trial_period_days: 0,
-      fake_processor_id: :getting_started,
+      stripe_id: Settings.stripe.getting_started_price_id,
       description: "For when you company is under 20 people, or you just want to check out Reteamer",
       features: ["Limited to allocating a maximum of 20 people, upgrade to allocate more"]
     )

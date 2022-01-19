@@ -14,7 +14,7 @@ module ReteamerApi
         employee_id: params[:employee_id]
       )
 
-      authorize new_person
+      authorize new_person.becomes(People::Person)
 
       effective_date = Date.parse(params[:effective_at])
       person_entry = Entry.create!(effective_at: effective_date, versionable: new_person)

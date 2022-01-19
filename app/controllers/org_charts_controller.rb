@@ -1,5 +1,5 @@
 class OrgChartsController < ApplicationController
-  before_action :authenticate_user!, :require_subscription
+  before_action :authenticate_user!, :require_subscription, :check_plan_policy
 
   def show
     @selected_date = Date.parse(session.fetch(:effective_date, Date.today.iso8601))

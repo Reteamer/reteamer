@@ -35,10 +35,6 @@ class DemoData
     pd = Entry.create(effective_at: Date.today, versionable: People::OpenReq.new(supervisor_key: grandboss_entry.key, title: "Product Designer"))
     Entry.create(effective_at: Date.today, versionable: Assignment.new(team_key: food_team_entry.key, person_key: pd.key))
 
-    vk = Entry.create(effective_at: Date.today, versionable: People::Employee.new(supervisor_key: grandboss_entry.key, first_name: "Vivian", last_name: "Kertzmann", title: "Software Engineer", image_url: "demo_avatars/cartoon/42.png"))
-    Entry.create(effective_at: Date.today, versionable: Assignment.new(team_key: car_team_entry.key, person_key: vk.key))
-    ph = Entry.create(effective_at: Date.today, versionable: People::Employee.new(supervisor_key: grandboss_entry.key, first_name: "Phil", last_name: "Harris", title: "Senior Software Engineer", image_url: "demo_avatars/cartoon/31.png"))
-    Entry.create(effective_at: Date.today, versionable: Assignment.new(team_key: car_team_entry.key, person_key: ph.key))
     ky = Entry.create(effective_at: Date.today, versionable: People::Contractor.new(first_name: "Kim", last_name: "Yost", title: "Senior Software Engineer", image_url: "demo_avatars/cartoon/10.png"))
     Entry.create(effective_at: Date.today, versionable: Assignment.new(team_key: car_team_entry.key, person_key: ky.key))
     so = Entry.create(effective_at: Date.today, versionable: People::Employee.new(supervisor_key: grandboss_entry.key, first_name: "Steven", last_name: "Occupations", title: "Product Manager", image_url: "demo_avatars/cartoon/17.png"))
