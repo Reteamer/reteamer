@@ -214,7 +214,7 @@ GEM
       faraday-net_http (~> 2.0)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (2.0.1)
-    ffi (1.15.4)
+    ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -320,7 +320,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.13.1-x86_64-linux)
       racc (~> 1.4)
-    noticed (1.5.5)
+    noticed (1.5.7)
       http (>= 4.0.0)
       rails (>= 5.2.0)
     oj (3.13.11)
