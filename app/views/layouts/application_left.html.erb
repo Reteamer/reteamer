@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="h-full antialiased" lang="<%= I18n.locale %>">
+  <head>
+    <title>
+      <% if content_for?(:title) %>
+        <%= yield :title %> |
+      <% end %>
+      <%= Jumpstart.config.application_name %>
+    </title>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= viewport_meta_tag %>
+
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+
+    <%# Be sure to add your own custom favicons %>
+    <%= render "shared/favicons" %>
+    <%= render "shared/payments_dependencies" %>
+
+    <%# Replace this with your FontAwesome Pro Kit code %>
+    <script defer src="https://kit.fontawesome.com/0e5ab6a736.js" crossorigin="anonymous"></script>
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+    <%= yield :head %>
+  </head>
+
+  <body class="h-full font-sans antialiased font-normal leading-normal bg-gray-50">
+    <div class="main flex flex-row">
+      <nav class="flex flex-wrap flex-col px-2 pt-2 pb-5 bg-gray-900 border-r border-danger text-sm font-medium">
+        <div class="mb-10 flex-col flex-grow-1">
+          <%= link_to root_path do %>
+            <%= render_svg "icon", styles: "fill-current text-gray-700 hover:text-gray-800", width: 50, height: 50 %>
+            <span class="sr-only"><%= Jumpstart.config.application_name %></span>
+          <% end %>
+        </div>
+        <top-links class="flex flex-wrap items-center grow flex-col justify-between">
+          <org-chart-link>
+            <%= link_to org_chart_path, class: 'no-underline', aria: { label: t(".org_chart") } do %>
+              <i class="fa fa-sitemap"></i>
+            <% end %>
+          </org-chart-link>
+
+          <team-chart-link>
+            <%= link_to team_chart_path, class: 'no-underline', aria: { label: t(".team_chart") } do %>
+              <i class="fa fa-users"></i>
+            <% end %>
+          </team-chart-link>
+
+          <announcements-link>
+            <%= tag.a class: "inline-block select-none",
+              aria: { label: "Announcements" },
+              class: ["nav-link", unread_announcements_class(current_user)],
+              href: announcements_path do %>
+                  <span class="appearance-none flex items-center inline-block relative text-gray-700">
+                    <i class="fa fa-bullhorn"></i>
+                    <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
+                  </span>
+            <% end %>
+          </announcements-link>
+
+          <notifications-link>
+            <%= tag.div class: "z-10 mr-4 inline-flex items-center align-middle leading-none rounded no-underline text-gray-700 hover:text-gray-800 hover:bg-white",
+              data: {
+                controller: "notifications",
+                notifications_account_id_value: current_account.id,
+                notifications_account_unread_value: @account_unread,
+                notifications_total_unread_value: @total_unread,
+              } do %>
+
+              <div class="relative" data-controller="dropdown">
+                <%# Marks all notifications as read when menu opens by default. Remove the notifications Stimulus actions to disable this. %>
+                <%= tag.button class: "inline-block select-none",
+                  aria: { label: "Notifications" },
+                  data: {
+                    action: "click->notifications#open touch->notifications#open click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
+                  } do %>
+                          <span class="appearance-none flex items-center inline-block relative text-gray-700">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
+                          </span>
+                <% end %>
+
+                <div data-dropdown-target="menu" class="lg:absolute mt-2 hidden z-20">
+                  <div class="bg-white shadow rounded border border-gray-200 overflow-hidden sm:w-96">
+                    <%= turbo_frame_tag "notifications", loading: :lazy, target: :_top, src: notifications_path, data: { notifications_target: "list" } do %>
+                      <p class="p-4"><i class="fas fa-circle-notch fa-spin text-gray-400 mr-1"></i> Loading...</p>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+          </notifications-link>
+
+          <more-link>
+            <%= link_to edit_user_registration_path, class: 'no-underline' do %>
+              <i class="fa fa-ellipsis-h"></i>
+            <% end %>
+          </more-link>
+        </top-links>
+        <bottom-links class="flex flex-wrap flex-col grow items-center justify-end">
+          <account-link>
+            <%= link_to edit_user_registration_path, class: 'no-underline' do %>
+              <%= account_avatar current_account, class: "rounded-full h-8 w-8" %>
+            <% end %>
+          </account-link>
+
+          <profile-link>
+            <%= link_to edit_user_registration_path, class: 'no-underline' do %>
+              <%=  image_tag(avatar_url_for(current_user), class: "rounded-full h-10 w-10") %>
+            <% end %>
+          </profile-link>
+        </bottom-links>
+      </nav>
+
+      <div class="flex flex-col">
+        <%= render partial: "shared/flash" %>
+
+        <div class="px-3 lg:px-0 h-full">
+          <%= yield :chart_navigation %>
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
