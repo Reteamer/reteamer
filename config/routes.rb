@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   resource :team_chart, only: :show
   resource :reset_data, only: :show
 
+  namespace :widget do
+    resource :webhook
+    resource :team_chart, only: :show
+  end
+
   namespace :reteamer_api do
     resources :selected_date, only: :index, controller: :selected_date
     resources :supervisors, only: :index
