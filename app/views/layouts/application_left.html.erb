@@ -32,31 +32,31 @@
       <nav class="flex flex-wrap flex-col px-2 items-center pt-2 pb-5 bg-gray-900 border-r border-danger">
         <div class="mb-10 flex-col flex-grow-1 ">
           <%= link_to root_path do %>
-            <%= render_svg "icon", styles: "fill-current text-gray-700 hover:text-gray-800", width: 50, height: 50 %>
+            <%= render_svg "icon", styles: "fill-current text-gray-700 hover:text-gray-800", width: 60, height: 60 %>
             <span class="sr-only"><%= Jumpstart.config.application_name %></span>
           <% end %>
         </div>
         <top-links class="flex flex-wrap items-center grow flex-col justify-between">
-          <org-chart-link style="text-align:center">
+          <org-chart-link class="vertical-nav-link">
             <%= link_to org_chart_path, class: 'no-underline', aria: { label: t(".org_chart") } do %>
               <i class="fa fa-sitemap"></i><br />
               ORG CHART
             <% end %>
           </org-chart-link>
 
-          <team-chart-link style="text-align:center">
+          <team-chart-link class="vertical-nav-link">
             <%= link_to team_chart_path, class: 'no-underline', aria: { label: t(".team_chart") } do %>
               <i class="fa fa-users"></i><br />
               TEAM CHART
             <% end %>
           </team-chart-link>
 
-          <announcements-link style="text-align: center">
+          <announcements-link class="vertical-nav-link">
             <%= tag.a class: "inline-block select-none",
               aria: { label: "What's New" },
               class: [unread_announcements_class(current_user)],
               href: announcements_path do %>
-                  <span class="appearance-none relative text-gray-700">
+                  <span class="appearance-none relative">
                     <i class="fa fa-bullhorn"></i>
                     <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
                   </span><br />
@@ -64,8 +64,8 @@
           <% end %>
           </announcements-link>
 
-          <notifications-link style="text-align:center">
-            <%= tag.div class: "z-10 inline-flex items-center align-middle leading-none rounded no-underline text-gray-700 hover:text-gray-800 hover:bg-white",
+          <notifications-link class="vertical-nav-link">
+            <%= tag.div class: "z-10 inline-flex items-center align-middle leading-none no-underline",
               data: {
                 controller: "notifications",
                 notifications_account_id_value: current_account.id,
@@ -73,17 +73,15 @@
                 notifications_total_unread_value: @total_unread,
               } do %>
 
-              <div class="relative" data-controller="dropdown" style="text-align:center">
+              <div class="relative" data-controller="dropdown">
                 <%# Marks all notifications as read when menu opens by default. Remove the notifications Stimulus actions to disable this. %>
                 <%= tag.button class: "inline-block select-none",
                   aria: { label: "Notifications" },
                   data: {
                     action: "click->notifications#open touch->notifications#open click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
                   } do %>
-                    <span class="appearance-none inline-block relative text-gray-700">
-                      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                      </svg>
+                    <span class="appearance-none inline-block relative">
+                      <i class="fa fa-bell"></i>
                       <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
                     </span><br />
                     NOTIFICATIONS
@@ -102,11 +100,40 @@
 
           </notifications-link>
 
-          <more-link style="text-align: center">
-            <%= link_to edit_user_registration_path, class: 'no-underline' do %>
+          <more-link class="relative vertical-nav-link" data-controller="dropdown">
+            <%= tag.div data: {
+                action: "click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
+              } do %>
               <i class="fa fa-ellipsis-h"></i><br />
               MORE LINKS
-          <% end %>
+            <% end %>
+            <more-link-dropdown data-dropdown-target="menu" class="text-left z-20 hidden lg:absolute bottom-0 dropdown-menu">
+              <div class="overflow-hidden bg-white border border-gray-200 rounded shadow-md">
+                <% if Rails.configuration.can_reset_data %>
+                  <%= link_to t(".reset_data"), reset_data_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
+                <% end %>
+
+                <% if other_accounts.any? %>
+                  <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200">Switch Account</div>
+                  <% current_user.accounts.order(name: :asc).where.not(id: current_account.id).each do |account| %>
+                    <%= switch_account_button account, data: { controller: :accounts, action: "ajax:success->accounts#reconnect" }, class: 'block w-full text-left no-underline px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap cursor-pointer' %>
+                  <% end %>
+                <% end %>
+
+                <% if current_user.admin? %>
+                  <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200"><%= t(".admin") %></div>
+                  <%= link_to t(".dashboard"), admin_root_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
+                  <%= link_to 'Sidekiq', admin_sidekiq_web_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } if defined?(::Sidekiq) %>
+                <% end %>
+                <% if Rails.env.development? %>
+                  <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200">Development</div>
+                  <%= link_to 'Jumpstart Config', jumpstart_path(script_name: nil), class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', data: { turbo: false } %>
+                  <%= link_to 'Jumpstart Docs', jumpstart.docs_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
+                  <%= link_to 'Letter Opener', letter_opener_web_path(script_name: nil), class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
+                <% end %>
+                <%= button_to t(".sign_out"), destroy_user_session_path, method: :delete, class: 'w-full text-left font-medium cursor-pointer px-6 py-3 border-t border-gray-200 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
+              </div>
+            </more-link-dropdown>
           </more-link>
         </top-links>
         <bottom-links class="flex flex-wrap flex-col grow items-center justify-end">
