@@ -30,64 +30,57 @@
   <body class="h-full font-sans antialiased font-normal leading-normal bg-gray-50">
     <div class="main flex flex-row">
       <nav class="flex flex-wrap flex-col px-2 items-center pt-2 pb-5 bg-gray-900 border-r border-danger">
-        <div class="mb-10 flex-col flex-grow-1 ">
-          <%= link_to root_path do %>
+        <%= link_to root_path do %>
+        <logo class="mb-10 flex-col flex-grow-1 ">
             <%= render_svg "icon", styles: "fill-current text-gray-700 hover:text-gray-800", width: 60, height: 60 %>
             <span class="sr-only"><%= Jumpstart.config.application_name %></span>
-          <% end %>
-        </div>
+        </logo>
+        <% end %>
+
         <top-links class="flex flex-wrap items-center grow flex-col justify-between">
-          <org-chart-link class="vertical-nav-link">
-            <%= link_to org_chart_path, class: 'no-underline', aria: { label: t(".org_chart") } do %>
-              <i class="fa fa-sitemap"></i><br />
-              ORG CHART
-            <% end %>
-          </org-chart-link>
-
-          <team-chart-link class="vertical-nav-link">
-            <%= link_to team_chart_path, class: 'no-underline', aria: { label: t(".team_chart") } do %>
-              <i class="fa fa-users"></i><br />
-              TEAM CHART
-            <% end %>
-          </team-chart-link>
-
-          <announcements-link class="vertical-nav-link">
-            <%= tag.a class: "inline-block select-none",
-              aria: { label: "What's New" },
-              class: [unread_announcements_class(current_user)],
-              href: announcements_path do %>
-                  <span class="appearance-none relative">
-                    <i class="fa fa-bullhorn"></i>
-                    <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
-                  </span><br />
-                  WHAT'S NEW
+          <%= link_to org_chart_path, class: 'vertical-nav-link no-underline', aria: { label: t(".org_chart") } do %>
+            <org-chart-link>
+                <i class="fa fa-sitemap"></i><br />
+                ORG CHART
+            </org-chart-link>
           <% end %>
-          </announcements-link>
+
+          <%= link_to team_chart_path, class: 'vertical-nav-link no-underline', aria: { label: t(".team_chart") } do %>
+            <team-chart-link>
+                <i class="fa fa-users"></i><br />
+                TEAM CHART
+            </team-chart-link>
+          <% end %>
+
+          <%= link_to announcements_path, class: "vertical-nav-link no-underline #{unread_announcements_class(current_user)}", aria: { label: "What's New" } do %>
+            <announcements-link class="vertical-nav-link">
+              <span class="appearance-none relative">
+                <i class="fa fa-bullhorn"></i>
+              </span><br />
+              WHAT'S NEW
+            </announcements-link>
+          <% end %>
 
           <% if signed_in? %>
-          <notifications-link class="vertical-nav-link">
-            <%= tag.div class: "z-10 inline-flex items-center align-middle leading-none no-underline",
-              data: {
-                controller: "notifications",
-                notifications_account_id_value: current_account.id,
-                notifications_account_unread_value: @account_unread,
-                notifications_total_unread_value: @total_unread,
-              } do %>
-
+            <notifications-link class="vertical-nav-link z-10 no-undeline"
+                data-controller="notifications"
+                data-notifications-account-id-value="#{current_account.id}"
+                data-notifications-account-unread-value="#{@account_unread}"
+                data-notifications-total-unread-value="#{@total_unread}"
+            >
               <div class="relative" data-controller="dropdown">
                 <%# Marks all notifications as read when menu opens by default. Remove the notifications Stimulus actions to disable this. %>
                 <%= tag.button class: "inline-block select-none",
                   aria: { label: "Notifications" },
                   data: {
                     action: "click->notifications#open touch->notifications#open click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
-                  } do %>
-                    <span class="appearance-none inline-block relative">
-                      <i class="fa fa-bell"></i>
-                      <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
-                    </span><br />
-                    NOTIFICATIONS
-
-              <% end %>
+                } do %>
+                  <span class="appearance-none inline-block relative">
+                    <i class="fa fa-bell"></i>
+                    <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
+                  </span><br />
+                  NOTIFICATIONS
+                <% end %>
 
                 <div data-dropdown-target="menu" class="lg:absolute mt-2 hidden z-20">
                   <div class="bg-white shadow rounded border border-gray-200 overflow-hidden sm:w-96">
@@ -97,17 +90,11 @@
                   </div>
                 </div>
               </div>
-            <% end %>
-
-          </notifications-link>
+            </notifications-link>
           <% end %>
-          <more-link class="relative vertical-nav-link" data-controller="dropdown">
-            <%= tag.div data: {
-                action: "click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
-              } do %>
-              <i class="fa fa-ellipsis-h"></i><br />
-              MORE LINKS
-            <% end %>
+          <more-link class="relative vertical-nav-link" data-controller="dropdown" data-action="click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide">
+            <i class="fa fa-ellipsis-h"></i><br />
+            MORE LINKS
             <more-link-dropdown data-dropdown-target="menu" class="text-left text-base z-20 hidden lg:absolute bottom-0 dropdown-menu">
               <div class="overflow-hidden bg-white border border-gray-200 rounded shadow-md">
                 <% if signed_in? && Rails.configuration.can_reset_data %>
