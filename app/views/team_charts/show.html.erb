@@ -1,12 +1,9 @@
-<% content_for :chart_navigation do %>
-  <%= render "shared/simple_date_navigator", selected_date: @selected_date %>
-<% end %>
-
-<div class="row chart team-chart">
-  <div class="px-4">
-    <h1><%= t(".title") %></h1>
+<div class="row flex flex-col h-full">
+  <div class="px-4 p-1 bg-blue-200">
+    <h1 class="inline-block"><%= t(".title") %></h1>
+    <%= render "shared/simple_date_navigator", selected_date: @selected_date %>
   </div>
-  <div class="team-chart" data-controller="team-chart"
+  <div id="tree-chart" class="team-chart h-full" data-controller="team-chart"
        data-action="
        newData@window->team-chart#handleNewTeamData
        cancelTeamChange@window->team-chart#handleCancelChange
@@ -24,6 +21,8 @@
 
   <%= render "shared/floating_action_menu", selected_date: @selected_date, enabled_menu_options: [FloatingActionMenu::TEAM, FloatingActionMenu::PERSON, FloatingActionMenu::PROPOSAL, FloatingActionMenu::OPEN_REQ] %>
 </div>
+
+
 <effective-date-modal
   id="change-assignment-effective-date-modal"
   data-controller="effective-date-modal"
@@ -32,6 +31,7 @@
   data-effective-date-modal-canceled-event-value="cancelAssignmentChange"
   data-effective-date-modal-open-event-value="personDropped"
 ></effective-date-modal>
+
 <effective-date-modal
   id="change-team-parent-effective-date-modal"
   data-controller="effective-date-modal"
@@ -40,6 +40,7 @@
   data-effective-date-modal-canceled-event-value="cancelTeamParentChange"
   data-effective-date-modal-open-event-value="teamDropped"
 ></effective-date-modal>
+
 <effective-date-modal
   id="deactivate-person-effective-date-modal"
   data-controller="effective-date-modal"
@@ -48,6 +49,7 @@
   data-effective-date-modal-canceled-event-value="cancelDeactivatePersonChange"
   data-effective-date-modal-open-event-value="personDeactivationStarted"
 ></effective-date-modal>
+
 <effective-date-modal
   id="deactivate-team-effective-date-modal"
   data-controller="effective-date-modal"
@@ -57,8 +59,8 @@
   data-effective-date-modal-open-event-value="teamDeactivated"
 ></effective-date-modal>
 
-<div
+<url-date-manager
   data-controller="url-date-manager"
   data-action="datePicked@window->url-date-manager#handleDatePicked proposalPicked@window->url-date-manager#handleProposalPicked"
-></div>
+></url-date-manager>
 

@@ -1,12 +1,9 @@
-<% content_for :chart_navigation  do %>
-  <%= render "shared/simple_date_navigator", selected_date: @selected_date %>
-<% end %>
-
-<div class="row chart org-chart">
-  <div class="px-4">
-    <h1><%= t(".title") %></h1>
+<div class="row flex flex-col h-full">
+  <div class="px-4 p-1 bg-blue-200">
+    <h1 class="inline-block"><%= t(".title") %></h1>
+    <%= render "shared/simple_date_navigator", selected_date: @selected_date %>
   </div>
-  <div class="org-chart" data-controller="org-chart"
+  <div id="tree-chart" class="org-chart h-full" data-controller="org-chart"
        data-action="
        newData@window->org-chart#handleNewOrgData
        completeSupervisorChange@window->org-chart#handleCompleteSupervisorChange
