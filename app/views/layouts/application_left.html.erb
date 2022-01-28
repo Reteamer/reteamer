@@ -64,6 +64,7 @@
           <% end %>
           </announcements-link>
 
+          <% if signed_in? %>
           <notifications-link class="vertical-nav-link">
             <%= tag.div class: "z-10 inline-flex items-center align-middle leading-none no-underline",
               data: {
@@ -99,7 +100,7 @@
             <% end %>
 
           </notifications-link>
-
+          <% end %>
           <more-link class="relative vertical-nav-link" data-controller="dropdown">
             <%= tag.div data: {
                 action: "click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
@@ -109,18 +110,18 @@
             <% end %>
             <more-link-dropdown data-dropdown-target="menu" class="text-left text-base z-20 hidden lg:absolute bottom-0 dropdown-menu">
               <div class="overflow-hidden bg-white border border-gray-200 rounded shadow-md">
-                <% if Rails.configuration.can_reset_data %>
+                <% if signed_in? && Rails.configuration.can_reset_data %>
                   <%= link_to t(".reset_data"), reset_data_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
                 <% end %>
 
-                <% if other_accounts.any? %>
+                <% if signed_in? && other_accounts.any? %>
                   <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200">Switch Account</div>
                   <% current_user.accounts.order(name: :asc).where.not(id: current_account.id).each do |account| %>
                     <%= switch_account_button account, data: { controller: :accounts, action: "ajax:success->accounts#reconnect" }, class: 'block w-full text-left no-underline px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap cursor-pointer' %>
                   <% end %>
                 <% end %>
 
-                <% if current_user.admin? %>
+                <% if signed_in? && current_user.admin? %>
                   <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200"><%= t(".admin") %></div>
                   <%= link_to t(".dashboard"), admin_root_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
                   <%= link_to 'Sidekiq', admin_sidekiq_web_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } if defined?(::Sidekiq) %>
@@ -142,17 +143,19 @@
           </more-link>
         </top-links>
         <bottom-links class="flex flex-wrap flex-col grow items-center justify-end">
-          <account-link>
-            <%= link_to account_path(current_account), class: 'no-underline' do %>
-              <%= account_avatar current_account, class: "rounded-full h-8 w-8" %>
-            <% end %>
-          </account-link>
+          <% if signed_in? %>
+            <account-link>
+              <%= link_to account_path(current_account), class: 'no-underline' do %>
+                <%= account_avatar current_account, class: "rounded-full h-8 w-8" %>
+              <% end %>
+            </account-link>
 
-          <profile-link class="mt-4">
-            <%= link_to edit_user_registration_path, class: 'no-underline' do %>
-              <%=  image_tag(avatar_url_for(current_user), class: "rounded-full h-10 w-10") %>
-            <% end %>
-          </profile-link>
+            <profile-link class="mt-4">
+              <%= link_to edit_user_registration_path, class: 'no-underline' do %>
+                <%=  image_tag(avatar_url_for(current_user), class: "rounded-full h-10 w-10") %>
+              <% end %>
+            </profile-link>
+          <% end %>
         </bottom-links>
       </nav>
 
