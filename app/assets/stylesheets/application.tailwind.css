@@ -33,5 +33,6 @@
 
 @import "fab.scss";
 @import "chart.scss";
+@import "nav.scss";
 @import "person_node.scss";
 @import "team_node.scss";

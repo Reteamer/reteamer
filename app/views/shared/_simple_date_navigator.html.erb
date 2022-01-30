@@ -1,5 +1,5 @@
 <simple-date-navigator
-  class="px-4 h-full"
+  class="px-4 h-full inline-block"
   data-controller="simple-date-navigator"
   data-action="datePicked@window->simple-date-navigator#handleExternalDateChange"
   data-simple-date-navigator-selected-date-value="<%= selected_date %>"
@@ -15,7 +15,7 @@
          data-controller="flatpickr"
          data-flatpickr-alt-format="D M j, Y"
          data-flatpickr-alt-input="true"
-         data-flatpickr-alt-input-class="form-control-inline flatpickr-input active w-[165px]"
+         data-flatpickr-alt-input-class="form-control-inline flatpickr-input m-0 active w-[165px]"
          readonly="readonly"
          value="<%= selected_date %>"
     />

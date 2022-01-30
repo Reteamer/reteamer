@@ -438,6 +438,24 @@ en:
         verify: "Verify"
 
   layouts:
+    application_left:
+      profile: "Profile"
+      password: "Password"
+      connected_accounts: "Connected Accounts"
+      billing: "Billing"
+      api_tokens: "API"
+      accounts: "Accounts"
+      admin: "Admin"
+      dashboard: "Dashboard"
+      sign_out: "Sign Out"
+      log_in: "Log In"
+      sign_up: "Sign Up"
+      org_chart: "Org Chart"
+      team_chart: "Team Chart"
+      reset_data: "Reset Data"
+      about: "About Us"
+      privacy: "Privacy Policy"
+      terms: "Terms of Service"
     mailer:
       copyright_html: "Copyright &copy; %{year}, All rights reserved."
       mailing_address: "Our mailing address is:"

@@ -17,7 +17,7 @@ class OpenReqTest < ApplicationSystemTestCase
 
     AccountLeader.visit_org_chart
     assert_selector(".person-node", text: "Cunning Engineer")
-
+    find("i[title='Compact-Expand']").click
     sleep(1)
     page.percy_snapshot("Jack has an open req")
   end

@@ -1,0 +1,15 @@
+@tailwind components;
+
+@layer components {
+  .vertical-nav-link {
+    @apply w-full rounded hover:bg-white p-2;
+    @apply text-gray-400 hover:text-gray-800;
+    @apply text-center cursor-pointer;
+    font-size: .5rem;
+
+    i {
+      font-size: 1.5rem;
+      @apply p-3 mb-2 rounded;
+    }
+  }
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html class="h-full antialiased" lang="<%= I18n.locale %>">
+  <head>
+    <title>
+      <% if content_for?(:title) %>
+        <%= yield :title %> |
+      <% end %>
+      <%= Jumpstart.config.application_name %>
+    </title>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= viewport_meta_tag %>
+
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= stylesheet_link_tag "application", media: "all", "data-turbo-track": "reload" %>
+
+    <%# Be sure to add your own custom favicons %>
+    <%= render "shared/favicons" %>
+    <%= render "shared/payments_dependencies" %>
+
+    <%# Replace this with your FontAwesome Pro Kit code %>
+    <script defer src="https://kit.fontawesome.com/0e5ab6a736.js" crossorigin="anonymous"></script>
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+    <%= yield :head %>
+  </head>
+
+  <body class="h-full font-sans antialiased font-normal leading-normal bg-gray-50">
+    <div class="main flex flex-row">
+      <nav class="flex flex-wrap flex-col px-2 items-center pt-2 pb-5 bg-gray-900 border-r border-danger">
+        <%= link_to root_path do %>
+        <logo class="mb-10 flex-col flex-grow-1 ">
+            <%= render_svg "icon", styles: "fill-current text-gray-700 hover:text-gray-800", width: 60, height: 60 %>
+            <span class="sr-only"><%= Jumpstart.config.application_name %></span>
+        </logo>
+        <% end %>
+
+        <top-links class="flex flex-wrap items-center grow flex-col justify-between">
+          <%= link_to org_chart_path, class: 'vertical-nav-link no-underline', aria: { label: t(".org_chart") } do %>
+            <org-chart-link>
+                <i class="fa fa-sitemap"></i><br />
+                ORG CHART
+            </org-chart-link>
+          <% end %>
+
+          <%= link_to team_chart_path, class: 'vertical-nav-link no-underline', aria: { label: t(".team_chart") } do %>
+            <team-chart-link>
+                <i class="fa fa-users"></i><br />
+                TEAM CHART
+            </team-chart-link>
+          <% end %>
+
+          <%= link_to announcements_path, class: "vertical-nav-link no-underline #{unread_announcements_class(current_user)}", aria: { label: "What's New" } do %>
+            <announcements-link class="vertical-nav-link">
+              <span class="appearance-none relative">
+                <i class="fa fa-bullhorn"></i>
+              </span><br />
+              WHAT'S NEW
+            </announcements-link>
+          <% end %>
+
+          <% if signed_in? %>
+            <notifications-link class="vertical-nav-link z-10 no-undeline"
+                data-controller="notifications"
+                data-notifications-account-id-value="#{current_account.id}"
+                data-notifications-account-unread-value="#{@account_unread}"
+                data-notifications-total-unread-value="#{@total_unread}"
+            >
+              <div class="relative" data-controller="dropdown">
+                <%# Marks all notifications as read when menu opens by default. Remove the notifications Stimulus actions to disable this. %>
+                <%= tag.button class: "inline-block select-none",
+                  aria: { label: "Notifications" },
+                  data: {
+                    action: "click->notifications#open touch->notifications#open click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide"
+                } do %>
+                  <span class="appearance-none inline-block relative">
+                    <i class="fa fa-bell"></i>
+                    <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
+                  </span><br />
+                  NOTIFICATIONS
+                <% end %>
+
+                <div data-dropdown-target="menu" class="lg:absolute mt-2 hidden z-20">
+                  <div class="bg-white shadow rounded border border-gray-200 overflow-hidden sm:w-96">
+                    <%= turbo_frame_tag "notifications", loading: :lazy, target: :_top, src: notifications_path, data: { notifications_target: "list" } do %>
+                      <p class="p-4"><i class="fas fa-circle-notch fa-spin text-gray-400 mr-1"></i> Loading...</p>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </notifications-link>
+          <% end %>
+          <more-link class="relative vertical-nav-link" data-controller="dropdown" data-action="click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide">
+            <i class="fa fa-ellipsis-h"></i><br />
+            MORE LINKS
+            <more-link-dropdown data-dropdown-target="menu" class="text-left text-base z-20 hidden lg:absolute bottom-0 dropdown-menu">
+              <div class="overflow-hidden bg-white border border-gray-200 rounded shadow-md">
+                <% if signed_in? && Rails.configuration.can_reset_data %>
+                  <%= link_to t(".reset_data"), reset_data_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
+                <% end %>
+
+                <% if signed_in? && other_accounts.any? %>
+                  <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200">Switch Account</div>
+                  <% current_user.accounts.order(name: :asc).where.not(id: current_account.id).each do |account| %>
+                    <%= switch_account_button account, data: { controller: :accounts, action: "ajax:success->accounts#reconnect" }, class: 'block w-full text-left no-underline px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap cursor-pointer' %>
+                  <% end %>
+                <% end %>
+
+                <% if signed_in? && current_user.admin? %>
+                  <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200"><%= t(".admin") %></div>
+                  <%= link_to t(".dashboard"), admin_root_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
+                  <%= link_to 'Sidekiq', admin_sidekiq_web_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } if defined?(::Sidekiq) %>
+                <% end %>
+                <% if Rails.env.development? %>
+                  <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200">Development</div>
+                  <%= link_to 'Jumpstart Config', jumpstart_path(script_name: nil), class: 'no-underline block px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', data: { turbo: false } %>
+                  <%= link_to 'Jumpstart Docs', jumpstart.docs_path, class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
+                  <%= link_to 'Letter Opener', letter_opener_web_path(script_name: nil), class: 'no-underline block px-6 py-3 text-gray-800 bg-white  hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap', target: :_blank, data: { turbo: false } %>
+                <% end %>
+                <div class="px-6 py-3 text-xs font-bold text-gray-800 uppercase bg-white border-t border-gray-200">Legal</div>
+                <%= link_to t(".about"), about_path, class: "no-underline block px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap" %>
+                <%= link_to t(".privacy"), privacy_path, class: "no-underline block px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap" %>
+                <%= link_to t(".terms"), terms_path, class: "no-underline block px-6 py-3 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap" %>
+
+                <%= button_to t(".sign_out"), destroy_user_session_path, method: :delete, class: 'w-full text-left font-medium cursor-pointer px-6 py-3 border-t border-gray-200 text-gray-800 bg-white hover:bg-primary-50 transition ease-in-out duration-200 whitespace-nowrap' %>
+              </div>
+            </more-link-dropdown>
+          </more-link>
+        </top-links>
+        <bottom-links class="flex flex-wrap flex-col grow items-center justify-end">
+          <% if signed_in? %>
+            <account-link>
+              <%= link_to account_path(current_account), class: 'no-underline' do %>
+                <%= account_avatar current_account, class: "rounded-full h-8 w-8" %>
+              <% end %>
+            </account-link>
+
+            <profile-link class="mt-4">
+              <%= link_to edit_user_registration_path, class: 'no-underline' do %>
+                <%=  image_tag(avatar_url_for(current_user), class: "rounded-full h-10 w-10") %>
+              <% end %>
+            </profile-link>
+          <% end %>
+        </bottom-links>
+      </nav>
+
+      <div class="flex grow flex-col">
+        <%= render partial: "shared/flash" %>
+
+        <div class="px-3 lg:px-0 h-full">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

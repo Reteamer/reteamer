@@ -34,8 +34,8 @@ export class TreeChart {
     const attrs = {
       id: `ID${Math.floor(Math.random() * 1000000)}`, // Id for event handlings
       firstDraw: true,
-      svgWidth: 800,
-      svgHeight: window.innerHeight - 320,
+      svgWidth: document.getElementById("tree-chart").offsetWidth,
+      svgHeight: document.getElementById("tree-chart").offsetHeight,
       container: "body",
       defaultTextFill: "#2C3E50",
       defaultFont: "Helvetica",
