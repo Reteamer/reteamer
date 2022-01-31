@@ -19,27 +19,29 @@ export default class SalesRecruitingChartController extends Controller {
         "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_IC.csv",
-      function(data) { return data }).then(function(data) {
+    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
+      function(d){
+        return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+      }).then(function(data) {
 
       // Add X axis --> it is a date format
-      let x = d3.scaleLinear()
-        .domain([1, 100])
-        .range([0, width]);
+      let x = d3.scaleTime()
+        .domain(d3.extent(data, function(d) { return d.date; }))
+        .range([ 0, width ]);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
 
       // Add Y axis
       let y = d3.scaleLinear()
-        .domain([0, 13])
-        .range([height, 0]);
+        .domain([0, d3.max(data, function(d) { return +d.value; })])
+        .range([ height, 0 ]);
       svg.append("g")
         .call(d3.axisLeft(y));
 
       // This allows to find the closest X index of the mouse:
       let bisect = d3.bisector(function(d) {
-        return d.x;
+        return d.date;
       }).left;
 
       // Create the circle that travels along the curve of chart
@@ -68,10 +70,10 @@ export default class SalesRecruitingChartController extends Controller {
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
           .x(function(d) {
-            return x(d.x)
+            return x(d.date)
           })
           .y(function(d) {
-            return y(d.y)
+            return y(d.value)
           })
         )
 
@@ -99,12 +101,12 @@ export default class SalesRecruitingChartController extends Controller {
         let i = bisect(data, x0, 1);
         let selectedData = data[i]
         self.focus
-          .attr("cx", x(selectedData.x))
-          .attr("cy", y(selectedData.y))
+          .attr("cx", x(selectedData.date))
+          .attr("cy", y(selectedData.value))
         self.focusText
-          .html("x:" + selectedData.x + "  -  " + "y:" + selectedData.y)
-          .attr("x", x(selectedData.x) + 15)
-          .attr("y", y(selectedData.y))
+          .html("x:" + selectedData.date + "  -  " + "y:" + selectedData.value)
+          .attr("x", x(selectedData.date) + 15)
+          .attr("y", y(selectedData.value))
       }
 
       function mouseout() {
