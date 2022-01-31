@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   resource :org_chart, only: :show
   resource :team_chart, only: :show
+  resources :reports, only: :index
   resource :reset_data, only: :show
 
   namespace :reteamer_api do
