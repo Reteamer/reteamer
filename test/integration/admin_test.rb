@@ -2,14 +2,16 @@ require "test_helper"
 
 class Jumpstart::AdminTest < ActionDispatch::IntegrationTest
   test "cannot access /admin logged out" do
-    get "/admin"
-    assert_response :missing
+    assert_raises ActionController::RoutingError do
+      get "/admin"
+    end
   end
 
   test "cannot access /admin as regular user" do
-    sign_in users(:one)
-    get "/admin"
-    assert_response :missing
+    assert_raises ActionController::RoutingError do
+      sign_in users(:one)
+      get "/admin"
+    end
   end
 
   test "can access /admin as admin user" do
