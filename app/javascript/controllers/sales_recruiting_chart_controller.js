@@ -1,6 +1,7 @@
 import {Controller} from "@hotwired/stimulus";
 import * as d3 from "d3";
 import dayjs from "dayjs";
+import {peopleDate, toISODate} from "../date_helpers";
 
 export default class SalesRecruitingChartController extends Controller {
 
@@ -214,7 +215,7 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("font-size", "10px")
           .text(function(d) { return d.name; });
 
-        // Create the circle that travels along the curve of chart
+        // Create the focus
         self.openReqFocus = svg
           .append('g')
           .append('circle')
@@ -233,12 +234,46 @@ export default class SalesRecruitingChartController extends Controller {
           .style("opacity", 0)
 
         // Create the text that travels along the curve of chart
-        self.focusText = svg
+        const focusText = svg
           .append('g')
-          .append('text')
           .style("opacity", 0)
+
+        const focusTextBackground = focusText.append("rect").attr("fill", "#e2e8f0").attr("opacity", 0.9)
+
+        const focusTextBox = focusText
+          .append('text')
           .attr("text-anchor", "left")
           .attr("alignment-baseline", "middle")
+          .attr("font-size", "10px")
+
+        focusTextBox
+          .append("tspan")
+          .attr("class", "tooltip-text-line-date")
+          .attr("x", "5")
+          .attr("y", "5")
+          .attr("dy", "13px")
+          .attr("font-weight", "bold")
+
+        focusTextBox
+          .append("tspan")
+          .attr("class", "tooltip-text-line-unassigned")
+          .attr("x", "5")
+          .attr("dy", `14px`)
+          .attr("fill", unassignedColor)
+
+        focusTextBox
+          .append("tspan")
+          .attr("class", "tooltip-text-line-open-reqs")
+          .attr("x", "5")
+          .attr("dy", `14px`)
+          .attr("fill", openReqColor)
+
+        focusTextBox
+          .append("tspan")
+          .attr("class", "tooltip-text-line-how-many-to-hire")
+          .attr("x", "5")
+          .attr("dy", `14px`)
+          .attr("fill", howManyToHireColor)
 
         // Create a rect on top of the svg area: this rectangle recovers mouse position
         svg
@@ -256,13 +291,14 @@ export default class SalesRecruitingChartController extends Controller {
         function mouseover() {
           self.openReqFocus.style("opacity", 1)
           self.unassignedFocus.style("opacity", 1)
-          self.focusText.style("opacity", 1)
+          focusText.style("opacity", 1)
         }
 
         function mousemove(e) {
-          let x0 = x.invert(d3.pointer(e)[0]);
+          const pointerElement = d3.pointer(e);
+          let x0 = x.invert(pointerElement[0]);
           let i = bisect(data, x0, 1);
-          let selectedData = data[i]
+          let selectedData = data[i-1]
           self.openReqFocus
             .attr("cx", x(selectedData.date))
             .attr("cy", y(selectedData.open_reqs))
@@ -271,16 +307,22 @@ export default class SalesRecruitingChartController extends Controller {
             .attr("cx", x(selectedData.date))
             .attr("cy", y(selectedData.unassigned))
 
-          self.focusText
-            .html(`Open Reqs: ${selectedData.open_reqs}Unassigned People: ${selectedData.unassigned}`)
-            .attr("x", x(selectedData.date) + 15)
-            .attr("y", y(selectedData.open_reqs))
+          focusText
+            // .html(`Open Reqs: ${selectedData.open_reqs}Unassigned People: ${selectedData.unassigned}`)
+            .attr("transform", `translate(${pointerElement[0] + 15}, ${pointerElement[1]})`)
+
+          focusTextBackground.attr("width", focusTextBox.node().getBBox().width + 10).attr("height", focusTextBox.node().getBBox().height + 10);
+
+          focusTextBox.select(".tooltip-text-line-date").text(`${dayjs(selectedData.date).format(peopleDate)}`)
+          focusTextBox.select(".tooltip-text-line-unassigned").text(`# of Unassigned People: ${selectedData.unassigned}`)
+          focusTextBox.select(".tooltip-text-line-open-reqs").text(`# of Open Reqs: ${selectedData.open_reqs}`)
+          focusTextBox.select(".tooltip-text-line-how-many-to-hire").text(`# of People to Hire: ${selectedData.how_many_to_hire}`)
         }
 
         function mouseout() {
           self.openReqFocus.style("opacity", 0)
           self.unassignedFocus.style("opacity", 0)
-          self.focusText.style("opacity", 0)
+          focusText.style("opacity", 0)
         }
       })
   }
