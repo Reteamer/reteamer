@@ -21,13 +21,17 @@ export default class SalesRecruitingChartController extends Controller {
         "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    d3.json("/reteamer_api/sales_recruitings.json",
-      function(d){
-        return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-      }).then(function(data) {
+    let timeParse = d3.timeParse("%Y-%m-%d");
+    d3.json("/reteamer_api/sales_recruitings.json")
+      .then(function(data) {
+      console.error("=============>", data);
+      data.forEach(function(d) {
+        d.date = timeParse(d.date)
+      })
+      console.error("=============>", data);
       // Add X axis --> it is a date format
-      let x = d3.scaleUtc()
-        .domain(d3.extent(data, function(d) { return dayjs(d.date); }))
+      let x = d3.scaleTime()
+        .domain(d3.extent(data, function(d) { return d.date; }))
         .range([ 0, width ]);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -70,12 +74,28 @@ export default class SalesRecruitingChartController extends Controller {
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
           .x(function(d) {
-            return x(dayjs(d.date))
+            return x(d.date)
           })
           .y(function(d) {
             return y(d.value)
           }).curve(d3.curveStepAfter)
         )
+
+        // Add the line
+        svg
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "darkorange")
+          .attr("stroke-width", 1.5)
+          .attr("d", d3.line()
+            .x(function(d) {
+              return x(d.date)
+            })
+            .y(function(d) {
+              return y(d.unassigned)
+            }).curve(d3.curveStepAfter)
+          )
 
       // Create a rect on top of the svg area: this rectangle recovers mouse position
       svg
@@ -104,7 +124,7 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("cx", x(selectedData.date))
           .attr("cy", y(selectedData.value))
         self.focusText
-          .html("x:" + selectedData.date + "  -  " + "y:" + selectedData.value)
+          .html("x:" + selectedData.date + "  " + "y:" + selectedData.value)
           .attr("x", x(selectedData.date) + 15)
           .attr("y", y(selectedData.value))
       }
