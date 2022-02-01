@@ -8,12 +8,9 @@ Rails.application.routes.draw do
   resource :reset_data, only: :show
 
   namespace :reteamer_api do
-    resources :selected_date, only: :index, controller: :selected_date
-    resources :supervisors, only: :index
     resources :assignments, only: [:create, :update, :destroy], param: :key
-    resources :teams, only: [:index, :create, :update, :destroy], param: :key
-    resources :team_parents, only: [:update], param: :key
     resources :open_reqs, only: [:create, :update], param: :key
+    resource :org_chart, only: :show
     resources :people, only: [:create, :update, :destroy], param: :key do
       collection do
         post :update_supervisor
@@ -22,8 +19,12 @@ Rails.application.routes.draw do
     resources :proposals, only: [:create] do
       post :switch, on: :collection
     end
-    resource :org_chart, only: :show
+    resources :sales_recruitings, only: :index
+    resources :selected_date, only: :index, controller: :selected_date
+    resources :supervisors, only: :index
+    resources :team_parents, only: [:update], param: :key
     resource :team_chart, only: :show
+    resources :teams, only: [:index, :create, :update, :destroy], param: :key
   end
 
   # Jumpstart views

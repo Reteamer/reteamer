@@ -1,7 +1,9 @@
 import {Controller} from "@hotwired/stimulus";
 import * as d3 from "d3";
+import dayjs from "dayjs";
 
 export default class SalesRecruitingChartController extends Controller {
+
   connect() {
     const self = this;
     // set the dimensions and margins of the graph
@@ -19,19 +21,17 @@ export default class SalesRecruitingChartController extends Controller {
         "translate(" + margin.left + "," + margin.top + ")");
 
     //Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/3_TwoNumOrdered_comma.csv",
+    d3.json("/reteamer_api/sales_recruitings.json",
       function(d){
         return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
       }).then(function(data) {
-
       // Add X axis --> it is a date format
-      let x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.date; }))
+      let x = d3.scaleUtc()
+        .domain(d3.extent(data, function(d) { return dayjs(d.date); }))
         .range([ 0, width ]);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
-
       // Add Y axis
       let y = d3.scaleLinear()
         .domain([0, d3.max(data, function(d) { return +d.value; })])
@@ -70,11 +70,11 @@ export default class SalesRecruitingChartController extends Controller {
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
           .x(function(d) {
-            return x(d.date)
+            return x(dayjs(d.date))
           })
           .y(function(d) {
             return y(d.value)
-          })
+          }).curve(d3.curveStepAfter)
         )
 
       // Create a rect on top of the svg area: this rectangle recovers mouse position
