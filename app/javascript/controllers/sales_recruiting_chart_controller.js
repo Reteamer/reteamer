@@ -76,6 +76,7 @@ export default class SalesRecruitingChartController extends Controller {
               .tickValues(data.map(function(d) {
                 return d.date
               }))
+              .tickFormat(d3.timeFormat("%b %-d"))
           )
 
         xAxis.select(".domain")
