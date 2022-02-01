@@ -7,13 +7,19 @@ export default class SalesRecruitingChartController extends Controller {
   connect() {
     const self = this;
     // set the dimensions and margins of the graph
-    let margin = {top: 10, right: 30, bottom: 30, left: 60},
+    const margin = {top: 10, right: 30, bottom: 30, left: 60},
       width = 1000 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
-    let gridOpacity = "0.1";
-    let gridColor = "steelblue";
-    let gridWidth = "1px";
+    const gridOpacity = "0.1";
+    const gridColor = "steelblue";
+    const gridWidth = "1px";
+
+    const barWidth = 50;
+
+    const openReqColor = "#ea86cd";
+    const unassignedColor = "#ec9e5d";
+    const howManyToHireColor = "#326aa2";
 
     // append the svg object to the body of the page
     let svg = d3.select("#my_dataviz")
@@ -120,22 +126,23 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("stroke-width", gridWidth)
 
         //Add the "How Many To Hire" bars
-        svg.selectAll("mybar")
+        svg.selectAll(".how-many-to-hire-bar")
           .data(data)
           .enter()
           .append("rect")
+          .attr("class", "how-many-to-hire-bar")
           .attr("clip-path", "url(#graph-clip)")
           .attr("x", function(d) {
-            return x(d.date) - 25;
+            return x(d.date) - barWidth/2;
           })
           .attr("y", function(d) {
             return d.how_many_to_hire > 0 ? y(d.how_many_to_hire) : y(0);
           })
-          .attr("width", 50)
+          .attr("width", barWidth)
           .attr("height", function(d) {
             return Math.abs(y(d.how_many_to_hire) - y(0));
           })
-          .attr("fill", "#69b3a2")
+          .attr("fill", howManyToHireColor)
 
 
         // Add the OpenReqs line
@@ -143,8 +150,9 @@ export default class SalesRecruitingChartController extends Controller {
           .append("path")
           .datum(data)
           .attr("fill", "none")
-          .attr("stroke", "steelblue")
+          .attr("stroke", openReqColor)
           .attr("stroke-width", 1.5)
+          .attr("opacity", 0.7)
           .attr("d", d3.line()
             .x(function(d) {
               return x(d.date)
@@ -159,8 +167,9 @@ export default class SalesRecruitingChartController extends Controller {
           .append("path")
           .datum(data)
           .attr("fill", "none")
-          .attr("stroke", "darkorange")
+          .attr("stroke", unassignedColor)
           .attr("stroke-width", 1.5)
+          .attr("opacity", 0.7)
           .attr("d", d3.line()
             .x(function(d) {
               return x(d.date)
@@ -170,12 +179,46 @@ export default class SalesRecruitingChartController extends Controller {
             }).curve(d3.curveLinear)
           )
 
+        // The legend
+        const legendDomain = [
+          {name: "# of Open Reqs", color: openReqColor},
+          {name: "# of Unassigned People", color: unassignedColor},
+          {name: "# of People to Hire", color: howManyToHireColor},
+        ];
+        const legendRectSize = 6
+        const legendSpacing = 6
+        const legendOffsetY = 10;
+
+        var legend = svg.selectAll('.legend')
+          .data(legendDomain)
+          .enter()
+          .append('g')
+          .attr('class', 'legend')
+          .attr('transform', function(d, i) {
+            const height = legendRectSize + legendSpacing;
+            const horz = 2 * legendRectSize;
+            const vert = i * height + legendOffsetY;
+            return 'translate(' + horz + ',' + vert + ')';
+          });
+
+        legend.append('rect')
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)
+          .style('fill', function(d) { return d.color})
+          .style('stroke', function(d) { return d.color});
+
+        legend.append('text')
+          .attr('x', legendRectSize + legendSpacing)
+          .attr('y', legendRectSize )
+          .attr("font-size", "10px")
+          .text(function(d) { return d.name; });
+
         // Create the circle that travels along the curve of chart
         self.openReqFocus = svg
           .append('g')
           .append('circle')
           .style("fill", "none")
-          .attr("stroke", "steelblue")
+          .attr("stroke", openReqColor)
           .attr('r', 8)
           .style("opacity", 0)
 
@@ -184,7 +227,7 @@ export default class SalesRecruitingChartController extends Controller {
           .append('g')
           .append('circle')
           .style("fill", "none")
-          .attr("stroke", "darkorange")
+          .attr("stroke", unassignedColor)
           .attr('r', 6)
           .style("opacity", 0)
 
