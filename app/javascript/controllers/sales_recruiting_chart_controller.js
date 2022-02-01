@@ -8,7 +8,7 @@ export default class SalesRecruitingChartController extends Controller {
     const self = this;
     // set the dimensions and margins of the graph
     let margin = {top: 10, right: 30, bottom: 30, left: 60},
-      width = 460 - margin.left - margin.right,
+      width = 1000 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
@@ -20,40 +20,74 @@ export default class SalesRecruitingChartController extends Controller {
       .attr("transform",
         "translate(" + margin.left + "," + margin.top + ")");
 
+    // define the clipPath
+    svg.append("clipPath")       // define a clip path
+      .attr("id", "graph-clip") // give the clipPath an ID
+      .append('rect')
+      .attr('width', width)
+      .attr('height', height)
+
     //Read the data
     let timeParse = d3.timeParse("%Y-%m-%d");
     d3.json("/reteamer_api/sales_recruitings.json")
       .then(function(data) {
-      console.error("=============>", data);
+
+      const ticks = data.length
+
       data.forEach(function(d) {
         d.date = timeParse(d.date)
       })
-      console.error("=============>", data);
-      // Add X axis --> it is a date format
-      let x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.date; }))
-        .range([ 0, width ]);
-      svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+
       // Add Y axis
+      const yMin = d3.min(data, function(d) {
+        return Math.min(d.open_reqs, d.unassigned, d.how_many_to_hire)
+      }) - 3
+      const yMax = d3.max(data, function(d) {
+        return Math.max(d.open_reqs, d.unassigned, d.how_many_to_hire)
+      }) + 3
       let y = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return +d.value; })])
+        .domain([yMin, yMax])
         .range([ height, 0 ]);
       svg.append("g")
         .call(d3.axisLeft(y));
 
+      // Add X axis --> it is a date format
+      let x = d3.scaleTime()
+        .domain(d3.extent(data, function(d) { return d.date; }))
+        .range([ 0, width ])
+      svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x).tickValues(data.map(function(d) { return d.date})));
       // This allows to find the closest X index of the mouse:
       let bisect = d3.bisector(function(d) {
         return d.date;
       }).left;
 
+      // Draw a thick line at x=0
+      svg.append("line")
+        .attr("class", "cursor-line")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", y(0))
+        .attr("y2", y(0))
+
       // Create the circle that travels along the curve of chart
-      self.focus = svg
+      self.openReqFocus = svg
         .append('g')
         .append('circle')
         .style("fill", "none")
-        .attr("stroke", "black")
+        .attr("stroke", "steelblue")
+        .attr('r', 8.5)
+        .style("opacity", 0)
+
+      // Create the circle that travels along the curve of chart
+      self.unassignedFocus = svg
+        .append('g')
+        .append('circle')
+        .style("fill", "none")
+        .attr("stroke", "darkorange")
         .attr('r', 8.5)
         .style("opacity", 0)
 
@@ -65,7 +99,7 @@ export default class SalesRecruitingChartController extends Controller {
         .attr("text-anchor", "left")
         .attr("alignment-baseline", "middle")
 
-      // Add the line
+      // Add the OpenReqs line
       svg
         .append("path")
         .datum(data)
@@ -77,11 +111,11 @@ export default class SalesRecruitingChartController extends Controller {
             return x(d.date)
           })
           .y(function(d) {
-            return y(d.value)
-          }).curve(d3.curveStepAfter)
+            return y(d.open_reqs)
+          }).curve(d3.curveLinear)
         )
 
-        // Add the line
+        // Add the Unassigned line
         svg
           .append("path")
           .datum(data)
@@ -94,8 +128,20 @@ export default class SalesRecruitingChartController extends Controller {
             })
             .y(function(d) {
               return y(d.unassigned)
-            }).curve(d3.curveStepAfter)
+            }).curve(d3.curveLinear)
           )
+
+        //Add the "How Many To Hire" bars
+        svg.selectAll("mybar")
+          .data(data)
+          .enter()
+          .append("rect")
+          .attr("clip-path", "url(#graph-clip)")
+          .attr("x", function(d) { return x(d.date)-25; })
+          .attr("y", function(d) { return d.how_many_to_hire > 0 ? y(d.how_many_to_hire) : y(0); })
+          .attr("width", 50)
+          .attr("height", function(d) { return Math.abs(y(d.how_many_to_hire) - y(0)); })
+          .attr("fill", "#69b3a2")
 
       // Create a rect on top of the svg area: this rectangle recovers mouse position
       svg
@@ -111,29 +157,34 @@ export default class SalesRecruitingChartController extends Controller {
 
       // What happens when the mouse move -> show the annotations at the right positions.
       function mouseover() {
-        self.focus.style("opacity", 1)
+        self.openReqFocus.style("opacity", 1)
+        self.unassignedFocus.style("opacity", 1)
         self.focusText.style("opacity", 1)
       }
 
       function mousemove(e) {
-        // recover coordinate we need
         let x0 = x.invert(d3.pointer(e)[0]);
         let i = bisect(data, x0, 1);
         let selectedData = data[i]
-        self.focus
+        self.openReqFocus
           .attr("cx", x(selectedData.date))
-          .attr("cy", y(selectedData.value))
+          .attr("cy", y(selectedData.open_reqs))
+
+        self.unassignedFocus
+          .attr("cx", x(selectedData.date))
+          .attr("cy", y(selectedData.unassigned))
+
         self.focusText
-          .html("x:" + selectedData.date + "  " + "y:" + selectedData.value)
+          .html(`Open Reqs: ${selectedData.open_reqs}Unassigned People: ${selectedData.unassigned}`)
           .attr("x", x(selectedData.date) + 15)
-          .attr("y", y(selectedData.value))
+          .attr("y", y(selectedData.open_reqs))
       }
 
       function mouseout() {
-        self.focus.style("opacity", 0)
+        self.openReqFocus.style("opacity", 0)
+        self.unassignedFocus.style("opacity", 0)
         self.focusText.style("opacity", 0)
       }
-
     })
   }
 }
