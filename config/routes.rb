@@ -172,4 +172,6 @@ Rails.application.routes.draw do
 
   # Public marketing homepage
   root to: "static#index"
+
+  match "*path", to: "unknown_route#index", via: :all
 end
