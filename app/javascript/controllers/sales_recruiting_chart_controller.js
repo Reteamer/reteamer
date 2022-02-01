@@ -11,6 +11,10 @@ export default class SalesRecruitingChartController extends Controller {
       width = 1000 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
+    let gridOpacity = "0.1";
+    let gridColor = "steelblue";
+    let gridWidth = "1px";
+
     // append the svg object to the body of the page
     let svg = d3.select("#my_dataviz")
       .append("svg")
@@ -55,15 +59,26 @@ export default class SalesRecruitingChartController extends Controller {
         const xAxisExtent = d3.extent(data, function(d) {
           return d.date;
         });
-        console.error("=============>", xAxisExtent);
         let x = d3.scaleTime()
           .domain(xAxisExtent)
           .range([0, width])
-        svg.append("g")
+
+        const xAxis = svg.append("g")
           .attr("transform", `translate(0, ${height})`)
-          .call(d3.axisBottom(x).tickValues(data.map(function(d) {
-            return d.date
-          })));
+          .call(
+            d3.axisBottom(x)
+              .tickValues(data.map(function(d) {
+                return d.date
+              }))
+          )
+
+        xAxis.select(".domain")
+          .attr("stroke", "none")
+        xAxis.selectAll(".tick line")
+          .attr("opacity", gridOpacity)
+          .attr("stroke-width", gridWidth)
+          .attr("stroke", gridColor)
+
         // This allows to find the closest X index of the mouse:
         let bisect = d3.bisector(function(d) {
           return d.date;
@@ -88,9 +103,9 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("y1", function(d){ return y(d);})
           .attr("y2", function(d){ return y(d);})
           .attr("fill", "none")
-          .attr("opacity", "0.1")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", "1px")
+          .attr("opacity", gridOpacity)
+          .attr("stroke", gridColor)
+          .attr("stroke-width", gridWidth)
 
         svg.selectAll("line.vertical-grid").data(d3.timeMonday.range(...xAxisExtent)).enter()
           .append("line")
@@ -100,9 +115,9 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("y1", 0)
           .attr("y2", height)
           .attr("fill", "none")
-          .attr("opacity", "0.1")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", "1px")
+          .attr("opacity", gridOpacity)
+          .attr("stroke", gridColor)
+          .attr("stroke-width", gridWidth)
 
         //Add the "How Many To Hire" bars
         svg.selectAll("mybar")
@@ -161,7 +176,7 @@ export default class SalesRecruitingChartController extends Controller {
           .append('circle')
           .style("fill", "none")
           .attr("stroke", "steelblue")
-          .attr('r', 8.5)
+          .attr('r', 8)
           .style("opacity", 0)
 
         // Create the circle that travels along the curve of chart
@@ -170,7 +185,7 @@ export default class SalesRecruitingChartController extends Controller {
           .append('circle')
           .style("fill", "none")
           .attr("stroke", "darkorange")
-          .attr('r', 8.5)
+          .attr('r', 6)
           .style("opacity", 0)
 
         // Create the text that travels along the curve of chart
