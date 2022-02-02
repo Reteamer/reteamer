@@ -18,8 +18,9 @@ export default class SalesRecruitingChartController extends Controller {
 
     // const openReqColor = "#ea86cd";
     // const unassignedColor = "#ec9e5d";
-    const oversoldColor = "#326aa2";
-    const undersoldColor = "#f8b044";
+    const openReqsColor = "#326aa2";
+    const unassignedColor = "#f8b044";
+    const utilizationColor = "#9f2828";
 
     // append the svg object to the body of the page
     let svg = d3.select(this.element)
@@ -47,10 +48,10 @@ export default class SalesRecruitingChartController extends Controller {
 
         // Add Y axis
         const yMin = d3.min(data, function(d) {
-          return d.undersold
+          return d.unassigned
         }) - 3
         const yMax = d3.max(data, function(d) {
-          return Math.max(d.open_reqs, d.unassigned)
+          return Math.max(d.open_reqs)
         }) + 3
 
         let y = d3.scaleLinear()
@@ -96,16 +97,6 @@ export default class SalesRecruitingChartController extends Controller {
           return d.date;
         }).left;
 
-        // Draw a thick line at x=0
-        svg.append("line")
-          .attr("class", "cursor-line")
-          .style("stroke", "black")
-          .style("stroke-width", "1px")
-          .attr("x1", 0)
-          .attr("x2", width)
-          .attr("y1", y(0))
-          .attr("y2", y(0))
-
         // grid lines
         svg.selectAll("line.horizontal-grid").data(y.ticks(yMax-yMin)).enter()
           .append("line")
@@ -134,82 +125,74 @@ export default class SalesRecruitingChartController extends Controller {
 
         const barWidth = width/(1.5*data.length);
 
-        //Add the Oversold bars
-        svg.selectAll(".oversold-bar")
+        //Add the Open Reqs bars
+        svg.selectAll(".open-reqs-bar")
           .data(data)
           .enter()
           .append("rect")
-          .attr("class", "oversold-bar")
-          .attr("fill", oversoldColor)
+          .attr("class", "open-reqs-bar")
+          .attr("fill", openReqsColor)
           .attr("clip-path", "url(#graph-clip)")
           .attr("x", function(d) {
             return x(d.date) - barWidth/2;
           })
           .attr("y", function(d) {
-            return y(d.oversold);
+            return y(d.open_reqs);
           })
           .attr("width", barWidth)
           .attr("height", function(d) {
-            return y(0) - y(d.oversold);
+            return y(0) - y(d.open_reqs);
           })
 
-        //Add the Undersold bars
-        svg.selectAll(".undersold-bar")
+        //Add the Unassigned bars
+        svg.selectAll(".unassigned-bar")
           .data(data)
           .enter()
           .append("rect")
-          .attr("class", "undersold-bar")
-          .attr("fill", undersoldColor)
+          .attr("class", "unassigned-bar")
+          .attr("fill", unassignedColor)
           .attr("clip-path", "url(#graph-clip)")
           .attr("x", function(d) {
             return x(d.date) - barWidth/2;
           })
-          .attr("y", function(d) {
-            return y(0);
-          })
+          .attr("y", y(0))
           .attr("width", barWidth)
           .attr("height", function(d) {
-            return y(d.undersold) - y(0);
+            return y(d.unassigned) - y(0);
           })
 
-        // // Add the OpenReqs line
-        // svg
-        //   .append("path")
-        //   .datum(data)
-        //   .attr("fill", "none")
-        //   .attr("stroke", openReqColor)
-        //   .attr("stroke-width", 1.5)
-        //   .attr("opacity", 0.7)
-        //   .attr("d", d3.line()
-        //     .x(function(d) {
-        //       return x(d.date)
-        //     })
-        //     .y(function(d) {
-        //       return y(d.open_reqs)
-        //     }).curve(d3.curveLinear)
-        //   )
-        //
-        // // Add the Unassigned line
-        // svg
-        //   .append("path")
-        //   .datum(data)
-        //   .attr("fill", "none")
-        //   .attr("stroke", unassignedColor)
-        //   .attr("stroke-width", 1.5)
-        //   .attr("opacity", 0.7)
-        //   .attr("d", d3.line()
-        //     .x(function(d) {
-        //       return x(d.date)
-        //     })
-        //     .y(function(d) {
-        //       return y(d.unassigned)
-        //     }).curve(d3.curveLinear)
-        //   )
+        // Draw a thick line at x=0
+        svg.append("line")
+          .attr("class", "cursor-line")
+          .style("stroke", "black")
+          .style("stroke-width", "1px")
+          .attr("x1", 0)
+          .attr("x2", width)
+          .attr("y1", y(0))
+          .attr("y2", y(0))
+
+        // Add the Utilization line
+        svg
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", utilizationColor)
+          .attr("stroke-width", 2)
+          .attr("opacity", 1)
+          .attr("d", d3.line()
+            .x(function(d) {
+              return x(d.date)
+            })
+            .y(function(d) {
+              return y(d.utilization)
+            }).curve(d3.curveLinear)
+          )
 
         // The legend
         const legendDomain = [
-          {name: "Oversold count (hire more/ adjust contracts)", color: oversoldColor},
-          {name: "Undersold count (sell more/ adjust contracts", color: undersoldColor},
+          {name: "Unfilled Project Needs", color: openReqsColor},
+          {name: "Unassigned People", color: unassignedColor},
+          {name: "Best case scenario (Unfilled - Unassigned)", color: utilizationColor},
         ];
         const legendRectSize = 6
         const legendSpacing = 6
@@ -240,22 +223,14 @@ export default class SalesRecruitingChartController extends Controller {
           .text(function(d) { return d.name; });
 
         // Create the focus
-        // self.openReqFocus = svg
-        //   .append('g')
-        //   .append('circle')
-        //   .style("fill", "none")
-        //   .attr("stroke", openReqColor)
-        //   .attr('r', 8)
-        //   .style("opacity", 0)
-
-        // // Create the circle that travels along the curve of chart
-        // self.unassignedFocus = svg
-        //   .append('g')
-        //   .append('circle')
-        //   .style("fill", "none")
-        //   .attr("stroke", unassignedColor)
-        //   .attr('r', 6)
-        //   .style("opacity", 0)
+        // Create the circle that travels along the curve of chart
+        const utilizationFocus = svg
+          .append('g')
+          .append('circle')
+          .style("fill", "none")
+          .attr("stroke", utilizationColor)
+          .attr('r', 6)
+          .style("opacity", 0)
 
         // Create the text that travels along the curve of chart
         const focusText = svg
@@ -278,33 +253,26 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("dy", "13px")
           .attr("font-weight", "bold")
 
-        // focusTextBox
-        //   .append("tspan")
-        //   .attr("class", "tooltip-text-line-unassigned")
-        //   .attr("x", "5")
-        //   .attr("dy", `14px`)
-        //   .attr("fill", unassignedColor)
-        //
-        // focusTextBox
-        //   .append("tspan")
-        //   .attr("class", "tooltip-text-line-open-reqs")
-        //   .attr("x", "5")
-        //   .attr("dy", `14px`)
-        //   .attr("fill", openReqColor)
+        focusTextBox
+          .append("tspan")
+          .attr("class", "tooltip-text-line-unassigned")
+          .attr("x", "5")
+          .attr("dy", `14px`)
+          .attr("fill", unassignedColor)
 
         focusTextBox
           .append("tspan")
-          .attr("class", "tooltip-text-line-oversold")
+          .attr("class", "tooltip-text-line-open-reqs")
           .attr("x", "5")
           .attr("dy", `14px`)
-          .attr("fill", oversoldColor)
+          .attr("fill", openReqsColor)
 
         focusTextBox
           .append("tspan")
-          .attr("class", "tooltip-text-line-undersold")
+          .attr("class", "tooltip-text-line-utilization")
           .attr("x", "5")
           .attr("dy", `14px`)
-          .attr("fill", undersoldColor)
+          .attr("fill", utilizationColor)
 
         // Create a rect on top of the svg area: this rectangle recovers mouse position
         svg
@@ -320,8 +288,7 @@ export default class SalesRecruitingChartController extends Controller {
 
         // What happens when the mouse move -> show the annotations at the right positions.
         function mouseover() {
-          self.openReqFocus.style("opacity", 1)
-          self.unassignedFocus.style("opacity", 1)
+          utilizationFocus.style("opacity", 1)
           focusText.style("opacity", 1)
         }
 
@@ -330,30 +297,25 @@ export default class SalesRecruitingChartController extends Controller {
           let x0 = x.invert(pointerElement[0]);
           let i = bisect(data, x0, 1);
           let selectedData = data[i-1]
-          self.openReqFocus
-            .attr("cx", x(selectedData.date))
-            .attr("cy", y(selectedData.open_reqs))
 
-          self.unassignedFocus
+          utilizationFocus
             .attr("cx", x(selectedData.date))
-            .attr("cy", y(selectedData.unassigned))
+            .attr("cy", y(selectedData.utilization))
 
           focusText
-            // .html(`Open Reqs: ${selectedData.open_reqs}Unassigned People: ${selectedData.unassigned}`)
             .attr("transform", `translate(${pointerElement[0] + 15}, ${pointerElement[1]})`)
 
           focusTextBackground.attr("width", focusTextBox.node().getBBox().width + 10).attr("height", focusTextBox.node().getBBox().height + 10);
 
           focusTextBox.select(".tooltip-text-line-date").text(`${dayjs(selectedData.date).format(peopleDate)}`)
-          // focusTextBox.select(".tooltip-text-line-unassigned").text(`# of Unassigned People: ${selectedData.unassigned}`)
-          // focusTextBox.select(".tooltip-text-line-open-reqs").text(`# of Open Reqs: ${selectedData.open_reqs}`)
-          focusTextBox.select(".tooltip-text-line-oversold").text(`Oversold by: ${selectedData.oversold}`)
+          focusTextBox.select(".tooltip-text-line-unassigned").text(`# of Unassigned People: ${Math.abs(selectedData.unassigned)}`)
+          focusTextBox.select(".tooltip-text-line-open-reqs").text(`# of Open Reqs: ${selectedData.open_reqs}`)
           focusTextBox.select(".tooltip-text-line-undersold").text(`Undersold by: ${selectedData.undersold}`)
         }
 
         function mouseout() {
-          self.openReqFocus.style("opacity", 0)
-          self.unassignedFocus.style("opacity", 0)
+          openReqFocus.style("opacity", 0)
+          utilizationFocus.style("opacity", 0)
           focusText.style("opacity", 0)
         }
       })

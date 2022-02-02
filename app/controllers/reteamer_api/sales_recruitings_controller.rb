@@ -13,15 +13,10 @@ module ReteamerApi
         assignments = Entry.find_for(date, versionable_type: Assignment.name).map(&:versionable).map(&:person_key)
         unassigned = people.count { |p| !assignments.include?(p.key) }
 
-        oversold = [open_reqs - unassigned, 0].max
-        undersold = -1 * [unassigned - open_reqs, 0].max
-
         sales_recruiting_data.push({
           date: date,
           open_reqs: open_reqs,
-          unassigned: unassigned,
-          oversold: oversold,
-          undersold: undersold,
+          unassigned: -1 * unassigned,
           utilization: open_reqs - unassigned
         })
       end
