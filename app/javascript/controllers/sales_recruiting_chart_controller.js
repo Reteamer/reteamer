@@ -63,9 +63,9 @@ export default class SalesRecruitingChartController extends Controller {
           .call(d3.axisLeft(y));
 
         // Add X axis --> it is a date format
-        const xAxisExtent = d3.extent(data, function(d) {
-          return d.date;
-        });
+        const xMin = dayjs(d3.min(data, function(d) {return d.date})).subtract(3, "days");
+        const xMax = dayjs(d3.max(data, function(d) {return d.date})).add(3, "days");
+        const xAxisExtent = [xMin, xMax]
         let x = d3.scaleTime()
           .domain(xAxisExtent)
           .range([0, width])
