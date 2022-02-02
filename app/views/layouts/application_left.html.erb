@@ -41,21 +41,14 @@
           <%= link_to org_chart_path, class: 'vertical-nav-link no-underline', aria: { label: t(".org_chart") } do %>
             <org-chart-link>
                 <i class="fa fa-sitemap"></i><br />
-                Org Chart
+                ORG CHART
             </org-chart-link>
           <% end %>
 
           <%= link_to team_chart_path, class: 'vertical-nav-link no-underline', aria: { label: t(".team_chart") } do %>
             <team-chart-link>
                 <i class="fa fa-users"></i><br />
-                Team Chart
-            </team-chart-link>
-          <% end %>
-
-          <%= link_to reports_path, class: 'vertical-nav-link no-underline', aria: { label: "Reports" } do %>
-            <team-chart-link>
-              <i class="fa fa-chart-area"></i><br />
-              Reports
+                TEAM CHART
             </team-chart-link>
           <% end %>
 
@@ -64,7 +57,7 @@
               <span class="appearance-none relative">
                 <i class="fa fa-bullhorn"></i>
               </span><br />
-              What's New
+              WHAT'S NEW
             </announcements-link>
           <% end %>
 
@@ -86,7 +79,7 @@
                     <i class="fa fa-bell"></i>
                     <span data-notifications-target="badge" class="hidden absolute top-0 right-0 block h-2 w-2 transform -translate-y-1/2 translate-x-1/2 rounded-full text-white shadow-solid bg-red-400"></span>
                   </span><br />
-                  Notifications
+                  NOTIFICATIONS
                 <% end %>
 
                 <div data-dropdown-target="menu" class="lg:absolute mt-2 hidden z-20">
@@ -101,7 +94,7 @@
           <% end %>
           <more-link class="relative vertical-nav-link" data-controller="dropdown" data-action="click->dropdown#toggle click@window->dropdown#hide touch->dropdown#toggle touch@window->dropdown#hide">
             <i class="fa fa-ellipsis-h"></i><br />
-            More Links
+            MORE LINKS
             <more-link-dropdown data-dropdown-target="menu" class="text-left text-base z-20 hidden lg:absolute bottom-0 dropdown-menu">
               <div class="overflow-hidden bg-white border border-gray-200 rounded shadow-md">
                 <% if signed_in? && Rails.configuration.can_reset_data %>
@@ -156,7 +149,7 @@
       <div class="flex grow flex-col">
         <%= render partial: "shared/flash" %>
 
-        <div class="lg:px-0 h-full">
+        <div class="px-3 lg:px-0 h-full">
           <%= yield %>
         </div>
       </div>
