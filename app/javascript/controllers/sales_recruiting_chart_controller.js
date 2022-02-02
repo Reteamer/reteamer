@@ -16,17 +16,14 @@ export default class SalesRecruitingChartController extends Controller {
     const gridColor = "steelblue";
     const gridWidth = "1px";
 
-    const barWidth = 50;
-
-    const openReqColor = "#ea86cd";
-    const unassignedColor = "#ec9e5d";
-    const howManyToHireColor = "#326aa2";
+    // const openReqColor = "#ea86cd";
+    // const unassignedColor = "#ec9e5d";
+    const oversoldColor = "#326aa2";
+    const undersoldColor = "#f8b044";
 
     // append the svg object to the body of the page
-    let svg = d3.select("#my_dataviz")
+    let svg = d3.select(this.element)
       .append("svg")
-      // .attr("width", width + margin.left + margin.right)
-      // .attr("height", height + margin.top + margin.bottom)
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
       .append("g")
@@ -44,23 +41,30 @@ export default class SalesRecruitingChartController extends Controller {
     let timeParse = d3.timeParse("%Y-%m-%d");
     d3.json("/reteamer_api/sales_recruitings.json")
       .then(function(data) {
-
         data.forEach(function(d) {
           d.date = timeParse(d.date)
         })
 
         // Add Y axis
         const yMin = d3.min(data, function(d) {
-          return Math.min(d.open_reqs, d.unassigned, d.how_many_to_hire)
+          return d.undersold
         }) - 3
         const yMax = d3.max(data, function(d) {
-          return Math.max(d.open_reqs, d.unassigned, d.how_many_to_hire)
+          return Math.max(d.open_reqs, d.unassigned)
         }) + 3
+
         let y = d3.scaleLinear()
           .domain([yMin, yMax])
           .range([height, 0]);
+
+        const yAxisTicks = y.ticks()
+          .filter(tick => Number.isInteger(tick));
+        const yAxis = d3.axisLeft(y)
+          .tickValues(yAxisTicks)
+          .tickFormat(d3.format('d'));
+
         svg.append("g")
-          .call(d3.axisLeft(y));
+          .call(yAxis)
 
         // Add X axis --> it is a date format
         const xMin = dayjs(d3.min(data, function(d) {return d.date})).subtract(3, "days");
@@ -127,65 +131,85 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("stroke", gridColor)
           .attr("stroke-width", gridWidth)
 
-        //Add the "How Many To Hire" bars
-        svg.selectAll(".how-many-to-hire-bar")
+
+        const barWidth = width/(1.5*data.length);
+
+        //Add the Oversold bars
+        svg.selectAll(".oversold-bar")
           .data(data)
           .enter()
           .append("rect")
-          .attr("class", "how-many-to-hire-bar")
+          .attr("class", "oversold-bar")
+          .attr("fill", oversoldColor)
           .attr("clip-path", "url(#graph-clip)")
           .attr("x", function(d) {
             return x(d.date) - barWidth/2;
           })
           .attr("y", function(d) {
-            return d.how_many_to_hire > 0 ? y(d.how_many_to_hire) : y(0);
+            return y(d.oversold);
           })
           .attr("width", barWidth)
           .attr("height", function(d) {
-            return Math.abs(y(d.how_many_to_hire) - y(0));
+            return y(0) - y(d.oversold);
           })
-          .attr("fill", howManyToHireColor)
 
+        //Add the Undersold bars
+        svg.selectAll(".undersold-bar")
+          .data(data)
+          .enter()
+          .append("rect")
+          .attr("class", "undersold-bar")
+          .attr("fill", undersoldColor)
+          .attr("clip-path", "url(#graph-clip)")
+          .attr("x", function(d) {
+            return x(d.date) - barWidth/2;
+          })
+          .attr("y", function(d) {
+            return y(0);
+          })
+          .attr("width", barWidth)
+          .attr("height", function(d) {
+            return y(d.undersold) - y(0);
+          })
 
-        // Add the OpenReqs line
-        svg
-          .append("path")
-          .datum(data)
-          .attr("fill", "none")
-          .attr("stroke", openReqColor)
-          .attr("stroke-width", 1.5)
-          .attr("opacity", 0.7)
-          .attr("d", d3.line()
-            .x(function(d) {
-              return x(d.date)
-            })
-            .y(function(d) {
-              return y(d.open_reqs)
-            }).curve(d3.curveLinear)
-          )
-
-        // Add the Unassigned line
-        svg
-          .append("path")
-          .datum(data)
-          .attr("fill", "none")
-          .attr("stroke", unassignedColor)
-          .attr("stroke-width", 1.5)
-          .attr("opacity", 0.7)
-          .attr("d", d3.line()
-            .x(function(d) {
-              return x(d.date)
-            })
-            .y(function(d) {
-              return y(d.unassigned)
-            }).curve(d3.curveLinear)
-          )
+        // // Add the OpenReqs line
+        // svg
+        //   .append("path")
+        //   .datum(data)
+        //   .attr("fill", "none")
+        //   .attr("stroke", openReqColor)
+        //   .attr("stroke-width", 1.5)
+        //   .attr("opacity", 0.7)
+        //   .attr("d", d3.line()
+        //     .x(function(d) {
+        //       return x(d.date)
+        //     })
+        //     .y(function(d) {
+        //       return y(d.open_reqs)
+        //     }).curve(d3.curveLinear)
+        //   )
+        //
+        // // Add the Unassigned line
+        // svg
+        //   .append("path")
+        //   .datum(data)
+        //   .attr("fill", "none")
+        //   .attr("stroke", unassignedColor)
+        //   .attr("stroke-width", 1.5)
+        //   .attr("opacity", 0.7)
+        //   .attr("d", d3.line()
+        //     .x(function(d) {
+        //       return x(d.date)
+        //     })
+        //     .y(function(d) {
+        //       return y(d.unassigned)
+        //     }).curve(d3.curveLinear)
+        //   )
 
         // The legend
         const legendDomain = [
-          {name: "# of Open Reqs", color: openReqColor},
-          {name: "# of Unassigned People", color: unassignedColor},
-          {name: "# of People to Hire", color: howManyToHireColor},
+          {name: "Oversold count (hire more/ adjust contracts)", color: oversoldColor},
+          {name: "Undersold count (sell more/ adjust contracts", color: undersoldColor},
         ];
         const legendRectSize = 6
         const legendSpacing = 6
@@ -216,22 +240,22 @@ export default class SalesRecruitingChartController extends Controller {
           .text(function(d) { return d.name; });
 
         // Create the focus
-        self.openReqFocus = svg
-          .append('g')
-          .append('circle')
-          .style("fill", "none")
-          .attr("stroke", openReqColor)
-          .attr('r', 8)
-          .style("opacity", 0)
+        // self.openReqFocus = svg
+        //   .append('g')
+        //   .append('circle')
+        //   .style("fill", "none")
+        //   .attr("stroke", openReqColor)
+        //   .attr('r', 8)
+        //   .style("opacity", 0)
 
-        // Create the circle that travels along the curve of chart
-        self.unassignedFocus = svg
-          .append('g')
-          .append('circle')
-          .style("fill", "none")
-          .attr("stroke", unassignedColor)
-          .attr('r', 6)
-          .style("opacity", 0)
+        // // Create the circle that travels along the curve of chart
+        // self.unassignedFocus = svg
+        //   .append('g')
+        //   .append('circle')
+        //   .style("fill", "none")
+        //   .attr("stroke", unassignedColor)
+        //   .attr('r', 6)
+        //   .style("opacity", 0)
 
         // Create the text that travels along the curve of chart
         const focusText = svg
@@ -254,26 +278,33 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("dy", "13px")
           .attr("font-weight", "bold")
 
-        focusTextBox
-          .append("tspan")
-          .attr("class", "tooltip-text-line-unassigned")
-          .attr("x", "5")
-          .attr("dy", `14px`)
-          .attr("fill", unassignedColor)
+        // focusTextBox
+        //   .append("tspan")
+        //   .attr("class", "tooltip-text-line-unassigned")
+        //   .attr("x", "5")
+        //   .attr("dy", `14px`)
+        //   .attr("fill", unassignedColor)
+        //
+        // focusTextBox
+        //   .append("tspan")
+        //   .attr("class", "tooltip-text-line-open-reqs")
+        //   .attr("x", "5")
+        //   .attr("dy", `14px`)
+        //   .attr("fill", openReqColor)
 
         focusTextBox
           .append("tspan")
-          .attr("class", "tooltip-text-line-open-reqs")
+          .attr("class", "tooltip-text-line-oversold")
           .attr("x", "5")
           .attr("dy", `14px`)
-          .attr("fill", openReqColor)
+          .attr("fill", oversoldColor)
 
         focusTextBox
           .append("tspan")
-          .attr("class", "tooltip-text-line-how-many-to-hire")
+          .attr("class", "tooltip-text-line-undersold")
           .attr("x", "5")
           .attr("dy", `14px`)
-          .attr("fill", howManyToHireColor)
+          .attr("fill", undersoldColor)
 
         // Create a rect on top of the svg area: this rectangle recovers mouse position
         svg
@@ -314,9 +345,10 @@ export default class SalesRecruitingChartController extends Controller {
           focusTextBackground.attr("width", focusTextBox.node().getBBox().width + 10).attr("height", focusTextBox.node().getBBox().height + 10);
 
           focusTextBox.select(".tooltip-text-line-date").text(`${dayjs(selectedData.date).format(peopleDate)}`)
-          focusTextBox.select(".tooltip-text-line-unassigned").text(`# of Unassigned People: ${selectedData.unassigned}`)
-          focusTextBox.select(".tooltip-text-line-open-reqs").text(`# of Open Reqs: ${selectedData.open_reqs}`)
-          focusTextBox.select(".tooltip-text-line-how-many-to-hire").text(`# of People to Hire: ${selectedData.how_many_to_hire}`)
+          // focusTextBox.select(".tooltip-text-line-unassigned").text(`# of Unassigned People: ${selectedData.unassigned}`)
+          // focusTextBox.select(".tooltip-text-line-open-reqs").text(`# of Open Reqs: ${selectedData.open_reqs}`)
+          focusTextBox.select(".tooltip-text-line-oversold").text(`Oversold by: ${selectedData.oversold}`)
+          focusTextBox.select(".tooltip-text-line-undersold").text(`Undersold by: ${selectedData.undersold}`)
         }
 
         function mouseout() {
