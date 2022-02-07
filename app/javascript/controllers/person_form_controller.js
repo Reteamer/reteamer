@@ -16,6 +16,7 @@ export default class extends Controller {
     form.last_name.value = this.person.lastName
     form.employee_id.value = this.person.employee_code
     form.title.value = this.person.title
+    form.job_family.value = this.person.job_family
     form.email.value = this.person.email || ""
     this.element.querySelector("supervisor-form-group").classList.add("hidden");
     this.element.querySelector("team-form-group").classList.add("hidden");
@@ -108,6 +109,7 @@ export default class extends Controller {
     newPersonAttributes.last_name = form.last_name.value
     newPersonAttributes.email = form.email.value
     newPersonAttributes.title = form.title.value
+    newPersonAttributes.job_family = form.job_family.value
     newPersonAttributes.employee_id = form.employee_id.value
     newPersonAttributes.supervisor_key = form.supervisor_key.value
     newPersonAttributes.team_key = form.team_key.value
@@ -186,7 +188,7 @@ export default class extends Controller {
                     <label for="team_key">Initial Team</label>
                     <select name="team_key" class="select">
                       <option disabled selected value="">Pick one...</option>
-                      <option value="">&lt;Unassigned&gt;</option>
+                      <option value="">[Unassigned]</option>
                     </select>
                   </team-form-group>
                   <div class="form-group">
@@ -196,6 +198,10 @@ export default class extends Controller {
                   <div class="form-group">
                     <label>Job Title</label>
                     <input type="text" class="form-control" name="title" />
+                  </div>
+                  <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" class="form-control" name="job_family" />
                   </div>
                   <div class="form-group">
                     <label>Email (used for notifying employee as well as Gravatar for avatar)</label>
