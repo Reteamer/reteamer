@@ -36,5 +36,8 @@ module ReteamerPro
     # Prevent sassc-rails from setting sass as the compressor
     # Libsass is deprecated and doesn't support modern CSS syntax used by TailwindCSS
     config.assets.css_compressor = nil
+
+    # for active storage image upload
+    config.active_storage.variant_processor = :vips
   end
 end
