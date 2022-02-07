@@ -26,7 +26,7 @@ div.form-control {
 
 @layer components {
   .form-control-inline {
-    @apply form-input mt-1 w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+    @apply form-input mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
   }
 
   .form-control {

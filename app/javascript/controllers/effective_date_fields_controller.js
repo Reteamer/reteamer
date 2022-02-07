@@ -76,7 +76,7 @@ export default class extends Controller {
       <input type="text"
              name="other_effective_date"
              id="other_effective_date"
-             class="form-control-inline flatpickr-input active otherDateInput"
+             class="form-control-inline flatpickr-input active otherDateInput w-32"
              data-controller="flatpickr"
              readonly="readonly"
              value="${this.selectedDateValue}"
