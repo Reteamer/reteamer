@@ -36,6 +36,8 @@
     "bucketeer:hobbyist"
   ],
   "buildpacks": [
+    { "url": "heroku-community/apt" },
+    { "url": "https://github.com/brandoncc/heroku-buildpack-vips" },
     { "url": "heroku/nodejs" },
     { "url": "heroku/ruby" }
   ],
