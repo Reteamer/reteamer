@@ -116,4 +116,13 @@ class AccountTest < ActiveSupport::TestCase
     refute account.transfer_ownership(users(:invited).id)
     assert_equal owner, account.reload.owner
   end
+
+  test "destroys associated models" do
+    account = accounts(:company)
+    ActsAsTenant.with_tenant(account) do
+      entry = Entry.create!(effective_at: Date.today, versionable: People::Employee.new(first_name: "Adios"))
+      account.destroy
+      assert(!Entry.exists?(entry.id))
+    end
+  end
 end

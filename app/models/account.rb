@@ -106,4 +106,15 @@ class Account < ApplicationRecord
       end
     end
   end
+
+  after_destroy do |account|
+    ActsAsTenant.with_tenant(account) do
+      Entry.delete_all
+      People::Person.delete_all
+      Team.delete_all
+      Assignment.delete_all
+      Connection.delete_all
+      Proposal.delete_all
+    end
+  end
 end
