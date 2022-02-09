@@ -16,7 +16,6 @@ export default class extends Controller {
     form.last_name.value = this.person.lastName
     form.employee_id.value = this.person.employee_code
     form.title.value = this.person.title
-    form.job_family.value = this.person.job_family
     form.email.value = this.person.email || ""
     this.element.querySelector("supervisor-form-group").classList.add("hidden");
     this.element.querySelector("team-form-group").classList.add("hidden");
@@ -56,40 +55,33 @@ export default class extends Controller {
   }
 
   populateDropdowns() {
-    let select = this.element.querySelector("select[name='supervisor_key']")
-    for(let i = 2; i < select.options.length;) {
-      select.remove(i)
-    }
+    const dropDowns = [
+      {formKey: "supervisor_key", dataKey: "supervisors", resetIndex: 2},
+      {formKey: "team_key", dataKey: "teams", resetIndex: 2},
+      {formKey: "job_family_key", dataKey: "job_families", resetIndex: 1},
+    ]
 
-    select = this.element.querySelector("select[name='team_key']")
-    for(let i = 2; i < select.options.length;) {
-      select.remove(i)
-    }
+    dropDowns.forEach((dropDown) => {
+      let select = this.element.querySelector(`select[name="${dropDown.formKey}"]`)
+      for(let i = dropDown.resetIndex; i < select.options.length;) {
+        select.remove(i)
+      }
+    })
 
     const selected_date = document.querySelector("#person-form input[name='effective_at']").value
 
-    fetch(`/reteamer_api/supervisors.json?effective_date=${selected_date}`).then((response) => {
+    fetch(`/reteamer_api/person_form_drop_downs.json?effective_date=${selected_date}`).then((response) => {
       response.json().then((data) => {
-        const select = document.querySelector("#person-form select[name='supervisor_key']")
-        const sortedSupervisors = data.supervisors.sort((supervisor, other) => supervisor.name.localeCompare(other.name))
-        sortedSupervisors.forEach((supervisor) => {
-          let option = document.createElement('option')
-          option.value = supervisor.id
-          option.text = supervisor.name
-          select.appendChild(option)
-        })
-      })
-    })
 
-    fetch(`/reteamer_api/teams.json?effective_date=${selected_date}`).then((response) => {
-      response.json().then((data) => {
-        const select = document.querySelector("#person-form select[name='team_key']")
-        const sortedTeams = data.teams.sort((team, other) => team.name.localeCompare(other.name))
-        sortedTeams.forEach((team) => {
-          let option = document.createElement('option')
-          option.value = team.id
-          option.text = team.name
-          select.appendChild(option)
+        dropDowns.forEach((dropDown) => {
+          const select = document.querySelector(`#person-form select[name="${dropDown.formKey}"]`)
+          const sortedItems = data[dropDown.dataKey].sort((item, other) => item.name.localeCompare(other.name))
+          sortedItems.forEach((item) => {
+            let option = document.createElement('option')
+            option.value = item.key
+            option.text = item.name
+            select.appendChild(option)
+          })
         })
       })
     })
@@ -180,8 +172,8 @@ export default class extends Controller {
                   <supervisor-form-group class="form-group">
                     <label for="supervisor_key">Supervisor</label>
                     <select name="supervisor_key" class="select">
-                      <option disabled selected>Pick one...</option>
-                      <option value="">&lt;No Supervisor&gt;</option>
+                      <option disabled selected value="">Pick one...</option>
+                      <option value="">[No Supervisor]</option>
                     </select>
                   </supervisor-form-group>
                   <team-form-group class="form-group">
@@ -201,7 +193,9 @@ export default class extends Controller {
                   </div>
                   <div class="form-group">
                     <label title="Used to filter and group people and job openings">Job Family</label>
-                    <input type="text" class="form-control" name="job_family" />
+                    <select name="job_family_key" class="select">
+                      <option disabled selected value="">Pick one...</option>
+                    </select>
                   </div>
                   <div class="form-group">
                     <label title="Used for notifying employee as well as Gravatar for avatar">Email</label>

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     resources :team_parents, only: [:update], param: :key
     resource :team_chart, only: :show
     resources :teams, only: [:index, :create, :update, :destroy], param: :key
+    resource :person_form_drop_downs, only: [:show]
   end
 
   # Jumpstart views
