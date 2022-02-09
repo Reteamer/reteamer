@@ -200,11 +200,11 @@ export default class extends Controller {
                     <input type="text" class="form-control" name="title" />
                   </div>
                   <div class="form-group">
-                    <label>Job Title</label>
+                    <label title="Used to filter and group people and job openings">Job Family</label>
                     <input type="text" class="form-control" name="job_family" />
                   </div>
                   <div class="form-group">
-                    <label>Email (used for notifying employee as well as Gravatar for avatar)</label>
+                    <label title="Used for notifying employee as well as Gravatar for avatar">Email</label>
                     <input type="email" class="form-control" name="email" />
                   </div>
   

@@ -1,9 +1,9 @@
 class DemoData
   def self.create_consultancy(account, owner)
-    software_engineer = Entry.create(effective_at: Date.today, versionable: JobFamily.new("Software Engineer"))
-    product_manager = Entry.create(effective_at: Date.today, versionable: JobFamily.new("Product Manager"))
-    product_designer = Entry.create(effective_at: Date.today, versionable: JobFamily.new("Product Designer"))
-    other = Entry.create(effective_at: Date.today, versionable: JobFamily.new("Other"))
+    software_engineer = Entry.create(effective_at: Date.today, versionable: JobFamily.new(name: "Software Engineer"))
+    product_manager = Entry.create(effective_at: Date.today, versionable: JobFamily.new(name: "Product Manager"))
+    product_designer = Entry.create(effective_at: Date.today, versionable: JobFamily.new(name: "Product Designer"))
+    other = Entry.create(effective_at: Date.today, versionable: JobFamily.new(name: "Other"))
 
     # thanks https://namelix.com/
     account_team_entry = Entry.create(effective_at: Date.today, versionable: Team.new(name: account.name))

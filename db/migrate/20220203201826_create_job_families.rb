@@ -8,10 +8,9 @@ class CreateJobFamilies < ActiveRecord::Migration[7.0]
     end
 
     add_column :people, :job_family_entry_key, :string
-
-
-    # TODO: Migrate the data for existing accounts
-    #     other = Entry.create(effective_at: Date.today, versionable: JobFamily.new("Other"))
-    #
+    add_column :assignments, :job_family_entry_key, :string
+    safety_assured do
+      remove_column :assignments, :role_on_team
+    end
   end
 end
