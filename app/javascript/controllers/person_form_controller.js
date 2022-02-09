@@ -7,7 +7,7 @@ export default class extends Controller {
     selectedDate: String
   }
 
-  handlePersonEdit(event) {
+  async handlePersonEdit(event) {
     this.resetWizard();
 
     this.person = event.detail.person
@@ -25,7 +25,6 @@ export default class extends Controller {
 
   handleNewPerson(event) {
     this.resetWizard();
-    this.populateDropdowns()
     this.callback = event.detail.callback
     this.sectionOneTarget.classList.add("hidden")
     this.sectionTwoTarget.classList.remove("hidden")
@@ -45,6 +44,8 @@ export default class extends Controller {
     this.sectionThreeTarget.classList.add("hidden")
     this.person = null;
     this.callback = () => {}
+
+    this.populateDropdowns()
   }
 
   handleDatePicked(event) {
@@ -82,6 +83,11 @@ export default class extends Controller {
             option.text = item.name
             select.appendChild(option)
           })
+
+          if(this.person) {
+            const form = this.element.querySelector("#person-form")
+            form.job_family_key.value = this.person.job_family_key
+          }
         })
       })
     })
@@ -101,7 +107,7 @@ export default class extends Controller {
     newPersonAttributes.last_name = form.last_name.value
     newPersonAttributes.email = form.email.value
     newPersonAttributes.title = form.title.value
-    newPersonAttributes.job_family = form.job_family.value
+    newPersonAttributes.job_family_key = form.job_family_key.value
     newPersonAttributes.employee_id = form.employee_id.value
     newPersonAttributes.supervisor_key = form.supervisor_key.value
     newPersonAttributes.team_key = form.team_key.value
@@ -172,14 +178,14 @@ export default class extends Controller {
                   <supervisor-form-group class="form-group">
                     <label for="supervisor_key">Supervisor</label>
                     <select name="supervisor_key" class="select">
-                      <option disabled selected value="">Pick one...</option>
+                      <option disabled value="">Pick one...</option>
                       <option value="">[No Supervisor]</option>
                     </select>
                   </supervisor-form-group>
                   <team-form-group class="form-group">
                     <label for="team_key">Initial Team</label>
                     <select name="team_key" class="select">
-                      <option disabled selected value="">Pick one...</option>
+                      <option disabled value="">Pick one...</option>
                       <option value="">[Unassigned]</option>
                     </select>
                   </team-form-group>

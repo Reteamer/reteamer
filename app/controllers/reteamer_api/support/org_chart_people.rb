@@ -31,6 +31,10 @@ module ReteamerApi
           nil
         end
 
+        def job_family_key
+          nil
+        end
+
         def type
           "account"
         end

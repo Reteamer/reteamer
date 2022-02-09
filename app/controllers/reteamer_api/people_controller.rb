@@ -42,7 +42,8 @@ module ReteamerApi
         last_name: person_params[:last_name],
         email: person_params[:email],
         title: person_params[:title],
-        employee_id: person_params[:employee_id]
+        employee_id: person_params[:employee_id],
+        job_family_key: person_params[:job_family_key]
       )
       entry = Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
 
@@ -66,7 +67,7 @@ module ReteamerApi
     private
 
     def person_params
-      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key, :first_name, :last_name, :email, :title, :employee_id)
+      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key, :job_family_key, :first_name, :last_name, :email, :title, :employee_id)
     end
   end
 end

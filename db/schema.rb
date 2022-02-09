@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_08_235940) do
+ActiveRecord::Schema.define(version: 2022_02_09_060131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -262,7 +262,7 @@ ActiveRecord::Schema.define(version: 2022_02_08_235940) do
     t.text "image_url"
     t.integer "account_id", null: false
     t.datetime "created_at"
-    t.string "job_family_entry_key"
+    t.string "job_family_key"
   end
 
   create_table "plans", force: :cascade do |t|

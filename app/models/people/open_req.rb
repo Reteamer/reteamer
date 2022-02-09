@@ -2,14 +2,14 @@
 #
 # Table name: people
 #
-#  id                   :bigint           not null, primary key
-#  image_url            :text
-#  job_family_entry_key :string
-#  supervisor_key       :string
-#  title                :string
-#  type                 :string
-#  created_at           :datetime
-#  account_id           :integer          not null
+#  id             :bigint           not null, primary key
+#  image_url      :text
+#  job_family_key :string
+#  supervisor_key :string
+#  title          :string
+#  type           :string
+#  created_at     :datetime
+#  account_id     :integer          not null
 #
 module People
   class OpenReq < Person

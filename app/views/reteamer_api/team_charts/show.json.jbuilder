@@ -24,7 +24,8 @@ json.chart do
       json.firstName(h(member.first_name))
       json.lastName(h(member.last_name))
       json.title(h(member.title))
-      json.job_family(h(member.job_family_name(@selected_date)))
+      json.job_family_key(member.job_family_key)
+      json.supervisor_key(member.supervisor_key)
       json.image_url(member.image_url || "https://www.gravatar.com/avatar/?s=50")
       json.employee_id(member.employee_id) # deprecated
       json.employee_code(member.employee_id)

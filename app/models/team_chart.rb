@@ -57,7 +57,7 @@ class TeamChart
   end
 
   class Assignee
-    delegate :key, :name, :first_name, :last_name, :title, :image_url, :employee_id, :type, :job_family_name, to: :@person
+    delegate :key, :name, :first_name, :last_name, :title, :image_url, :employee_id, :type, :job_family_key, :supervisor_key, to: :@person
     attr_reader :assignment_key
 
     def initialize(person_entry, assignment_key)
