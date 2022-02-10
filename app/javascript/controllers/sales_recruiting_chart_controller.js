@@ -207,6 +207,7 @@ export default class SalesRecruitingChartController extends Controller {
 
           focusText
             .attr("transform", `translate(${pointerElement[0] + 15}, ${pointerElement[1]})`)
+            .raise()
 
           focusTextBackground.attr("width", focusTextBox.node().getBBox().width + 10).attr("height", focusTextBox.node().getBBox().height + 10);
 
