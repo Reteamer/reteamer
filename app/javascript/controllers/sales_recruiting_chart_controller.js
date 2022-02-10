@@ -17,17 +17,10 @@ export default class SalesRecruitingChartController extends Controller {
           width = 1000 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
 
-        const gridOpacity = "0.1";
-        const gridColor = "steelblue";
-        const gridWidth = "1px";
-
-        // const openReqColor = "#ea86cd";
-        // const unassignedColor = "#ec9e5d";
         const openReqsColor = "#326aa2";
         const unassignedColor = "#f8b044";
-        const utilizationColor = "#9f2828";
 
-        self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor);
+        self.applyData(data, self, self.x, self.y, height, width, openReqsColor, unassignedColor);
       })
   }
 
@@ -39,12 +32,6 @@ export default class SalesRecruitingChartController extends Controller {
       width = 1000 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
-    const gridOpacity = "0.1";
-    const gridColor = "steelblue";
-    const gridWidth = "1px";
-
-    // const openReqColor = "#ea86cd";
-    // const unassignedColor = "#ec9e5d";
     const openReqsColor = "#326aa2";
     const unassignedColor = "#f8b044";
     const utilizationColor = "#9f2828";
@@ -103,7 +90,7 @@ export default class SalesRecruitingChartController extends Controller {
         self.dataSet = data
         self.x = d3.scaleTime()
         self.y = d3.scaleLinear()
-        let bisect = self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor);
+        let bisect = self.applyData(data, self, self.x, self.y, height, width, openReqsColor, unassignedColor);
 
         // The legend
         const legendDomain = [
@@ -172,17 +159,17 @@ export default class SalesRecruitingChartController extends Controller {
 
         focusTextBox
           .append("tspan")
-          .attr("class", "tooltip-text-line-unassigned")
-          .attr("x", "5")
-          .attr("dy", `14px`)
-          .attr("fill", unassignedColor)
-
-        focusTextBox
-          .append("tspan")
           .attr("class", "tooltip-text-line-open-reqs")
           .attr("x", "5")
           .attr("dy", `14px`)
           .attr("fill", openReqsColor)
+
+        focusTextBox
+          .append("tspan")
+          .attr("class", "tooltip-text-line-unassigned")
+          .attr("x", "5")
+          .attr("dy", `14px`)
+          .attr("fill", unassignedColor)
 
         focusTextBox
           .append("tspan")
@@ -236,7 +223,11 @@ export default class SalesRecruitingChartController extends Controller {
       })
   }
 
-  applyData(data, self, x, y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor) {
+  applyData(data, self, x, y, height, width, openReqsColor, unassignedColor) {
+    const gridOpacity = "0.1";
+    const gridColor = "steelblue";
+    const gridWidth = "1px";
+
     data.forEach(function(d) {
       d.date = self.timeParse(d.date)
     })

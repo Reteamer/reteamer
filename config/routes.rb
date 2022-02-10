@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
   namespace :reteamer_api do
     resources :assignments, only: [:create, :update, :destroy], param: :key
+    resources :job_families, only: [:index]
     resources :open_reqs, only: [:create, :update], param: :key
     resource :org_chart, only: :show
     resources :people, only: [:create, :update, :destroy], param: :key do
@@ -16,6 +17,7 @@ Rails.application.routes.draw do
         post :update_supervisor
       end
     end
+    resource :person_form_drop_downs, only: [:show]
     resources :proposals, only: [:create] do
       post :switch, on: :collection
     end
@@ -25,7 +27,6 @@ Rails.application.routes.draw do
     resources :team_parents, only: [:update], param: :key
     resource :team_chart, only: :show
     resources :teams, only: [:index, :create, :update, :destroy], param: :key
-    resource :person_form_drop_downs, only: [:show]
   end
 
   # Jumpstart views

@@ -4,7 +4,7 @@ module ReteamerApi
       sales_recruiting_data = []
       monday = Date.today.monday
 
-      rand(22..25).times do |i|
+      24.times do |i|
         date = monday + i.weeks
 
         people = Entry.find_for(date, versionable_type: People::Person.name)
