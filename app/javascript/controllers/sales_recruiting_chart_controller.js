@@ -4,8 +4,34 @@ import dayjs from "dayjs";
 import {peopleDate, toISODate} from "../date_helpers";
 
 export default class SalesRecruitingChartController extends Controller {
+  setFilter(e) {
+    const self = this;
+    self.jobFamilyFilter = e.detail.jobFamilyKey;
+    let url = "/reteamer_api/sales_recruitings.json"
+    if(self.jobFamilyFilter) url += `?job_family_key=${self.jobFamilyFilter}`
+
+    d3.json(url)
+      .then(function(data) {
+        const margin = {top: 10, right: 30, bottom: 30, left: 60},
+          width = 1000 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+        const gridOpacity = "0.1";
+        const gridColor = "steelblue";
+        const gridWidth = "1px";
+
+        // const openReqColor = "#ea86cd";
+        // const unassignedColor = "#ec9e5d";
+        const openReqsColor = "#326aa2";
+        const unassignedColor = "#f8b044";
+        const utilizationColor = "#9f2828";
+
+        self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor, utilizationColor);
+      })
+  }
 
   connect() {
+    this.jobFamilyFilter = null
     const self = this;
     // set the dimensions and margins of the graph
     const margin = {top: 10, right: 30, bottom: 30, left: 60},
@@ -23,7 +49,7 @@ export default class SalesRecruitingChartController extends Controller {
     const utilizationColor = "#9f2828";
 
     // append the svg object to the body of the page
-    let svg = d3.select(this.element)
+    self.svg = d3.select(this.element)
       .append("svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
@@ -32,161 +58,21 @@ export default class SalesRecruitingChartController extends Controller {
         "translate(" + margin.left + "," + margin.top + ")");
 
     // define the clipPath
-    svg.append("clipPath")       // define a clip path
+    self.svg.append("clipPath")       // define a clip path
       .attr("id", "graph-clip") // give the clipPath an ID
       .append('rect')
       .attr('width', width)
       .attr('height', height)
 
     //Read the data
-    let timeParse = d3.timeParse("%Y-%m-%d");
-    d3.json("/reteamer_api/sales_recruitings.json")
+    self.timeParse = d3.timeParse("%Y-%m-%d");
+    let url = "/reteamer_api/sales_recruitings.json"
+    if(this.jobFamilyFilter) url += `?job_family=${this.jobFamilyFilter}`
+    d3.json(url)
       .then(function(data) {
-        data.forEach(function(d) {
-          d.date = timeParse(d.date)
-        })
-
-        // Add Y axis
-        const yMin = d3.min(data, function(d) {
-          return d.unassigned
-        }) - 3
-        const yMax = d3.max(data, function(d) {
-          return Math.max(d.open_reqs)
-        }) + 3
-
-        let y = d3.scaleLinear()
-          .domain([yMin, yMax])
-          .range([height, 0]);
-
-        const yAxisTicks = y.ticks()
-          .filter(tick => Number.isInteger(tick));
-        const yAxis = d3.axisLeft(y)
-          .tickValues(yAxisTicks)
-          .tickFormat(d3.format('d'));
-
-        svg.append("g")
-          .call(yAxis)
-
-        // Add X axis --> it is a date format
-        const xMin = dayjs(d3.min(data, function(d) {return d.date})).subtract(3, "days");
-        const xMax = dayjs(d3.max(data, function(d) {return d.date})).add(3, "days");
-        const xAxisExtent = [xMin, xMax]
-        let x = d3.scaleTime()
-          .domain(xAxisExtent)
-          .range([0, width])
-
-        const xAxis = svg.append("g")
-          .attr("transform", `translate(0, ${height})`)
-          .call(
-            d3.axisBottom(x)
-              .tickValues(data.map(function(d) {
-                return d.date
-              }))
-              .tickFormat(d3.timeFormat("%b %-d"))
-          )
-
-        xAxis.select(".domain")
-          .attr("stroke", "none")
-        xAxis.selectAll(".tick line")
-          .attr("opacity", gridOpacity)
-          .attr("stroke-width", gridWidth)
-          .attr("stroke", gridColor)
-
-        // This allows to find the closest X index of the mouse:
-        let bisect = d3.bisector(function(d) {
-          return d.date;
-        }).left;
-
-        // grid lines
-        svg.selectAll("line.horizontal-grid").data(y.ticks(yMax-yMin)).enter()
-          .append("line")
-          .attr("class", "horizontal-grid")
-          .attr("x1", 0)
-          .attr("x2", width)
-          .attr("y1", function(d){ return y(d);})
-          .attr("y2", function(d){ return y(d);})
-          .attr("fill", "none")
-          .attr("opacity", gridOpacity)
-          .attr("stroke", gridColor)
-          .attr("stroke-width", gridWidth)
-
-        svg.selectAll("line.vertical-grid").data(d3.timeMonday.range(...xAxisExtent)).enter()
-          .append("line")
-          .attr("class", "vertical-grid")
-          .attr("x1", function(d){ return x(d);})
-          .attr("x2", function(d){ return x(d);})
-          .attr("y1", 0)
-          .attr("y2", height)
-          .attr("fill", "none")
-          .attr("opacity", gridOpacity)
-          .attr("stroke", gridColor)
-          .attr("stroke-width", gridWidth)
-
-
-        const barWidth = width/(1.5*data.length);
-
-        //Add the Open Reqs bars
-        svg.selectAll(".open-reqs-bar")
-          .data(data)
-          .enter()
-          .append("rect")
-          .attr("class", "open-reqs-bar")
-          .attr("fill", openReqsColor)
-          .attr("clip-path", "url(#graph-clip)")
-          .attr("x", function(d) {
-            return x(d.date) - barWidth/2;
-          })
-          .attr("y", function(d) {
-            return y(d.open_reqs);
-          })
-          .attr("width", barWidth)
-          .attr("height", function(d) {
-            return y(0) - y(d.open_reqs);
-          })
-
-        //Add the Unassigned bars
-        svg.selectAll(".unassigned-bar")
-          .data(data)
-          .enter()
-          .append("rect")
-          .attr("class", "unassigned-bar")
-          .attr("fill", unassignedColor)
-          .attr("clip-path", "url(#graph-clip)")
-          .attr("x", function(d) {
-            return x(d.date) - barWidth/2;
-          })
-          .attr("y", y(0))
-          .attr("width", barWidth)
-          .attr("height", function(d) {
-            return y(d.unassigned) - y(0);
-          })
-
-        // Draw a thick line at x=0
-        svg.append("line")
-          .attr("class", "cursor-line")
-          .style("stroke", "black")
-          .style("stroke-width", "1px")
-          .attr("x1", 0)
-          .attr("x2", width)
-          .attr("y1", y(0))
-          .attr("y2", y(0))
-
-        // Add the Utilization line
-        svg
-          .append("path")
-          .datum(data)
-          .attr("fill", "none")
-          .attr("stroke", utilizationColor)
-          .attr("stroke-width", 2)
-          .attr("opacity", 1)
-          .attr("d", d3.line()
-            .x(function(d) {
-              return x(d.date)
-            })
-            .y(function(d) {
-              return y(d.utilization)
-            }).curve(d3.curveLinear)
-          )
+        self.x = d3.scaleTime()
+        self.y = d3.scaleLinear()
+        let bisect = self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor, utilizationColor);
 
         // The legend
         const legendDomain = [
@@ -198,7 +84,7 @@ export default class SalesRecruitingChartController extends Controller {
         const legendSpacing = 6
         const legendOffsetY = 10;
 
-        var legend = svg.selectAll('.legend')
+        const legend = self.svg.selectAll('.legend')
           .data(legendDomain)
           .enter()
           .append('g')
@@ -209,6 +95,8 @@ export default class SalesRecruitingChartController extends Controller {
             const vert = i * height + legendOffsetY;
             return 'translate(' + horz + ',' + vert + ')';
           });
+
+        self.svg.selectAll('.legend').exit().remove()
 
         legend.append('rect')
           .attr('width', legendRectSize)
@@ -224,8 +112,7 @@ export default class SalesRecruitingChartController extends Controller {
 
         // Create the focus
         // Create the circle that travels along the curve of chart
-        const utilizationFocus = svg
-          .append('g')
+        const utilizationFocus = self.svg.append('g')
           .append('circle')
           .style("fill", "none")
           .attr("stroke", utilizationColor)
@@ -233,8 +120,7 @@ export default class SalesRecruitingChartController extends Controller {
           .style("opacity", 0)
 
         // Create the text that travels along the curve of chart
-        const focusText = svg
-          .append('g')
+        const focusText = self.svg.append('g')
           .style("opacity", 0)
 
         const focusTextBackground = focusText.append("rect").attr("fill", "#e2e8f0").attr("opacity", 0.9)
@@ -275,8 +161,7 @@ export default class SalesRecruitingChartController extends Controller {
           .attr("fill", utilizationColor)
 
         // Create a rect on top of the svg area: this rectangle recovers mouse position
-        svg
-          .append('rect')
+        self.svg.append('rect')
           .style("fill", "none")
           .style("pointer-events", "all")
           .attr('width', width)
@@ -293,14 +178,15 @@ export default class SalesRecruitingChartController extends Controller {
         }
 
         function mousemove(e) {
+          const self = this;
           const pointerElement = d3.pointer(e);
-          let x0 = x.invert(pointerElement[0]);
+          let x0 = self.x.invert(pointerElement[0]);
           let i = bisect(data, x0, 1);
           let selectedData = data[i-1]
 
           utilizationFocus
-            .attr("cx", x(selectedData.date))
-            .attr("cy", y(selectedData.utilization))
+            .attr("cx", self.x(selectedData.date))
+            .attr("cy", self.y(selectedData.utilization))
 
           focusText
             .attr("transform", `translate(${pointerElement[0] + 15}, ${pointerElement[1]})`)
@@ -314,10 +200,243 @@ export default class SalesRecruitingChartController extends Controller {
         }
 
         function mouseout() {
-          openReqFocus.style("opacity", 0)
           utilizationFocus.style("opacity", 0)
           focusText.style("opacity", 0)
         }
       })
+  }
+
+  applyData(data, self, x, y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor, utilizationColor) {
+    data.forEach(function(d) {
+      d.date = self.timeParse(d.date)
+    })
+
+    // Add Y axis
+    self.yMin = d3.min(data, function(d) {
+      return d.unassigned
+    }) - 3
+    self.yMax = d3.max(data, function(d) {
+      return Math.max(d.open_reqs)
+    }) + 3
+
+    y.domain([self.yMin, self.yMax]).range([height, 0])
+
+    const yAxisTicks = y.ticks()
+      .filter(tick => Number.isInteger(tick));
+    const yAxis = d3.axisLeft(y)
+      .tickValues(yAxisTicks)
+      .tickFormat(d3.format('d'));
+
+    self.svg.append("g").call(yAxis)
+
+    // Add X axis --> it is a date format
+    const xMin = dayjs(d3.min(data, function(d) {
+      return d.date
+    })).subtract(3, "days");
+    const xMax = dayjs(d3.max(data, function(d) {
+      return d.date
+    })).add(3, "days");
+    const xAxisExtent = [xMin, xMax]
+    x.domain(xAxisExtent).range([0, width])
+
+    const xAxis = self.svg.append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(
+        d3.axisBottom(x)
+          .tickValues(data.map(function(d) {
+            return d.date
+          }))
+          .tickFormat(d3.timeFormat("%b %-d"))
+      )
+
+    xAxis.select(".domain")
+      .attr("stroke", "none")
+    xAxis.selectAll(".tick line")
+      .attr("opacity", gridOpacity)
+      .attr("stroke-width", gridWidth)
+      .attr("stroke", gridColor)
+
+    // This allows to find the closest X index of the mouse:
+    let bisect = d3.bisector(function(d) {
+      return d.date;
+    }).left;
+
+    // grid lines
+    self.svg.selectAll("line.horizontal-grid").data(y.ticks(self.yMax - self.yMin)).join(
+      enter => enter
+        .append("line")
+        .attr("class", "horizontal-grid")
+        .attr("x1", 0)
+        .attr("x2", width)
+        .attr("y1", function(d) {
+          return y(d);
+        })
+        .attr("y2", function(d) {
+          return y(d);
+        })
+        .attr("fill", "none")
+        .attr("opacity", gridOpacity)
+        .attr("stroke", gridColor)
+        .attr("stroke-width", gridWidth),
+      update => update
+        .transition()
+        .duration(750)
+        .attr("x2", width)
+        .attr("y1", function(d) {
+          return y(d);
+        })
+        .attr("y2", function(d) {
+          return y(d);
+        }),
+      exit => exit.remove().transition()
+        .duration(750)
+    )
+
+    self.svg.selectAll("line.vertical-grid").data(d3.timeMonday.range(...xAxisExtent)).join(
+      enter => enter
+        .append("line")
+        .attr("class", "vertical-grid")
+        .attr("x1", function(d) {
+          return x(d);
+        })
+        .attr("x2", function(d) {
+          return x(d);
+        })
+        .attr("y1", 0)
+        .attr("y2", height)
+        .attr("fill", "none")
+        .attr("opacity", gridOpacity)
+        .attr("stroke", gridColor)
+        .attr("stroke-width", gridWidth),
+      update => update
+        .transition()
+        .duration(750)
+        .attr("x1", function(d) {
+          return x(d);
+        })
+        .attr("x2", function(d) {
+          return x(d);
+        }),
+      exit => exit.remove().transition().duration(750)
+    )
+
+    self.barWidth = width / (1.5 * data.length);
+
+    //Add the Open Reqs bars
+    self.openReqBars = self.svg.selectAll(".open-reqs-bar")
+      .data(data, d => d.date)
+    self.openReqBars.join(enter =>
+        enter
+          .append("rect")
+          .attr("class", "open-reqs-bar")
+          .attr("fill", openReqsColor)
+          .attr("clip-path", "url(#graph-clip)")
+          .attr("x", function(d) {
+            return x(d.date) - self.barWidth / 2;
+          })
+          .attr("y", function(d) {
+            return y(d.open_reqs);
+          })
+          .attr("width", self.barWidth)
+          .attr("height", function(d) {
+            return y(0) - y(d.open_reqs);
+          }),
+      update => update
+        .transition()
+        .duration(750)
+        .attr("x", function(d) {
+          return x(d.date) - self.barWidth / 2;
+        })
+        .attr("y", function(d) {
+          return y(d.open_reqs);
+        })
+        .attr("width", self.barWidth)
+        .attr("height", function(d) {
+          return y(0) - y(d.open_reqs);
+        }),
+      exit => exit.remove()
+    )
+
+    //Add the Unassigned bars
+    self.unassignedBars = self.svg.selectAll(".unassigned-bar")
+      .data(data, d => d.date)
+    self.unassignedBars.join(enter =>
+        enter
+          .append("rect")
+          .attr("class", "unassigned-bar")
+          .attr("fill", unassignedColor)
+          .attr("clip-path", "url(#graph-clip)")
+          .attr("x", function(d) {
+            return x(d.date) - self.barWidth / 2;
+          })
+          .attr("y", y(0))
+          .attr("width", self.barWidth)
+          .attr("height", function(d) {
+            return y(d.unassigned) - y(0);
+          }),
+      update => update
+        .transition()
+        .duration(750)
+        .attr("x", function(d) {
+          return x(d.date) - self.barWidth / 2;
+        })
+        .attr("y", y(0))
+        .attr("width", self.barWidth)
+        .attr("height", function(d) {
+          return y(d.unassigned) - y(0);
+        }),
+      exit => exit.remove()
+    )
+
+    // Draw a thick line at x=0
+    self.svg.selectAll(".cursor-line")
+      .data(data)
+      .join(
+        enter => enter.append("line")
+          .attr("class", "cursor-line")
+          .style("stroke", "black")
+          .style("stroke-width", "1px")
+          .attr("x1", 0)
+          .attr("x2", width)
+          .attr("y1", y(0))
+          .attr("y2", y(0)),
+        update => update
+          .transition()
+          .duration(750)
+          .attr("x1", 0)
+          .attr("x2", width)
+          .attr("y1", y(0))
+          .attr("y2", y(0)),
+        exit => exit.remove()
+      )
+
+    // Add the Utilization line
+    self.svg.selectAll("path")
+      .data(data)
+      .join(
+        enter => enter.append("path").attr("fill", "none")
+          .attr("stroke", utilizationColor)
+          .attr("stroke-width", 2)
+          .attr("opacity", 1)
+          .attr("d", d3.line()
+              .x(function(d) {
+                console.error("=============>", d);
+                return x(d.date)
+              })
+              .y(function(d) {
+                return y(d.utilization)
+              }).curve(d3.curveLinear)),
+        update => update.transition()
+          .duration(750)
+          .attr("d", d3.line()
+              .x(function(d) {
+                return x(d.date)
+              })
+              .y(function(d) {
+                return y(d.utilization)
+              }).curve(d3.curveLinear)),
+        exit => exit.remove()
+      )
+    return bisect;
   }
 }

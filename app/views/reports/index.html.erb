@@ -1,10 +1,19 @@
 <div class="row flex flex-col h-full">
   <div class="px-4 p-1 bg-blue-200">
     <h1 class="inline-block align-middle"><%= t(".title") %></h1>
+    <label for="job_family_key" data-controller="job-family-navigator">Job Family:
+      <select class="w-36" name="job_family_key" data-action="change->job-family-navigator#emitNewJobFamily">
+        <option value="all">All</option>
+        <option value="774284c1-ac52-44ad-8046-7567b95a051b">Other</option>
+        <option value="4ef44244-5847-44fa-8f0b-59e16ce0bea9">Product Designer</option>
+        <option value="8997feab-f8a9-4ae2-9e46-cf704f369cca">Product Manager</option>
+        <option value="c85d4798-d853-48ea-b28a-82dedae6ed63">Software Engineer</option>
+      </select>
+    </label>
   </div>
   <div class="px-4">
     <h3>Sales &amp; Recruiting</h3>
     <h4>When do I need to hire/start more projects?</h4>
-    <sales-recruiting-chart data-controller="sales-recruiting-chart"></sales-recruiting-chart>
+    <sales-recruiting-chart data-controller="sales-recruiting-chart" data-action="jobFamilyPicked@window->sales-recruiting-chart#setFilter"></sales-recruiting-chart>
   </div>
 </div>
