@@ -88,6 +88,11 @@ export default class SalesRecruitingChartController extends Controller {
         }).curve(d3.curveLinear)
       )
 
+    //add the x-axis labels
+    self.svg.append("g").attr("class", "x-axis-labels")
+
+    //add the y-axis labels
+    self.svg.append("g").attr("class", "y-axis-labels")
 
     //Read the data
     self.timeParse = d3.timeParse("%Y-%m-%d");
@@ -252,7 +257,7 @@ export default class SalesRecruitingChartController extends Controller {
       .tickValues(yAxisTicks)
       .tickFormat(d3.format('d'));
 
-    self.svg.append("g").call(yAxis)
+    self.svg.select(".y-axis-labels").transition().duration(750).call(yAxis)
 
     // Add X axis --> it is a date format
     const xMin = dayjs(d3.min(data, function(d) {
@@ -264,7 +269,7 @@ export default class SalesRecruitingChartController extends Controller {
     const xAxisExtent = [xMin, xMax]
     x.domain(xAxisExtent).range([0, width])
 
-    const xAxis = self.svg.append("g")
+    const xAxis = self.svg.selectAll(".x-axis-labels").transition().duration(750)
       .attr("transform", `translate(0, ${height})`)
       .call(
         d3.axisBottom(x)
