@@ -12,6 +12,7 @@ export default class SalesRecruitingChartController extends Controller {
 
     d3.json(url)
       .then(function(data) {
+        self.dataSet = data
         const margin = {top: 10, right: 30, bottom: 30, left: 60},
           width = 1000 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
@@ -26,7 +27,7 @@ export default class SalesRecruitingChartController extends Controller {
         const unassignedColor = "#f8b044";
         const utilizationColor = "#9f2828";
 
-        self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor, utilizationColor);
+        self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor);
       })
   }
 
@@ -94,9 +95,10 @@ export default class SalesRecruitingChartController extends Controller {
     if(this.jobFamilyFilter) url += `?job_family=${this.jobFamilyFilter}`
     d3.json(url)
       .then(function(data) {
+        self.dataSet = data
         self.x = d3.scaleTime()
         self.y = d3.scaleLinear()
-        let bisect = self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor, utilizationColor);
+        let bisect = self.applyData(data, self, self.x, self.y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor);
 
         // The legend
         const legendDomain = [
@@ -204,8 +206,8 @@ export default class SalesRecruitingChartController extends Controller {
         function mousemove(e) {
           const pointerElement = d3.pointer(e);
           let x0 = self.x.invert(pointerElement[0]);
-          let i = bisect(data, x0, 1);
-          let selectedData = data[i-1]
+          let i = bisect(self.dataSet, x0, 1);
+          let selectedData = self.dataSet[i-1]
 
           utilizationFocus
             .attr("cx", self.x(selectedData.date))
@@ -229,7 +231,7 @@ export default class SalesRecruitingChartController extends Controller {
       })
   }
 
-  applyData(data, self, x, y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor, utilizationColor) {
+  applyData(data, self, x, y, height, width, gridOpacity, gridWidth, gridColor, openReqsColor, unassignedColor) {
     data.forEach(function(d) {
       d.date = self.timeParse(d.date)
     })
