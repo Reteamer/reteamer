@@ -226,7 +226,7 @@ export default class SalesRecruitingChartController extends Controller {
           focusTextBox.select(".tooltip-text-line-date").text(`${dayjs(selectedData.date).format(peopleDate)}`)
           focusTextBox.select(".tooltip-text-line-unassigned").text(`# of Unassigned People: ${Math.abs(selectedData.unassigned)}`)
           focusTextBox.select(".tooltip-text-line-open-reqs").text(`# of Open Reqs: ${selectedData.open_reqs}`)
-          focusTextBox.select(".tooltip-text-line-undersold").text(`Undersold by: ${selectedData.undersold}`)
+          focusTextBox.select(".tooltip-text-line-utilization").text(`Best Case: ${selectedData.utilization}`)
         }
 
         function mouseout() {
