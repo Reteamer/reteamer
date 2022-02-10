@@ -64,6 +64,30 @@ export default class SalesRecruitingChartController extends Controller {
       .attr('width', width)
       .attr('height', height)
 
+    // Thick line at y=0
+    self.svg.append("line")
+      .attr("class", "x-axis-line")
+      .style("stroke", "black")
+      .style("stroke-width", "1px")
+
+    // Utilization line
+    self.svg.append("path")
+      .datum([0])
+      .attr("class", "utilization-line")
+      .attr("fill", "none")
+      .attr("stroke", utilizationColor)
+      .attr("stroke-width", 2)
+      .attr("opacity", 1)
+      .attr("d", d3.line()
+        .x(function(d) {
+          return 0
+        })
+        .y(function(d) {
+          return 0
+        }).curve(d3.curveLinear)
+      )
+
+
     //Read the data
     self.timeParse = d3.timeParse("%Y-%m-%d");
     let url = "/reteamer_api/sales_recruitings.json"
@@ -178,7 +202,6 @@ export default class SalesRecruitingChartController extends Controller {
         }
 
         function mousemove(e) {
-          const self = this;
           const pointerElement = d3.pointer(e);
           let x0 = self.x.invert(pointerElement[0]);
           let i = bisect(data, x0, 1);
@@ -388,54 +411,27 @@ export default class SalesRecruitingChartController extends Controller {
       exit => exit.remove()
     )
 
-    // Draw a thick line at x=0
-    self.svg.selectAll(".cursor-line")
-      .data(data)
-      .join(
-        enter => enter.append("line")
-          .attr("class", "cursor-line")
-          .style("stroke", "black")
-          .style("stroke-width", "1px")
-          .attr("x1", 0)
-          .attr("x2", width)
-          .attr("y1", y(0))
-          .attr("y2", y(0)),
-        update => update
-          .transition()
-          .duration(750)
-          .attr("x1", 0)
-          .attr("x2", width)
-          .attr("y1", y(0))
-          .attr("y2", y(0)),
-        exit => exit.remove()
-      )
+    // Draw a thick line at y=0
+    self.svg.selectAll(".x-axis-line")
+      .transition()
+      .duration(750)
+      .attr("x1", 0)
+      .attr("x2", width)
+      .attr("y1", y(0))
+      .attr("y2", y(0))
 
     // Add the Utilization line
-    self.svg.selectAll("path")
-      .data(data)
-      .join(
-        enter => enter.append("path").attr("fill", "none")
-          .attr("stroke", utilizationColor)
-          .attr("stroke-width", 2)
-          .attr("opacity", 1)
-          .attr("d", d3.line()
-              .x(function(d) {
-                console.error("=============>", d);
-                return x(d.date)
-              })
-              .y(function(d) {
-                return y(d.utilization)
-              }).curve(d3.curveLinear)),
-        update => update.transition()
-          .duration(750)
-          .attr("d", d3.line()
-              .x(function(d) {
-                return x(d.date)
-              })
-              .y(function(d) {
-                return y(d.utilization)
-              }).curve(d3.curveLinear)),
-        exit => exit.remove()
+    self.svg.selectAll(".utilization-line")
+      .datum(data)
+      .raise()
+      .transition().duration(750)
+      .attr("d", d3.line()
+        .x(function(d) {
+          return x(d.date)
+        })
+        .y(function(d) {
+          return y(d.utilization)
+        }).curve(d3.curveLinear)
       )
     return bisect;
   }
