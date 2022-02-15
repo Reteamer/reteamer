@@ -21,7 +21,7 @@ module ActsAsProposable
           end
 
           if ActsAsProposable.current_proposal
-            keys = [ActsAsProposable.current_proposal.send(pkey), Proposal.default_proposal].compact
+            keys = [ActsAsProposable.current_proposal.send(pkey), Proposal.default_proposal.send(pkey)].uniq.compact
             keys.push(nil) if options[:has_global_records]
 
             query_criteria = {fkey.to_sym => keys}

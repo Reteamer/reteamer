@@ -5,8 +5,8 @@ module ReteamerApi
 
     def create
       new_open_req = People::OpenReq.new(
-        title: params[:title],
-        supervisor_key: params[:supervisor_key]
+        supervisor_key: params[:supervisor_key],
+        job_family_id: params[:job_family_id]
       )
 
       authorize new_open_req.becomes(People::Person)
@@ -34,7 +34,7 @@ module ReteamerApi
       effective_date = Date.parse(params[:effective_at])
       new_open_req = Entry.find_for(effective_date, key: params[:key]).first.versionable.deep_clone
       new_open_req.assign_attributes(
-        title: open_req_params[:title]
+        job_family_id: open_req_params[:job_family_id]
       )
       entry = Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_open_req)
 
@@ -44,7 +44,7 @@ module ReteamerApi
     private
 
     def open_req_params
-      params.fetch(:open_req, {}).permit(:title)
+      params.fetch(:open_req, {}).permit(:job_family_id)
     end
   end
 end

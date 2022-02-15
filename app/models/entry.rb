@@ -25,6 +25,9 @@ class Entry < ApplicationRecord
   acts_as_tenant :account
   acts_as_proposable :proposal
 
+  validates_associated :versionable
+  validates_uniqueness_to_tenant :effective_at
+
   before_create :set_values
 
   def set_values
@@ -40,9 +43,12 @@ class Entry < ApplicationRecord
   end
 
   def self.find_for(effective_date, key: nil, versionable_type: nil, include_inactive: false, where: nil)
-    relation = where(effective_at:
-      group(:key).where(effective_at: ..effective_date.end_of_day).select("max(effective_at) as effective_at"))
-      .includes(:versionable) # avoid n+1 queries
+    sub_query = group(:key)
+                  .where(effective_at: ..effective_date.end_of_day)
+                  .select("max(effective_at) as effective_at")
+    sub_query = sub_query.where(key: key) if key
+
+    relation = where(effective_at: sub_query).includes(:versionable) # avoid n+1 queries
     relation = relation.where(key: key) if key
     relation = relation.where(versionable_type: versionable_type) if versionable_type
     relation = relation.where(where) if where

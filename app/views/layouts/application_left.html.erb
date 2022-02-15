@@ -135,6 +135,16 @@
               </div>
             </more-link-dropdown>
           </more-link>
+
+          <%= link_to settings_path, class: 'vertical-nav-link no-underline', aria: { label: "Settings" } do %>
+            <settings-link>
+              <span class="appearance-none relative">
+                  <i class="fa fa-cog"></i>
+                </span><br />
+              Settings
+            </settings-link>
+          <% end %>
+
         </top-links>
         <bottom-links class="flex flex-wrap flex-col grow items-center justify-end">
           <% if signed_in? %>

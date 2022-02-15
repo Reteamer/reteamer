@@ -50,7 +50,7 @@ export default class extends Controller {
 
   handleDatePicked(event) {
     event.preventDefault();
-    this.populateDropdowns()
+    // this.populateDropdowns()
     this.sectionOneTarget.classList.add("hidden")
     this.sectionThreeTarget.classList.remove("hidden")
   }
@@ -59,7 +59,7 @@ export default class extends Controller {
     const dropDowns = [
       {formKey: "supervisor_key", dataKey: "supervisors", resetIndex: 2},
       {formKey: "team_key", dataKey: "teams", resetIndex: 2},
-      {formKey: "job_family_key", dataKey: "job_families", resetIndex: 1},
+      {formKey: "job_family_id", dataKey: "job_families", resetIndex: 1},
     ]
 
     dropDowns.forEach((dropDown) => {
@@ -69,13 +69,13 @@ export default class extends Controller {
       }
     })
 
-    const selected_date = document.querySelector("#person-form input[name='effective_at']").value
+    const selected_date = this.element.querySelector("input[name='effective_at']").value
 
     fetch(`/reteamer_api/person_form_drop_downs.json?effective_date=${selected_date}`).then((response) => {
       response.json().then((data) => {
 
         dropDowns.forEach((dropDown) => {
-          const select = document.querySelector(`#person-form select[name="${dropDown.formKey}"]`)
+          const select = this.element.querySelector(`select[name="${dropDown.formKey}"]`)
           const sortedItems = data[dropDown.dataKey].sort((item, other) => item.name.localeCompare(other.name))
           sortedItems.forEach((item) => {
             let option = document.createElement('option')
@@ -86,7 +86,7 @@ export default class extends Controller {
 
           if(this.person) {
             const form = this.element.querySelector("#person-form")
-            form.job_family_key.value = this.person.job_family_key
+            form.job_family_id.value = this.person.job_family_id
           }
         })
       })
@@ -107,7 +107,7 @@ export default class extends Controller {
     newPersonAttributes.last_name = form.last_name.value
     newPersonAttributes.email = form.email.value
     newPersonAttributes.title = form.title.value
-    newPersonAttributes.job_family_key = form.job_family_key.value
+    newPersonAttributes.job_family_id = form.job_family_id.value
     newPersonAttributes.employee_id = form.employee_id.value
     newPersonAttributes.supervisor_key = form.supervisor_key.value
     newPersonAttributes.team_key = form.team_key.value
@@ -118,7 +118,7 @@ export default class extends Controller {
     }).catch((json) => {
       this.errorMessageTarget.innerHTML = json.error.message;
       this.errorMessageTarget.classList.remove("hidden")
-      this.submitButtonTarget.disabled = true;
+      // this.submitButtonTarget.disabled = true;
     })
   }
 
@@ -199,7 +199,7 @@ export default class extends Controller {
                   </div>
                   <div class="form-group">
                     <label title="Used to filter and group people and job openings">Job Family</label>
-                    <select name="job_family_key" class="select">
+                    <select name="job_family_id" class="select">
                       <option disabled selected value="">Pick one...</option>
                     </select>
                   </div>

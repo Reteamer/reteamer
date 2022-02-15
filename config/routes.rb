@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resource :team_chart, only: :show
   resources :reports, only: :index
   resource :reset_data, only: :show
+  resources :settings, only: :index
+  resources :job_families
 
   namespace :reteamer_api do
     resources :assignments, only: [:create, :update, :destroy], param: :key

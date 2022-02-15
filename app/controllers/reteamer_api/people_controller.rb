@@ -17,7 +17,13 @@ module ReteamerApi
       authorize new_person.becomes(People::Person)
 
       effective_date = Date.parse(params[:effective_at])
-      person_entry = Entry.create!(effective_at: effective_date, versionable: new_person)
+      person_entry = Entry.create(effective_at: effective_date, versionable: new_person)
+      unless(person_entry.valid?)
+        render status: :unprocessable_entity, json:
+          {
+            error: { message: "Error: Make sure you specify a name and a job family" }
+          } and return
+      end
 
       if params[:team_key]
         Entry.create!(effective_at: effective_date, versionable: Assignment.new(person_key: person_entry.key, team_key: params[:team_key]))
@@ -43,7 +49,7 @@ module ReteamerApi
         email: person_params[:email],
         title: person_params[:title],
         employee_id: person_params[:employee_id],
-        job_family_key: person_params[:job_family_key]
+        job_family_id: person_params[:job_family_id]
       )
       entry = Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
 
@@ -67,7 +73,7 @@ module ReteamerApi
     private
 
     def person_params
-      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key, :job_family_key, :first_name, :last_name, :email, :title, :employee_id)
+      params.fetch(:person, {}).permit(:effective_date, :key, :supervisor_key, :team_key, :job_family_id, :first_name, :last_name, :email, :title, :employee_id)
     end
   end
 end

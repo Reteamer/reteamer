@@ -6,7 +6,6 @@
 #  email          :string
 #  first_name     :string
 #  image_url      :text
-#  job_family_key :string
 #  last_name      :string
 #  supervisor_key :string
 #  title          :string
@@ -14,8 +13,10 @@
 #  created_at     :datetime
 #  account_id     :integer          not null
 #  employee_id    :string
+#  job_family_id  :bigint
 #
 module People
   class Employee < Person
+    validates_presence_of :first_name
   end
 end
