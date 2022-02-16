@@ -13,6 +13,7 @@
 #  created_at     :datetime
 #  account_id     :integer          not null
 #  employee_id    :string
+#  job_family_id  :bigint
 #
 require "test_helper"
 
@@ -22,10 +23,10 @@ class PersonTest < ActiveSupport::TestCase
   end
 
   test "has_subordinates? tells us if there are people reporting to this person now or in the future" do
-    supervisor = People::Person.new(first_name: "Blueshirt", last_name: "Guy")
+    supervisor = FactoryBot.build(:person)
     effective_date = 1.day.from_now
     supervisor_entry = Entry.create!(effective_at: effective_date, versionable: supervisor)
-    subordinate = People::Person.new(first_name: "Greenshirt", last_name: "Guy", supervisor_key: supervisor_entry.key)
+    subordinate = FactoryBot.build(:person, supervisor_key: supervisor_entry.key)
     subordinate_entry = Entry.create!(effective_at: effective_date, versionable: subordinate)
 
     assert(People::Person.has_subordinates?(effective_date, supervisor_entry.key) == true)

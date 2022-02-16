@@ -7,7 +7,7 @@ export default class extends Controller {
     selectedDate: String
   }
 
-  handlePersonEdit(event) {
+  async handlePersonEdit(event) {
     this.resetWizard();
 
     this.person = event.detail.person
@@ -25,7 +25,6 @@ export default class extends Controller {
 
   handleNewPerson(event) {
     this.resetWizard();
-    this.populateDropdowns()
     this.callback = event.detail.callback
     this.sectionOneTarget.classList.add("hidden")
     this.sectionTwoTarget.classList.remove("hidden")
@@ -45,50 +44,50 @@ export default class extends Controller {
     this.sectionThreeTarget.classList.add("hidden")
     this.person = null;
     this.callback = () => {}
+
+    this.populateDropdowns()
   }
 
   handleDatePicked(event) {
     event.preventDefault();
-    this.populateDropdowns()
+    // this.populateDropdowns()
     this.sectionOneTarget.classList.add("hidden")
     this.sectionThreeTarget.classList.remove("hidden")
   }
 
   populateDropdowns() {
-    let select = this.element.querySelector("select[name='supervisor_key']")
-    for(let i = 2; i < select.options.length;) {
-      select.remove(i)
-    }
+    const dropDowns = [
+      {formKey: "supervisor_key", dataKey: "supervisors", resetIndex: 2},
+      {formKey: "team_key", dataKey: "teams", resetIndex: 2},
+      {formKey: "job_family_id", dataKey: "job_families", resetIndex: 1},
+    ]
 
-    select = this.element.querySelector("select[name='team_key']")
-    for(let i = 2; i < select.options.length;) {
-      select.remove(i)
-    }
-
-    const selected_date = document.querySelector("#person-form input[name='effective_at']").value
-
-    fetch(`/reteamer_api/supervisors.json?effective_date=${selected_date}`).then((response) => {
-      response.json().then((data) => {
-        const select = document.querySelector("#person-form select[name='supervisor_key']")
-        const sortedSupervisors = data.supervisors.sort((supervisor, other) => supervisor.name.localeCompare(other.name))
-        sortedSupervisors.forEach((supervisor) => {
-          let option = document.createElement('option')
-          option.value = supervisor.id
-          option.text = supervisor.name
-          select.appendChild(option)
-        })
-      })
+    dropDowns.forEach((dropDown) => {
+      let select = this.element.querySelector(`select[name="${dropDown.formKey}"]`)
+      for(let i = dropDown.resetIndex; i < select.options.length;) {
+        select.remove(i)
+      }
     })
 
-    fetch(`/reteamer_api/teams.json?effective_date=${selected_date}`).then((response) => {
+    const selected_date = this.element.querySelector("input[name='effective_at']").value
+
+    fetch(`/reteamer_api/person_form_drop_downs.json?effective_date=${selected_date}`).then((response) => {
       response.json().then((data) => {
-        const select = document.querySelector("#person-form select[name='team_key']")
-        const sortedTeams = data.teams.sort((team, other) => team.name.localeCompare(other.name))
-        sortedTeams.forEach((team) => {
-          let option = document.createElement('option')
-          option.value = team.id
-          option.text = team.name
-          select.appendChild(option)
+
+        dropDowns.forEach((dropDown) => {
+          const select = this.element.querySelector(`select[name="${dropDown.formKey}"]`)
+          const sortedItems = data[dropDown.dataKey].sort((item, other) => item.name.localeCompare(other.name))
+          sortedItems.forEach((item) => {
+            let option = document.createElement('option')
+            option.value = item.key
+            option.text = item.name
+            select.appendChild(option)
+          })
+
+          if(this.person) {
+            const form = this.element.querySelector("#person-form")
+            form.job_family_id.value = this.person.job_family_id
+          }
         })
       })
     })
@@ -108,6 +107,7 @@ export default class extends Controller {
     newPersonAttributes.last_name = form.last_name.value
     newPersonAttributes.email = form.email.value
     newPersonAttributes.title = form.title.value
+    newPersonAttributes.job_family_id = form.job_family_id.value
     newPersonAttributes.employee_id = form.employee_id.value
     newPersonAttributes.supervisor_key = form.supervisor_key.value
     newPersonAttributes.team_key = form.team_key.value
@@ -118,7 +118,7 @@ export default class extends Controller {
     }).catch((json) => {
       this.errorMessageTarget.innerHTML = json.error.message;
       this.errorMessageTarget.classList.remove("hidden")
-      this.submitButtonTarget.disabled = true;
+      // this.submitButtonTarget.disabled = true;
     })
   }
 
@@ -178,15 +178,15 @@ export default class extends Controller {
                   <supervisor-form-group class="form-group">
                     <label for="supervisor_key">Supervisor</label>
                     <select name="supervisor_key" class="select">
-                      <option disabled selected>Pick one...</option>
-                      <option value="">&lt;No Supervisor&gt;</option>
+                      <option disabled value="">Pick one...</option>
+                      <option value="">[No Supervisor]</option>
                     </select>
                   </supervisor-form-group>
                   <team-form-group class="form-group">
                     <label for="team_key">Initial Team</label>
                     <select name="team_key" class="select">
-                      <option disabled selected value="">Pick one...</option>
-                      <option value="">&lt;Unassigned&gt;</option>
+                      <option disabled value="">Pick one...</option>
+                      <option value="">[Unassigned]</option>
                     </select>
                   </team-form-group>
                   <div class="form-group">
@@ -198,7 +198,13 @@ export default class extends Controller {
                     <input type="text" class="form-control" name="title" />
                   </div>
                   <div class="form-group">
-                    <label>Email (used for notifying employee as well as Gravatar for avatar)</label>
+                    <label title="Used to filter and group people and job openings">Job Family</label>
+                    <select name="job_family_id" class="select">
+                      <option disabled selected value="">Pick one...</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label title="Used for notifying employee as well as Gravatar for avatar">Email</label>
                     <input type="email" class="form-control" name="email" />
                   </div>
   

@@ -19,17 +19,20 @@
 #  index_entries_on_versionable  (versionable_type,versionable_id)
 #
 class Entry < ApplicationRecord
-  self.ignored_columns = ["plan_name"] # TODO: delete this line after migration is deployed to remove this column
-
   belongs_to :versionable, polymorphic: true
   acts_as_tenant :account
   acts_as_proposable :proposal
 
-  before_create :set_values
+  before_validation :set_values, on: :create
+
+  validates_associated :versionable
+  validates_uniqueness_to_tenant :effective_at
 
   def set_values
-    number_of_events = self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).count
-    self.effective_at = effective_at.to_date + number_of_events.seconds
+    max_effective_at = ActsAsProposable.without_proposal do
+      self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).maximum(:effective_at) || effective_at.beginning_of_day
+    end
+    self.effective_at = max_effective_at + 1.second
     self.key = SecureRandom.uuid unless key.present?
   end
 
@@ -39,12 +42,16 @@ class Entry < ApplicationRecord
       .order(:date)
   end
 
-  def self.find_for(effective_date, key: nil, versionable_type: nil, include_inactive: false)
-    relation = where(effective_at:
-      group(:key).where(effective_at: ..effective_date.end_of_day).select("max(effective_at) as effective_at"))
-      .includes(:versionable) # avoid n+1 queries
+  def self.find_for(effective_date, key: nil, versionable_type: nil, include_inactive: false, where: nil)
+    sub_query = group(:key)
+      .where(effective_at: ..effective_date.end_of_day)
+      .select("max(effective_at) as effective_at")
+    sub_query = sub_query.where(key: key) if key
+
+    relation = where(effective_at: sub_query).includes(:versionable) # avoid n+1 queries
     relation = relation.where(key: key) if key
     relation = relation.where(versionable_type: versionable_type) if versionable_type
+    relation = relation.where(where) if where
     relation = relation.select(&:active) unless include_inactive
     relation
   end

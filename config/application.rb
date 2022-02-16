@@ -30,6 +30,10 @@ module ReteamerPro
     # Set default locale
     config.i18n.default_locale = :en
 
+    # Set time zone
+    config.time_zone = "UTC"
+    config.active_record.default_timezone = :utc
+
     # Use default language as fallback if translation is missing
     config.i18n.fallbacks = true
 

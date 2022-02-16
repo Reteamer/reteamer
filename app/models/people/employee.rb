@@ -13,8 +13,10 @@
 #  created_at     :datetime
 #  account_id     :integer          not null
 #  employee_id    :string
+#  job_family_id  :bigint
 #
 module People
   class Employee < Person
+    validates_presence_of :first_name
   end
 end

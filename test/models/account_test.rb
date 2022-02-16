@@ -119,8 +119,11 @@ class AccountTest < ActiveSupport::TestCase
 
   test "destroys associated models" do
     account = accounts(:company)
-    ActsAsTenant.with_tenant(account) do
-      entry = Entry.create!(effective_at: Date.today, versionable: People::Employee.new(first_name: "Adios"))
+    entry = ActsAsTenant.with_tenant(account) do
+      Entry.create!(effective_at: Date.today, versionable: FactoryBot.build(:person))
+    end
+
+    ActsAsTenant.without_tenant do
       account.destroy
       assert(!Entry.exists?(entry.id))
     end

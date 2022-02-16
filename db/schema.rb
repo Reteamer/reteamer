@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_28_073447) do
+ActiveRecord::Schema.define(version: 2022_02_13_221945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,7 +121,6 @@ ActiveRecord::Schema.define(version: 2021_11_28_073447) do
   create_table "assignments", force: :cascade do |t|
     t.string "person_key", null: false
     t.string "team_key", null: false
-    t.string "role_on_team"
     t.integer "account_id", null: false
     t.datetime "created_at"
   end
@@ -144,6 +143,12 @@ ActiveRecord::Schema.define(version: 2021_11_28_073447) do
     t.datetime "created_at"
     t.bigint "proposal_id", null: false
     t.index ["versionable_type", "versionable_id"], name: "index_entries_on_versionable"
+  end
+
+  create_table "job_families", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "account_id", null: false
+    t.datetime "created_at", precision: 6
   end
 
   create_table "notification_tokens", force: :cascade do |t|
@@ -257,6 +262,7 @@ ActiveRecord::Schema.define(version: 2021_11_28_073447) do
     t.text "image_url"
     t.integer "account_id", null: false
     t.datetime "created_at"
+    t.bigint "job_family_id"
   end
 
   create_table "plans", force: :cascade do |t|

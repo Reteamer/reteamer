@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_selected_date
 
+  around_action :settings_time_zone
+
   impersonates :user
   add_flash_types :error
 
@@ -67,5 +69,9 @@ class ApplicationController < ActionController::Base
     unless subscribed?
       redirect_to pricing_path, alert: t("must_be_subscribed")
     end
+  end
+
+  def settings_time_zone(&block)
+    Time.use_zone("UTC") { yield }
   end
 end

@@ -6,9 +6,12 @@ Rails.application.routes.draw do
   resource :team_chart, only: :show
   resources :reports, only: :index
   resource :reset_data, only: :show
+  resources :settings, only: :index
+  resources :job_families
 
   namespace :reteamer_api do
     resources :assignments, only: [:create, :update, :destroy], param: :key
+    resources :job_families, only: [:index]
     resources :open_reqs, only: [:create, :update], param: :key
     resource :org_chart, only: :show
     resources :people, only: [:create, :update, :destroy], param: :key do
@@ -16,6 +19,7 @@ Rails.application.routes.draw do
         post :update_supervisor
       end
     end
+    resource :person_form_drop_downs, only: [:show]
     resources :proposals, only: [:create] do
       post :switch, on: :collection
     end

@@ -20,7 +20,7 @@ require "test_helper"
 
 class EntryTest < ActiveSupport::TestCase
   test ".find_for returns only the most recent entries for a given date" do
-    versionable = People::Person.create!(first_name: "Blueshirt", last_name: "Guy")
+    versionable = FactoryBot.create(:person)
     first = Entry.create!(effective_at: 1.day.from_now, versionable: versionable.dup)
     third = Entry.create!(effective_at: 3.days.from_now, key: first.key, versionable: versionable.dup)
     second = Entry.create!(effective_at: 2.days.from_now, key: first.key, versionable: versionable.dup)
@@ -34,7 +34,7 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test "merge_conflicts finds all instances of a key that happen in the future" do
-    versionable = People::Person.create!(first_name: "Blueshirt", last_name: "Guy")
+    versionable = FactoryBot.create(:person)
     first = Entry.create!(effective_at: 1.day.from_now, versionable: versionable.dup)
     _third = Entry.create!(effective_at: 3.days.from_now, key: first.key, versionable: versionable.dup)
     _second = Entry.create!(effective_at: 2.days.from_now, key: first.key, versionable: versionable.dup)
@@ -62,5 +62,13 @@ class EntryTest < ActiveSupport::TestCase
     results = Entry.find_for(today, key: "expected")
     assert_includes(results, expected)
     refute_includes(results, not_expected)
+  end
+
+  test "effective_at should be in UTC starting around 00:00:00" do
+    effective_at = Date.parse("2022-04-26") + 4.seconds
+    assert_equal("UTC", effective_at.zone)
+
+    entry = Entry.create(effective_at: effective_at)
+    assert_equal("UTC", entry.effective_at.zone)
   end
 end

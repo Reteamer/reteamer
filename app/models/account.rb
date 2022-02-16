@@ -115,6 +115,7 @@ class Account < ApplicationRecord
       Assignment.delete_all
       Connection.delete_all
       Proposal.delete_all
+      JobFamily.delete_all
     end
   end
 end

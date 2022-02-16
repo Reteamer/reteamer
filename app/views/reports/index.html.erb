@@ -1,10 +1,16 @@
 <div class="row flex flex-col h-full">
   <div class="px-4 p-1 bg-blue-200">
     <h1 class="inline-block align-middle"><%= t(".title") %></h1>
+    <label for="job_family_key" class="inline-block ml-5" data-controller="job-family-navigator">Job Family:
+      <select class="w-36" name="job_family_key" data-action="change->job-family-navigator#emitNewJobFamily" style="display:inline-block; width:200px;">
+        <option value="all">All</option>
+
+      </select>
+    </label>
   </div>
   <div class="px-4">
     <h3>Sales &amp; Recruiting</h3>
     <h4>When do I need to hire/start more projects?</h4>
-    <sales-recruiting-chart data-controller="sales-recruiting-chart"></sales-recruiting-chart>
+    <sales-recruiting-chart data-controller="sales-recruiting-chart" data-action="jobFamilyPicked@window->sales-recruiting-chart#setFilter"></sales-recruiting-chart>
   </div>
 </div>
