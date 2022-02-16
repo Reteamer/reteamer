@@ -20,7 +20,7 @@ require "test_helper"
 
 class EntryTest < ActiveSupport::TestCase
   test ".find_for returns only the most recent entries for a given date" do
-    versionable = People::Person.create!(first_name: "Blueshirt", last_name: "Guy")
+    versionable = FactoryBot.create(:person)
     first = Entry.create!(effective_at: 1.day.from_now, versionable: versionable.dup)
     third = Entry.create!(effective_at: 3.days.from_now, key: first.key, versionable: versionable.dup)
     second = Entry.create!(effective_at: 2.days.from_now, key: first.key, versionable: versionable.dup)
@@ -34,7 +34,7 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test "merge_conflicts finds all instances of a key that happen in the future" do
-    versionable = People::Person.create!(first_name: "Blueshirt", last_name: "Guy")
+    versionable = FactoryBot.create(:person)
     first = Entry.create!(effective_at: 1.day.from_now, versionable: versionable.dup)
     _third = Entry.create!(effective_at: 3.days.from_now, key: first.key, versionable: versionable.dup)
     _second = Entry.create!(effective_at: 2.days.from_now, key: first.key, versionable: versionable.dup)

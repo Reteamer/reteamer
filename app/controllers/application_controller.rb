@@ -72,6 +72,6 @@ class ApplicationController < ActionController::Base
   end
 
   def settings_time_zone(&block)
-    Time.use_zone("UTC", &block)
+    Time.use_zone("UTC") { yield }
   end
 end

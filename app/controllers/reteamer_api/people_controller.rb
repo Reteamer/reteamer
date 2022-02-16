@@ -11,6 +11,7 @@ module ReteamerApi
         email: params[:email],
         title: params[:title],
         supervisor_key: params[:supervisor_key].presence,
+        job_family_id: params[:job_family_id],
         employee_id: params[:employee_id]
       )
 
@@ -51,7 +52,13 @@ module ReteamerApi
         employee_id: person_params[:employee_id],
         job_family_id: person_params[:job_family_id]
       )
-      entry = Entry.create!(key: params[:key], effective_at: effective_date, versionable: new_person)
+      entry = Entry.create(key: params[:key], effective_at: effective_date, versionable: new_person)
+      unless entry.valid?
+        render status: :unprocessable_entity, json:
+          {
+            error: {message: "Error: Make sure you specify a name and a job family"}
+          } and return
+      end
 
       Support::PersonEditor.new(entry).apply_intentions_going_forward
     end

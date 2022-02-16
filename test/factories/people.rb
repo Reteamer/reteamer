@@ -22,5 +22,14 @@ FactoryBot.define do
     title { "Test Specialist" }
     employee_id { "ABC-333" }
     email { "jane.doe@example.com" }
+    job_family
+  end
+end
+
+FactoryBot.define do
+  factory :job_family do
+    sequence :name do |n|
+      "Job Family #{n}"
+    end
   end
 end

@@ -29,8 +29,10 @@ class Entry < ApplicationRecord
   validates_uniqueness_to_tenant :effective_at
 
   def set_values
-    number_of_events = self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).count
-    self.effective_at = effective_at.to_date + number_of_events.seconds
+    max_effective_at = ActsAsProposable.without_proposal do
+      self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).maximum(:effective_at) || effective_at.beginning_of_day
+    end
+    self.effective_at = max_effective_at + 1.second
     self.key = SecureRandom.uuid unless key.present?
   end
 
