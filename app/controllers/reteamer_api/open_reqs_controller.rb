@@ -31,7 +31,7 @@ module ReteamerApi
     end
 
     def update
-      effective_date = Date.parse(params[:effective_at])
+      effective_date = params[:effective_at].in_time_zone("UTC")
       new_open_req = Entry.find_for(effective_date, key: params[:key]).first.versionable.deep_clone
       new_open_req.assign_attributes(
         job_family_id: open_req_params[:job_family_id]

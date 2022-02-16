@@ -19,16 +19,14 @@
 #  index_entries_on_versionable  (versionable_type,versionable_id)
 #
 class Entry < ApplicationRecord
-  self.ignored_columns = ["plan_name"] # TODO: delete this line after migration is deployed to remove this column
-
   belongs_to :versionable, polymorphic: true
   acts_as_tenant :account
   acts_as_proposable :proposal
 
+  before_validation :set_values, on: :create
+
   validates_associated :versionable
   validates_uniqueness_to_tenant :effective_at
-
-  before_create :set_values
 
   def set_values
     number_of_events = self.class.where(effective_at: effective_at.beginning_of_day..effective_at.end_of_day).count

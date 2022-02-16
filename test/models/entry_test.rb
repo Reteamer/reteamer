@@ -63,4 +63,12 @@ class EntryTest < ActiveSupport::TestCase
     assert_includes(results, expected)
     refute_includes(results, not_expected)
   end
+
+  test "effective_at should be in UTC starting around 00:00:00" do
+    effective_at = Date.parse("2022-04-26") + 4.seconds
+    assert_equal("UTC", effective_at.zone)
+
+    entry = Entry.create(effective_at: effective_at)
+    assert_equal("UTC", entry.effective_at.zone)
+  end
 end
