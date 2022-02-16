@@ -18,10 +18,10 @@ module ReteamerApi
 
       effective_date = Date.parse(params[:effective_at])
       person_entry = Entry.create(effective_at: effective_date, versionable: new_person)
-      unless(person_entry.valid?)
+      unless person_entry.valid?
         render status: :unprocessable_entity, json:
           {
-            error: { message: "Error: Make sure you specify a name and a job family" }
+            error: {message: "Error: Make sure you specify a name and a job family"}
           } and return
       end
 

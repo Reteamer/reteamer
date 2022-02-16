@@ -42,8 +42,8 @@ class Entry < ApplicationRecord
 
   def self.find_for(effective_date, key: nil, versionable_type: nil, include_inactive: false, where: nil)
     sub_query = group(:key)
-                  .where(effective_at: ..effective_date.end_of_day)
-                  .select("max(effective_at) as effective_at")
+      .where(effective_at: ..effective_date.end_of_day)
+      .select("max(effective_at) as effective_at")
     sub_query = sub_query.where(key: key) if key
 
     relation = where(effective_at: sub_query).includes(:versionable) # avoid n+1 queries

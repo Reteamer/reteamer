@@ -6,7 +6,7 @@ module ReteamerApi
         fake_root_node = FakeRootNode.new
         supervisor_keys = people.map(&:key)
         people.select { |person| person.supervisor_key.nil? || !supervisor_keys.include?(person.supervisor_key) }
-              .map { |person| person.supervisor_key = fake_root_node.key }
+          .map { |person| person.supervisor_key = fake_root_node.key }
         people << fake_root_node
       end
 

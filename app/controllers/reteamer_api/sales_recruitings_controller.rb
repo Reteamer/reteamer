@@ -9,7 +9,7 @@ module ReteamerApi
 
         people = Entry.find_for(date, versionable_type: People::Person.name)
 
-        if(params[:job_family_key] && params[:job_family_key] != "all")
+        if params[:job_family_key] && params[:job_family_key] != "all"
           job_family_entry = Entry.find_for(date, key: params[:job_family_key]).first
           people = people.select { |p| p.versionable.job_family_key == job_family_entry.key }
         end
