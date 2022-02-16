@@ -6,9 +6,9 @@ import {peopleDate, toISODate} from "../date_helpers";
 export default class SalesRecruitingChartController extends Controller {
   setFilter(e) {
     const self = this;
-    self.jobFamilyFilter = e.detail.jobFamilyKey;
+    self.jobFamilyFilter = e.detail.jobFamilyId;
     let url = "/reteamer_api/sales_recruitings.json"
-    if(self.jobFamilyFilter) url += `?job_family_key=${self.jobFamilyFilter}`
+    if(self.jobFamilyFilter) url += `?job_family_id=${self.jobFamilyFilter}`
 
     d3.json(url)
       .then(function(data) {

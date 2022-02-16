@@ -9,9 +9,8 @@ module ReteamerApi
 
         people = Entry.find_for(date, versionable_type: People::Person.name)
 
-        if params[:job_family_key] && params[:job_family_key] != "all"
-          job_family_entry = Entry.find_for(date, key: params[:job_family_key]).first
-          people = people.select { |p| p.versionable.job_family_key == job_family_entry.key }
+        if params[:job_family_id] && params[:job_family_id] != "all"
+          people = people.select { |p| p.versionable.job_family_id == params[:job_family_id].to_i }
         end
 
         open_reqs = people.map(&:versionable).count { |p| p.is_a?(People::OpenReq) }

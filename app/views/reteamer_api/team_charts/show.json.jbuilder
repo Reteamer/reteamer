@@ -23,7 +23,7 @@ json.chart do
       json.name(h(member.name))
       json.firstName(h(member.first_name))
       json.lastName(h(member.last_name))
-      json.title(h(member.title))
+      json.title(h(member.title.presence || member.job_family_name))
       json.job_family_id(member.job_family_id)
       json.supervisor_key(member.supervisor_key)
       json.image_url(member.image_url || "https://www.gravatar.com/avatar/?s=50")
