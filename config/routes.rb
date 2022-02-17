@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   namespace :reteamer_api do
     resources :assignments, only: [:create, :update, :destroy], param: :key
-    resources :job_families, only: [:index]
+    resources :job_families, only: [:index, :update, :destroy]
     resources :open_reqs, only: [:create, :update], param: :key
     resource :org_chart, only: :show
     resources :people, only: [:create, :update, :destroy], param: :key do

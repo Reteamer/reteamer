@@ -5,13 +5,17 @@
 
   <div class="w-full lg:w-3/4 lg:p-4">
     <div class="p-4 bg-white border border-gray-200 rounded-lg lg:p-10">
-      <ol>
         <% @job_families.each do |job_family| %>
-          <li>
-            <%= job_family.name %>
-          </li>
+          <p
+            data-controller="inline-edit"
+            data-inline-edit-model="job_family"
+            data-inline-edit-name="name"
+            data-inline-edit-form-url="<%= reteamer_api_job_family_path(job_family) %>"
+            data-inline-edit-input-class="form-control-inline"
+            data-inline-edit-target="source"
+            data-action="click->inline-edit#toggle click@window->inline-edit#close"
+          ><%= job_family.name %></p>
         <% end %>
-      </ol>
     </div>
   </div>
 </div>
