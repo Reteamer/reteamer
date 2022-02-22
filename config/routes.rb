@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   namespace :reteamer_api do
     resources :assignments, only: [:create, :update, :destroy], param: :key
-    resources :job_families, only: [:index, :update, :destroy]
+    resources :job_families, only: [:index, :create, :update, :destroy]
     resources :open_reqs, only: [:create, :update], param: :key
     resource :org_chart, only: :show
     resources :people, only: [:create, :update, :destroy], param: :key do
@@ -178,4 +178,7 @@ Rails.application.routes.draw do
 
   # Public marketing homepage
   root to: "static#index"
+
+  # Catch-All routes for bots that cause 500's because no route matches
+  match "*wlwmanifest.xml", to: proc { [404, {}, [""]] }, via: :all
 end
