@@ -5,17 +5,29 @@
 
   <div class="w-full lg:w-3/4 lg:p-4">
     <div class="p-4 bg-white border border-gray-200 rounded-lg lg:p-10">
-        <% @job_families.each do |job_family| %>
-          <p
-            data-controller="inline-edit"
-            data-inline-edit-model="job_family"
-            data-inline-edit-name="name"
-            data-inline-edit-form-url="<%= reteamer_api_job_family_path(job_family) %>"
-            data-inline-edit-input-class="form-control-inline"
-            data-inline-edit-target="source"
-            data-action="click->inline-edit#toggle click@window->inline-edit#close"
-          ><%= job_family.name %></p>
-        <% end %>
+      <% @job_families.each do |job_family| %>
+        <p
+          data-controller="inline-edit"
+          data-inline-edit-model="job_family"
+          data-inline-edit-name="name"
+          data-inline-edit-form-url="<%= reteamer_api_job_family_path(job_family) %>"
+          data-inline-edit-input-class="form-control-inline"
+          data-inline-edit-target="source"
+          data-action="click->inline-edit#toggle click@window->inline-edit#close"
+        ><%= job_family.name %></p>
+      <% end %>
+
+      <div data-controller="inline-add"
+         data-inline-add-model="job_family"
+         data-inline-add-name="name"
+         data-inline-add-form-url="<%= reteamer_api_job_families_path %>"
+         data-inline-add-input-class="form-control-inline"
+         data-inline-add-target="source"
+         data-action="click@window->inline-add#close"
+
+      >
+        <a data-action="click->inline-add#insertForm"><i class="fa fa-plus"></i>Add Another Job Family</a>
+      </div>
     </div>
   </div>
 </div>

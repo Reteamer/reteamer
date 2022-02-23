@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class extends Controller {
+export default class InlineEditController extends Controller {
   static targets = [ "source", "form", "input" ]
 
   connect() {
@@ -36,7 +36,7 @@ export default class extends Controller {
         <input name="utf8" type="hidden" value="✓">
         <input type="hidden" name="_method" value="patch">
         <input type="hidden" name="authenticity_token" value="${this.authenticity_token}">
-        <input type="text" autofocus value="${this.input_value}" name="${this.model}[${this.name}]" class="${this.input_class}" id="${this.model}_${this.name}" data-target="inline-edit.input" data-action="onblur->inline-edit#submit">
+        <input type="text" autofocus value="${this.input_value}" name="${this.model}[${this.name}]" class="${this.input_class}" id="${this.model}_${this.name}" data-inline-edit-target="input" data-action="onfocus->inline-edit#submit">
       </form>
     `
   }
