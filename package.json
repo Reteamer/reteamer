@@ -28,6 +28,7 @@
     "local-time": "^2.1.0",
     "postcss": "^8.4.6",
     "postcss-import": "^14.0.2",
+    "progressbar.js": "^1.1.0",
     "slim-select": "^1.27.1",
     "stimulus-flatpickr": "^3.0.0-0",
     "tailwindcss": "^3.0.23",

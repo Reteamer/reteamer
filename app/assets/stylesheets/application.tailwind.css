@@ -32,6 +32,7 @@
 @import "flatpickr/dist/flatpickr.css";
 
 @import "fab.scss";
+@import "inline_edit.scss";
 @import "chart.scss";
 @import "nav.scss";
 @import "person_node.scss";

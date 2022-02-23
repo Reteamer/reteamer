@@ -1,54 +1,57 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class InlineAddController extends Controller {
-  static targets = [ "source", "form", "input" ]
+  static targets = [ "form", "input" ]
 
   connect() {
-    this.model        = this.data.get("model")       || "model"
-    this.name         = this.data.get("name")        || "name"
-    this.form_url     = this.data.get("form-url")    || "/"
-    this.input_class  = this.data.get("input-class") || "input"
+    this.model        = this.data.get("model")
+    this.field        = this.data.get("field")
+    this.form_url     = this.data.get("form-url")
+    this.input_class  = this.data.get("input-class")
   }
 
   insertForm() {
-    this.sourceTarget.insertAdjacentHTML("afterbegin", this.form())
+    this.element.insertAdjacentHTML("afterbegin", this.form())
     this.inputTarget.focus()
   }
 
   onPostSuccess(event) {
     let [data, _status, _xhr] = event.detail;
 
-    let html = `<p
-        data-controller="inline-edit"
-        data-inline-edit-model="job_family"
-        data-inline-edit-name="name"
-        data-inline-edit-form-url="${data.update_url}"
-        data-inline-edit-input-class="form-control-inline"
-        data-inline-edit-target="source"
-        data-action="click->inline-edit#toggle click@window->inline-edit#close"
-      >${data.name}</p>`
+    let html = this.nonForm(data)
     this.formTarget.insertAdjacentHTML('afterend', html);
     this.formTarget.remove()
   }
 
   close(event) {
-    if (this.element.contains(event.target) === false) {
-      this.submit()
+    if(event.key == "Escape") {
+      this.formTarget.remove()
     }
   }
 
   submit() {
-    this.formTarget.submit()
+    Rails.fire(this.formTarget, 'submit')
   }
 
   form() {
     return `
-      <form action="${this.form_url}" accept-charset="UTF-8" data-remote="true" data-inline-add-target="form" data-action="ajax:success->inline-add#onPostSuccess" method="post">
+      <form action="${this.form_url}" accept-charset="UTF-8" data-remote="true" data-inline-add-target="form" data-action="ajax:success->inline-add#onPostSuccess keyup@window->inline-add#close" method="post">
         <input name="utf8" type="hidden" value="✓" />
         <input type="hidden" name="authenticity_token" value="${this.authenticity_token}" />
-        <input type="text" name="${this.model}[${this.name}]" class="${this.input_class}" id="${this.model}_${this.name}" data-inline-add-target="input" data-action="onblur->inline-add#submit">
+        <input type="text" name="${this.model}[${this.field}]" class="${this.input_class}" id="${this.model}_${this.field}" data-inline-add-target="input" data-action="blur->inline-add#submit">
       </form>
     `
+  }
+
+  nonForm(data) {
+    return `<inline-edit
+        data-controller="inline-edit"
+        data-inline-edit-model="${this.model}"
+        data-inline-edit-field="${this.field}"
+        data-inline-edit-form-url="${data.update_url}"
+        data-inline-edit-input-class="form-control-inline"
+        data-inline-edit-display-value="${data.name}"
+      ></inline-edit>`
   }
 
   get authenticity_token() {
