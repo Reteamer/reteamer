@@ -26,7 +26,7 @@ module ReteamerApi
           } and return
       end
 
-      if params[:team_key]
+      if params[:team_key].present?
         Entry.create!(effective_at: effective_date, versionable: Assignment.new(person_key: person_entry.key, team_key: params[:team_key]))
       end
       render json: {}

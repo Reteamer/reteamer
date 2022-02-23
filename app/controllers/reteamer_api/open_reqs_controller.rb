@@ -14,7 +14,7 @@ module ReteamerApi
       effective_date = Date.parse(params[:effective_at])
       open_req_entry = Entry.create!(effective_at: effective_date, versionable: new_open_req)
 
-      if params[:team_key]
+      if params[:team_key].present?
         Entry.create!(effective_at: effective_date, versionable: Assignment.new(person_key: open_req_entry.key, team_key: params[:team_key]))
       end
 
