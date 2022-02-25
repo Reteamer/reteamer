@@ -7,5 +7,5 @@
     <%= t(".description_html", link: link_to(t(".accept_or_decline"), account_invitation_url(@account_invitation), target: :_blank)) %>
   </p>
 
-  <%= link_to t(".view_invitation"), account_invitation_url(@account_invitation), style: "background:#38b2ac; color:#fff; border-radius: 4px; text-decoration: none; padding:.75rem 1rem;" %>
+  <%= link_to t(".view_invitation"), account_invitation_url(@account_invitation), class: "btn btn-primary" %>
 </div>

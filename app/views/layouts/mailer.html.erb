@@ -52,7 +52,7 @@
     font-family: Arial, sans-serif;
     font-size: 14px;
     line-height: 150%;
-    text-align: left;
+    text-align: center;
   }
 
   .addressContent div {
@@ -60,7 +60,7 @@
     font-family: Arial, sans-serif;
     font-size: 12px;
     line-height: 140%;
-    text-align: left;
+    text-align: center;
   }
 
   .bodyContent img {
@@ -68,15 +68,34 @@
     height: auto;
   }
 
-  .bodyContent div a:link,
-  .bodyContent div a:visited,
-  .bodyContent div a .yshortcuts
-
-  /* Yahoo! Mail Override */
-    {
+  a:link,
+  a:visited,
+  .yshortcuts   /* Yahoo! Mail Override */
+  {
     color: #336699;
     font-weight: normal;
     text-decoration: underline;
+  }
+
+  a.btn:link,
+  a.btn:visited
+  {
+    border-radius: 4px;
+    text-decoration: none;
+    padding:.75rem 1rem;
+  }
+
+  a.btn-primary:link,
+  a.btn-primary:visited
+  {
+    background:#0754A3;
+    color:#ddd;
+  }
+
+  a.btn-primary:hover
+  {
+    background: #0067ce;
+    color: #fff;
   }
   </style>
 </head>
@@ -90,6 +109,13 @@
             <tr>
               <td align="center" valign="top">
                 <table border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tr>
+                    <td>
+                      <%= link_to root_url do %>
+                        <%= render_svg "logo-dark", styles: "fill-current text-gray-700 hover:text-gray-800" %>
+                      <% end %>
+                    </td>
+                  </tr>
                   <tr>
                     <td valign="top" class="bodyContent">
                       <table border="0" cellpadding="20" cellspacing="0" width="100%">
@@ -113,17 +139,6 @@
                     <td valign="top">
                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
                         <tr>
-                          <td valign="top" class="addressContent">
-                            <div>
-                              <em><%= t(".copyright_html", year: Date.current.year) %></em>
-                              <br />
-                              <strong><%= t(".mailing_address") %></strong>
-                              <br />
-                              <%= Jumpstart.config.business_name %> <%= Jumpstart.config.business_address %>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
                           <td valign="middle" class="bodyContent">
                             <div>
                               &nbsp;
@@ -133,6 +148,15 @@
                               |
                               <%= link_to t(".preferences"), "#", target: :_blank %>
                               &nbsp;
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td valign="top" class="addressContent">
+                            <div>
+                              <em><%= t(".copyright_html", year: Date.current.year) %></em>
+                              <br />
+                              <%= Jumpstart.config.business_name %> <%= Jumpstart.config.business_address %>
                             </div>
                           </td>
                         </tr>

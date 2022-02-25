@@ -52,7 +52,7 @@ en:
   account_invitations_mailer:
     invite:
       subject: "%{inviter} invited you to %{account}"
-      header_html: "%{inviter} has invited you to collaborate on <strong>%{account}</strong>"
+      header_html: "%{inviter} is using Reteamer and has invited you to collaborate on their account, <strong>%{account}</strong>"
       description_html: "You can %{link} this invitation."
       accept_or_decline: "accept or decline"
       view_invitation: "View invitation"
