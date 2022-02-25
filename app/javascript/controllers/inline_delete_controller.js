@@ -57,7 +57,7 @@ export default class InlineDeleteController extends Controller {
     this.bar.animate(0)
   }
 
-  deleteFailed() {
+  deleteFailed(event) {
     let [data, _status, _xhr] = event.detail;
     alert(data.error.message)
   }
