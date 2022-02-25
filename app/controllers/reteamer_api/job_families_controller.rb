@@ -21,8 +21,8 @@ module ReteamerApi
     end
 
     def destroy
-      unless(People::Person.where(job_family_id: params[:id]).count == 0)
-        render status: 422, json: {error: {message: "Unable to delete this job family because it is still assigned to some people." }} and return
+      unless People::Person.where(job_family_id: params[:id]).count == 0
+        render status: 422, json: {error: {message: "Unable to delete this job family because it is still assigned to some people."}} and return
       end
       JobFamily.destroy(params[:id])
     end
