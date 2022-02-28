@@ -42,6 +42,6 @@
     "build": "node esbuild.config.js"
   },
   "devDependencies": {
-    "@percy/cli": "^1.0.0-beta.75"
+    "@percy/cli": "^1.0.0-beta.76"
   }
 }
