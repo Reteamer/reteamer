@@ -474,7 +474,7 @@ GEM
       rubocop-performance (= 1.13.2)
     stimulus-rails (1.0.2)
       railties (>= 6.0.0)
-    stripe (5.43.0)
+    stripe (5.44.0)
     strong_migrations (0.7.9)
       activerecord (>= 5)
     strscan (3.0.1)
