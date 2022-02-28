@@ -4,9 +4,9 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.0.1",
     "@hotwired/turbo-rails": "^7.1.1",
-    "@rails/actioncable": "^7.0.1",
+    "@rails/actioncable": "^7.0.2",
     "@rails/actiontext": "^7.0.1",
-    "@rails/activestorage": "^7.0.1",
+    "@rails/activestorage": "^7.0.2",
     "@rails/request.js": "^0.0.6",
     "@rails/ujs": "^7.0.1",
     "@tailwindcss/aspect-ratio": "^0.4.0",
@@ -18,7 +18,7 @@
     "clipboard": "^2.0.10",
     "d3": "^7.3.0",
     "d3-flextree": "^2.1.2",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.10.8",
     "esbuild": "^0.14.23",
     "esbuild-rails": "^1.0.3",
     "flatpickr": "^4.6.9",
@@ -42,6 +42,6 @@
     "build": "node esbuild.config.js"
   },
   "devDependencies": {
-    "@percy/cli": "^1.0.0-beta.75"
+    "@percy/cli": "^1.0.0-beta.76"
   }
 }
