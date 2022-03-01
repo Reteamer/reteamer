@@ -28,6 +28,15 @@ module ReteamerApi
             }
         },
         status: :unprocessable_entity
+    rescue ActiveRecord::RecordInvalid
+      render json:
+        {
+          error:
+            {
+              message: "Unable to save this open req. Please pick a job family."
+            }
+        },
+        status: :unprocessable_entity
     end
 
     def update

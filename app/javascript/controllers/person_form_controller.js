@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
-  static targets = [ "sectionOne", "sectionTwo", "sectionThree", "errorMessage", "submitButton" ]
+  static targets = [ "sectionOne", "sectionTwo", "sectionThree", "errorMessage", "form", "personType", "firstName" ]
   static values = {
     selectedDate: String
   }
@@ -28,6 +28,7 @@ export default class extends Controller {
     this.callback = event.detail.callback
     this.sectionOneTarget.classList.add("hidden")
     this.sectionTwoTarget.classList.remove("hidden")
+    this.personTypeTarget.focus()
   }
 
   resetWizard() {
@@ -37,7 +38,6 @@ export default class extends Controller {
 
     this.errorMessageTarget.innerHTML = null
     this.errorMessageTarget.classList.add("hidden")
-    this.submitButtonTarget.disabled = false
 
     this.sectionOneTarget.classList.remove("hidden")
     this.sectionTwoTarget.classList.add("hidden")
@@ -50,9 +50,9 @@ export default class extends Controller {
 
   handleDatePicked(event) {
     event.preventDefault();
-    // this.populateDropdowns()
     this.sectionOneTarget.classList.add("hidden")
     this.sectionThreeTarget.classList.remove("hidden")
+    this.firstNameTarget.focus()
   }
 
   populateDropdowns() {
@@ -96,11 +96,12 @@ export default class extends Controller {
   handlePersonTypePicked(event) {
     this.sectionTwoTarget.classList.add("hidden")
     this.sectionThreeTarget.classList.remove("hidden")
+    this.firstNameTarget.focus()
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    const form = event.target
+    const form = this.formTarget
     let newPersonAttributes = {}
     newPersonAttributes.type = form.type.value
     newPersonAttributes.first_name = form.first_name.value
@@ -118,38 +119,47 @@ export default class extends Controller {
     }).catch((json) => {
       this.errorMessageTarget.innerHTML = json.error.message;
       this.errorMessageTarget.classList.remove("hidden")
-      // this.submitButtonTarget.disabled = true;
     })
   }
 
   connect() {
     this.element.innerHTML = `
-    <div data-modal-target="container" data-action="click->modal#closeBackground keyup@window->modal#closeWithKeyboard" class="hidden animated fadeIn fixed inset-0 overflow-y-auto flex items-center justify-center" style="z-index: 9999;">
+    <div data-modal-target="container" data-action="click->modal#closeBackground" class="hidden animated fadeIn fixed inset-0 overflow-y-auto flex items-center justify-center" style="z-index: 9999;">
       <!-- Modal Inner Container -->
       <div class="max-w-lg max-h-screen w-full relative">
         <!-- Modal Card -->
         <div class="m-1 bg-white rounded shadow">
           <div class="p-8">
-            <form data-action="submit->person-form#handleSubmit" id="person-form">
+            <form 
+              data-person-form-target="form"
+              data-action="submit->person-form#handleSubmit" 
+              id="person-form"
+            >
               <section-one data-person-form-target="sectionOne">
                 <h2 class="text-xl mb-4">Pick a date for the changes to take effect</h2>
                 
                 <effective-date-fields
-                id="person-form-controller-fields"
+                  id="person-form-controller-fields"
                   data-controller="effective-date-fields"
                   data-action="datePicked@window->effective-date-fields#handleDatePicked"
                   data-effective-date-fields-selected-date-value="${this.selectedDateValue}"
                 ></effective-date-fields>
   
                 <div class="flex justify-end items-center flex-wrap mt-6">
-                  <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
-                  <button class="btn btn-primary" data-action="click->person-form#handleDatePicked">Next</button>
+                  <button type="button" class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
+                  <button type="button" class="btn btn-primary" data-action="click->person-form#handleDatePicked">Next</button>
                 </div>
               </section-one>
               <section-two data-person-form-target="sectionTwo" class="hidden">
                 <h2 class="text-xl mb-4">Select the type of position for this person</h2>
                 <label>This is
-                  <select name="type" class="select" name="type" data-action="change->person-form#handlePersonTypePicked">
+                  <select 
+                    name="type" 
+                    class="select" 
+                    name="type" 
+                    data-action="change->person-form#handlePersonTypePicked"
+                    data-person-form-target="personType"
+                  >
                     <option disabled selected="true" value="">Pick one...</option>
                     <option value="Employee">an Employee</option>
                     <option value="Contractor">a Contractor</option>
@@ -165,11 +175,10 @@ export default class extends Controller {
               </section-two>
               <section-three data-person-form-target="sectionThree" class="hidden">
                 <h2 class="text-xl mb-4">Fill in the details</h2>
-                
                 <div>
                   <div class="form-group">
                     <label for="first_name">First Name</label>
-                    <input type="text" class="form-control" name="first_name" />
+                    <input type="text" class="form-control" name="first_name" data-person-form-target="firstName" />
                   </div>
                   <div class="form-group">
                     <label for="last_name">Last Name</label>
@@ -210,8 +219,8 @@ export default class extends Controller {
   
                   <error-message data-person-form-target="errorMessage" class="form-group bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert"></error-message>
                   <div class="flex justify-end items-center flex-wrap mt-6">
-                    <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
-                    <button data-person-form-target="submitButton" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
                 </div>
               </section-three>

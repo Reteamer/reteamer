@@ -4,6 +4,7 @@ import {getNextMonday, peopleDate, isoDate} from "../date_helpers";
 import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
+  static targets = [ "radio" ]
   static values = {
     selectedDate: String
   }
@@ -43,6 +44,7 @@ export default class extends Controller {
              name="effective_date_radio"
              value="${this.selectedDateValue}"
              data-action="change->effective-date-fields#handleRadioChange"
+             data-effective-date-fields-target="radio"
              class="selectedDateInput"
              checked
       />
@@ -89,6 +91,7 @@ export default class extends Controller {
     />
     `
 
+    this.radioTarget.focus();
     this.hiddenInput = this.element.querySelector("input.hiddenInput")
     this.selectedDate = this.element.querySelector("span.selectedDateSpan")
     this.selectedDateInput = this.element.querySelector("input.selectedDateInput")

@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
-  static targets = [ "sectionOne", "sectionThree", "errorMessage", "submitButton" ]
+  static targets = [ "dateSection", "dataSection", "errorMessage", "submitButton" ]
   static values = {
     selectedDate: String
   }
@@ -19,8 +19,8 @@ export default class extends Controller {
 
   handleNewOpenReq(event) {
     this.resetWizard();
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionThreeTarget.classList.remove("hidden")
+    this.dateSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.remove("hidden")
     this.callback = event.detail.callback
   }
 
@@ -33,8 +33,8 @@ export default class extends Controller {
     this.errorMessageTarget.classList.add("hidden")
     this.submitButtonTarget.disabled = false
 
-    this.sectionOneTarget.classList.remove("hidden")
-    this.sectionThreeTarget.classList.add("hidden")
+    this.dateSectionTarget.classList.remove("hidden")
+    this.dataSectionTarget.classList.add("hidden")
     this.openReq = null;
     this.callback = () => {}
 
@@ -44,8 +44,8 @@ export default class extends Controller {
   handleDatePicked(event) {
     event.preventDefault();
     // this.populateDropdowns()
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionThreeTarget.classList.remove("hidden")
+    this.dateSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.remove("hidden")
   }
 
   populateDropdowns() {
@@ -112,7 +112,7 @@ export default class extends Controller {
         <div class="m-1 bg-white rounded shadow">
           <div class="p-8">
             <form data-action="submit->open-req-form#handleSubmit" id="open-req-form">
-              <section-one data-open-req-form-target="sectionOne">
+              <date-section data-open-req-form-target="dateSection">
                 <h2 class="text-xl mb-4">Pick a date for the changes to take effect</h2>
                 <p>
                   <em>Open Reqs</em>, or open requisitions, indicate where a hire needs to be made. These do
@@ -126,11 +126,11 @@ export default class extends Controller {
                 ></effective-date-fields>
   
                 <div class="flex justify-end items-center flex-wrap mt-6">
-                  <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
-                  <button class="btn btn-primary" data-action="click->open-req-form#handleDatePicked">Next</button>
+                  <button type="button" class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
+                  <button type="button" class="btn btn-primary" data-action="click->open-req-form#handleDatePicked">Next</button>
                 </div>
-              </section-one>
-              <section-three data-open-req-form-target="sectionThree" class="hidden">
+              </date-section>
+              <data-section data-open-req-form-target="dataSection" class="hidden">
                 <h2 class="text-xl mb-4">Fill in the details</h2>
                 <div>
                   <supervisor-form-group class="form-group">
@@ -155,11 +155,11 @@ export default class extends Controller {
                   </div>
                  <error-message data-open-req-form-target="errorMessage" class="form-group bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert"></error-message>
                  <div class="flex justify-end items-center flex-wrap mt-6">
-                    <button class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
-                    <button data-open-req-form-target="submitButton" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
+                    <button type="submit" data-open-req-form-target="submitButton" class="btn btn-primary">Submit</button>
                   </div>
                 </div>
-              </section-three>
+              </data-section>
             </form>
           </div>
         </div>
