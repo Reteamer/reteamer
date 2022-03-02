@@ -14,7 +14,7 @@
       <div class="m-1 bg-white rounded shadow">
         <div class="p-8">
           <form data-action="submit->team-form#handleSubmit" id="team-form">
-            <section-one data-team-form-target="sectionOne">
+            <date-section data-team-form-target="dateSection">
               <h2 class="text-xl mb-4">Pick a date for the new team to take effect</h2>
               <effective-date-fields
                 id="team-form-modal-fields"
@@ -27,8 +27,8 @@
                 <button type="button" class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
                 <button type="button" class="btn btn-primary" data-action="click->team-form#handleDatePicked">Next</button>
               </div>
-            </section-one>
-            <section-two data-team-form-target="sectionTwo" class="hidden">
+            </date-section>
+            <data-section data-team-form-target="dataSection" class="hidden">
               <h2 class="text-xl mb-4">Fill in the details</h2>
               <div>
                 <div class="form-group">
@@ -47,7 +47,7 @@
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
               </div>
-            </section-two>
+            </data-section>
           </form>
         </div>
       </div>

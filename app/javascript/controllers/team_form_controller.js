@@ -2,13 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
-  static targets = [ "sectionOne", "sectionTwo" ]
+  static targets = [ "dateSection", "dataSection" ]
 
   handleDatePicked(event) {
     event.preventDefault();
     this.populateDropdown();
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionTwoTarget.classList.remove("hidden")
+    this.dateSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.remove("hidden")
   }
 
   populateDropdown() {
@@ -37,8 +37,8 @@ export default class extends Controller {
     this.element.querySelector("#team-form").reset()
     this.element.querySelector("team-form-group").classList.remove("hidden");
 
-    this.sectionOneTarget.classList.remove("hidden")
-    this.sectionTwoTarget.classList.add("hidden")
+    this.dateSectionTarget.classList.remove("hidden")
+    this.dataSectionTarget.classList.add("hidden")
     this.team = null;
     this.callback = () => {}
   }
@@ -58,8 +58,8 @@ export default class extends Controller {
     this.resetWizard();
     this.populateDropdown();
     this.callback = event.detail.callback
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionTwoTarget.classList.remove("hidden")
+    this.dateSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.remove("hidden")
   }
 
   handleSubmit(event) {

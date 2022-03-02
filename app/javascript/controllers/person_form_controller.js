@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import {emitEvent} from "../event_emitter";
 
 export default class extends Controller {
-  static targets = [ "sectionOne", "sectionTwo", "sectionThree", "errorMessage", "form", "personType", "firstName" ]
+  static targets = [ "dateSection", "employmentSection", "dataSection", "errorMessage", "form", "personType", "firstName" ]
   static values = {
     selectedDate: String
   }
@@ -26,8 +26,8 @@ export default class extends Controller {
   handleNewPerson(event) {
     this.resetWizard();
     this.callback = event.detail.callback
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionTwoTarget.classList.remove("hidden")
+    this.dateSectionTarget.classList.add("hidden")
+    this.employmentSectionTarget.classList.remove("hidden")
     this.personTypeTarget.focus()
   }
 
@@ -39,9 +39,9 @@ export default class extends Controller {
     this.errorMessageTarget.innerHTML = null
     this.errorMessageTarget.classList.add("hidden")
 
-    this.sectionOneTarget.classList.remove("hidden")
-    this.sectionTwoTarget.classList.add("hidden")
-    this.sectionThreeTarget.classList.add("hidden")
+    this.dateSectionTarget.classList.remove("hidden")
+    this.employmentSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.add("hidden")
     this.person = null;
     this.callback = () => {}
 
@@ -50,8 +50,8 @@ export default class extends Controller {
 
   handleDatePicked(event) {
     event.preventDefault();
-    this.sectionOneTarget.classList.add("hidden")
-    this.sectionThreeTarget.classList.remove("hidden")
+    this.dateSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.remove("hidden")
     this.firstNameTarget.focus()
   }
 
@@ -94,8 +94,8 @@ export default class extends Controller {
   }
 
   handlePersonTypePicked(event) {
-    this.sectionTwoTarget.classList.add("hidden")
-    this.sectionThreeTarget.classList.remove("hidden")
+    this.employmentSectionTarget.classList.add("hidden")
+    this.dataSectionTarget.classList.remove("hidden")
     this.firstNameTarget.focus()
   }
 
@@ -135,7 +135,7 @@ export default class extends Controller {
               data-action="submit->person-form#handleSubmit" 
               id="person-form"
             >
-              <section-one data-person-form-target="sectionOne">
+              <date-section data-person-form-target="dateSection">
                 <h2 class="text-xl mb-4">Pick a date for the changes to take effect</h2>
                 
                 <effective-date-fields
@@ -149,8 +149,8 @@ export default class extends Controller {
                   <button type="button" class="btn btn-cancel" data-action="click->modal#close">Cancel</button>
                   <button type="button" class="btn btn-primary" data-action="click->person-form#handleDatePicked">Next</button>
                 </div>
-              </section-one>
-              <section-two data-person-form-target="sectionTwo" class="hidden">
+              </date-section>
+              <employment-section data-person-form-target="employmentSection" class="hidden">
                 <h2 class="text-xl mb-4">Select the type of position for this person</h2>
                 <label>This is
                   <select 
@@ -172,8 +172,8 @@ export default class extends Controller {
                     are highlightable in the charts.
                   </li>
                 </ul>
-              </section-two>
-              <section-three data-person-form-target="sectionThree" class="hidden">
+              </employment-section>
+              <data-section data-person-form-target="dataSection" class="hidden">
                 <h2 class="text-xl mb-4">Fill in the details</h2>
                 <div>
                   <div class="form-group">
@@ -223,7 +223,7 @@ export default class extends Controller {
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </div>
                 </div>
-              </section-three>
+              </data-section>
             </form>
           </div>
         </div>
